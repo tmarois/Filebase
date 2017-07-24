@@ -26,14 +26,13 @@ $item->last_name  = 'Smith';
 // Or it will create a new object using the id "4325663"
 $item->save();
 
-
 ```
 
 ## Create / Update items
 
 As listed above example, its very simple. `$item->save()`, the `save()` method will either Create or Update an existing item by default. It will log all changes with `createdAt` and `updatedAt`.
 
-```
+```php
 
 $created_at = $item->createdAt();
 
@@ -53,25 +52,23 @@ echo $updated_at;
 
 ```php
 
+// sets the configuration
+$db::config()
+
 // gets a single item by ID (loads up in the instance)
 $db->get()
-
-// saves the current item in instance
-$db->save()
-
-// deletes the current item in instance
-$db->delete()
-
-// copies current document, and returns a new instance
-$db->copy()
-
-// returns the items as an array instead of object
-$db->toArray()
 
 // returns all the entries within the database instance
 $db->findAll()
 
-// sets the configuration
-$db::config()
+
+// saves the current item in instance
+$item->save()
+
+// deletes the current item in instance
+$item->delete()
+
+// returns the items as an array instead of object
+$item->toArray()
 
 ```
