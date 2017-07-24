@@ -1,5 +1,10 @@
 {
 	"description": "Flatfile",
 	"name": "timothymarois/flatfile",
-	"type": "project"
+	"type": "project",
+    "autoload": {
+		"psr-4": {
+			"Flatfile\\": "src/"
+		}
+	},
 }
