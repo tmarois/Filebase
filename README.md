@@ -2,6 +2,13 @@
 Flat File Database
 
 
+## Installation
+
+Use [Composer](http://getcomposer.org/) to install package.
+
+Run `composer require timothymarois/flatfile` or add to your main `composer.json` file.
+
+
 ## Usage
 
 ```php
@@ -24,6 +31,7 @@ $item->last_name  = 'Smith';
 // Or it will create a new object using the id "4325663"
 $item->save();
 ```
+
 
 ## Create / Update items
 
