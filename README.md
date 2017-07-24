@@ -6,10 +6,10 @@ Flat File Database
 // gets a single item by ID (loads up in the instance)
 $db->get()
 
-// saves the current item
+// saves the current item in instance
 $db->save()
 
-// delets the current item
+// deletes the current item in instance
 $db->delete()
 
 // copies current document, and returns a new instance
@@ -18,7 +18,7 @@ $db->copy()
 // returns the items as an array instead of object
 $db->toArray()
 
-// returns all the entries within a database
+// returns all the entries within the database instance
 $db->findAll()
 
 // sets the configuration
