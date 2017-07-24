@@ -4,7 +4,7 @@ Flat File Database
 
 ## Usage
 
-```
+```php
 
 // configuration to your database
 $config = \Flatfile\Database::config([
@@ -15,12 +15,23 @@ $config = \Flatfile\Database::config([
 
 $my_database = new \Flatfile\Database($config);
 
+// load up a single item
+$item = $my_database->get('4325663');
+
+// Set Variables
+$item->first_name = 'John;
+$item->last_name  = 'Smith;
+
+// This will either save current changes to the object
+// Or it will create a new object using the id "4325663"
+$item->save();
+
 
 ```
 
 ## API (Methods)
 
-```
+```php
 
 // gets a single item by ID (loads up in the instance)
 $db->get()
