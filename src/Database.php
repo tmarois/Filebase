@@ -114,12 +114,12 @@ class Database
         $file_extension = $this->config->format::getFileExtension();
         $file_location  = $this->config->database.'/'.\Flatfile\Filesystem::validateName($document->getId()).'.'.$file_extension;
 
-        $document->setUpdatedAt(time());
-
-        if (!\Flatfile\Filesystem::read($file_location) || !$document->createdAt())
+        if (!\Flatfile\Filesystem::read($file_location) || $document->createdAt()==false)
         {
             $document->setCreatedAt(time());
         }
+
+        $document->setUpdatedAt(time());
 
         $data = $this->config->format::encode( $document->saveAs() );
 

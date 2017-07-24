@@ -158,6 +158,8 @@ class Document
     */
     public function createdAt($format = 'Y-m-d H:i:s')
     {
+        if (!$this->__created_at) return false;
+
         if ($format != '') return date($format,$this->__created_at);
 
         return $this->__created_at;
@@ -173,6 +175,8 @@ class Document
     */
     public function updatedAt($format = 'Y-m-d H:i:s')
     {
+        if (!$this->__updated_at) return false;
+
         if ($format != '') return date($format,$this->__updated_at);
 
         return $this->__updated_at;
