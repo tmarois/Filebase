@@ -1,6 +1,25 @@
 # Flatfile
 Flat File Database
 
+
+## Usage
+
+```
+
+// configuration to your database
+$config = \Flatfile\Database::config([
+    'database' => 'path/to/database',
+    'format'   => \Flatfile\Format\Json::class
+]);
+
+
+$my_database = new \Flatfile\Database($config);
+
+
+```
+
+## API (Methods)
+
 ```
 
 // gets a single item by ID (loads up in the instance)
