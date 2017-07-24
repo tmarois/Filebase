@@ -1,7 +1,8 @@
 {
-	"description": "Flatfile",
+	"description": "A very simple Flatfile (serverless) Database",
 	"name": "timothymarois/flatfile",
-	"type": "project",
+	"type": "package",
+    "licence": "MIT",
     "autoload": {
 		"psr-4": {
 			"Flatfile\\": "src/"
