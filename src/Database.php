@@ -116,7 +116,7 @@ class Database
 
         $document->setUpdatedAt(time());
 
-        if (!\Flatfile\Filesystem::read($file_location))
+        if (!\Flatfile\Filesystem::read($file_location) || !$document->createdAt())
         {
             $document->setCreatedAt(time());
         }
