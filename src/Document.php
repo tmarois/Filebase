@@ -52,7 +52,12 @@ class Document
     */
     public function save($data = '')
     {
-        return $this->__database->save($this,$data);
+        if (Validate::valid($this))
+        {
+            return $this->__database->save($this,$data);
+        }
+
+        return false;
     }
 
 
@@ -124,6 +129,20 @@ class Document
     public function find($key)
     {
         return (isset($this->{$key}) ? $this->{$key} : null);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * getDatabase
+    *
+    * @return $database
+    */
+    public function getDatabase()
+    {
+        return $this->__database;
     }
 
 

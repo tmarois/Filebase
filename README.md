@@ -119,6 +119,37 @@ echo $updated_at;
 ```
 
 
+## (5) Validation
+
+When invoking `save()` method, the document will be checked for validation rules (if set).
+These rules MUST pass in order for the document to save. The rules will shoot off an error message if validation has failed.
+
+```php
+$config = \Filebase\Database::config([
+    'dir' => '/path/to/database/dir',
+    'validate' => [
+        'name'   => [
+            'type' => 'string',
+            'required' => true
+        ],
+        'description' => [
+            'type' => 'string',
+            'default' => '',
+            'required' => false
+        ]
+    ]
+]);
+```
+
+**Validation rules:**
+
+|Name				|Description		|Description		                |
+|---				|---		                                            |---		|
+|`type`				|`string`, `str`, `integer`, `int`, `array`, `arr`		|Checks if the variable is the current type		|
+|`required`			|`true`, `false`		                                |Checks if the variable is on the document		|
+|`default`			|-		                                                |Adds this default value if none exist   		|
+
+
 ## API (Methods)
 
 ```php

@@ -282,4 +282,18 @@ class Database
         return $arr;
     }
 
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * getConfig
+    *
+    * @return $config
+    */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
 }
