@@ -27,7 +27,7 @@ class Database
     public function findAll($open = false)
     {
         $file_extension = $this->config->format::getFileExtension();
-        $file_location  = $this->config->database.'/';
+        $file_location  = $this->config->dir.'/';
 
         $all = Filesystem::getAllFiles($file_location,$file_extension);
         if ($open==true)
@@ -107,7 +107,7 @@ class Database
     {
         $id             = $document->getId();
         $file_extension = $this->config->format::getFileExtension();
-        $file_location  = $this->config->database.'/'.Filesystem::validateName($id).'.'.$file_extension;
+        $file_location  = $this->config->dir.'/'.Filesystem::validateName($id).'.'.$file_extension;
         $created        = $document->createdAt(false);
 
         if (isset($wdata))
@@ -142,7 +142,7 @@ class Database
     public function read($name)
     {
         $file_extension = $this->config->format::getFileExtension();
-        $file_location  = $this->config->database.'/'.Filesystem::validateName($name).'.'.$file_extension;
+        $file_location  = $this->config->dir.'/'.Filesystem::validateName($name).'.'.$file_extension;
 
         return $this->config->format::decode( Filesystem::read($file_location) );
     }
@@ -159,7 +159,7 @@ class Database
     public function delete(Document $document)
     {
         $file_extension = $this->config->format::getFileExtension();
-        $file_location  = $this->config->database.'/'.Filesystem::validateName($document->getId()).'.'.$file_extension;
+        $file_location  = $this->config->dir.'/'.Filesystem::validateName($document->getId()).'.'.$file_extension;
 
         return Filesystem::delete($file_location);
     }
