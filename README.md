@@ -19,7 +19,7 @@ $config = \Filebase\Database::config([
 
 $my_database = new \Filebase\Database($config);
 
-// load up a single item
+// load up a single item "4325663.json"
 $item = $my_database->get('4325663');
 
 // Set Variables
@@ -28,6 +28,7 @@ $item->last_name  = 'Smith';
 
 // This will either save current changes to the object
 // Or it will create a new object using the id "4325663"
+// Saves to "4325663.json"
 $item->save();
 ```
 
@@ -36,8 +37,8 @@ $item->save();
 
 |Name				|Type		|Default Value	|Description														|
 |---				|---		|---				|---														|
-|dir				|string				|the current working directory			|The directory where the database files are stored (this should be somewhere that is not web accessible) e.g. /path/to/database/			|
-|format			|object		|null		|The formatter class used to encode/decode data				|
+|`dir`				|string				|the current working directory			|The directory where the database files are stored (this should be somewhere that is not web accessible) e.g. /path/to/database/			|
+|`format`			|object		|null		|The formatter class used to encode/decode data				|
 
 
 ## Create / Update Documents
