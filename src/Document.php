@@ -122,12 +122,14 @@ class Document
     * __get
     *
     */
-    public function __get($name)
+    public function &__get($name)
     {
-        if (array_key_exists($name, $this->data))
+        if (!array_key_exists($name, $this->data))
         {
-            return $this->data[$name];
+            $this->data[$name] = null;
         }
+
+        return $this->data[$name];
     }
 
 

@@ -122,7 +122,7 @@ class Database
         {
             foreach($data as $key => $value)
             {
-                if (is_array($value)) $value = (object) $value;
+                if (is_array($value)) $value = (array) $value;
                 $document->{$key} = $value;
             }
         }
