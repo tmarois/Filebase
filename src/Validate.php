@@ -14,39 +14,7 @@ class Validate
     {
         $document = $object->toArray();
 
-        $rules = self::getValidateRules($object);
-        foreach($rules as $k => $rule)
-        {
-
-            // checks variable type
-            if (isset($document[$k],$rule['type']))
-            {
-                if (!self::checkType($document[$k],$rule['type']))
-                {
-                    throw new \Exception('Validation Failed setting variable on '.$object->getId().' - ['.$k.'] does not match type '.$rule['type']);
-                }
-            }
-
-            // check if variable is required
-            if (isset($rule['required']) && $rule['required']===true)
-            {
-                if (!isset($document[$k]))
-                {
-                    throw new \Exception('Validation Failed setting variable on '.$object->getId().' - ['.$k.'] is required');
-                }
-            }
-
-
-            // set the default (if is not set)
-            if (isset($rule['default']))
-            {
-                if (!isset($document[$k]))
-                {
-                    $object->{$k} = $rule['default'];
-                }
-            }
-
-        }
+        self::validateLoop($document,$object,self::getValidateRules($object));
 
         return true;
     }
@@ -63,6 +31,55 @@ class Validate
     public static function getValidateRules(Document $object)
     {
         return $object->getDatabase()->getConfig()->validate;
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * validateLoop
+    */
+    public static function validateLoop($document,$object,$rules)
+    {
+        foreach($rules as $key => $rule)
+        {
+            if (!isset($rule['type'],$rule['required'],$rule['default']) && isset($document[$key]))
+            {
+                self::validateLoop($document[$key],$object,$rules[$key]);
+
+                continue;
+            }
+
+            self::validateRules($document,$key,$rules[$key],$object);
+        }
+    }
+
+
+    /**
+    * validateRules
+    */
+    public static function validateRules($document,$key,$rules,$object)
+    {
+        // checks variable type
+        if (isset($document[$key],$rules['type']))
+        {
+            if (!self::checkType($document[$key],$rules['type']))
+            {
+                throw new \Exception('Validation Failed setting variable on '.$object->getId().' - ['.$key.'] does not match type '.$rules['type']);
+            }
+        }
+
+        // check if variable is required
+        if (isset($rules['required']) && $rules['required']===true)
+        {
+            if (!isset($document[$key]))
+            {
+                throw new \Exception('Validation Failed setting variable on '.$object->getId().' - ['.$key.'] is required');
+            }
+        }
+
+        return $object;
     }
 
 
@@ -99,7 +116,7 @@ class Validate
 
             case 'array':
             case 'arr':
-            
+
                 if (is_array($variable))
                 {
                     return true;
