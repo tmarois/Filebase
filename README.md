@@ -1,6 +1,8 @@
 # Filebase
 A Very Simple Flat File Database Storage.
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
+
 
 ## Installation
 
@@ -133,4 +135,4 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 - Data Validation (new config option)
 - Indexing (adding indexed "tag like")
 - Querying (searching for fields, and pulling in multiple doc results)
-- Auto-Increment ID or Create a hash ID 
+- Auto-Increment ID or Create a hash ID
