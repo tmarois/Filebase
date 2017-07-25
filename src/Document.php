@@ -115,6 +115,11 @@ class Document
     /**
     * find
     *
+    * This method only finds the property and returns its value
+    * Instead of you searching if the property exist. (only 1st level properties)
+    *
+    * @param mixed $key
+    * @return object property (returns null if does not exist)
     */
     public function find($key)
     {
