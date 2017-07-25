@@ -29,12 +29,12 @@ class Database
         {
             if (!@mkdir($this->config->dir, 0777, true))
             {
-                throw new \RuntimeException(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->dir));
+                throw new \Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->dir));
             }
         }
         else if (!is_writable($this->config->dir))
         {
-            throw new \RuntimeException(sprintf('`%s` is not writable.', $this->config->dir));
+            throw new \Exception(sprintf('`%s` is not writable.', $this->config->dir));
         }
     }
 
@@ -52,7 +52,7 @@ class Database
     *
     * @return array $items
     */
-    public function findAll($include_documents = false)
+    public function findAll($include_documents = true)
     {
         $file_extension = $this->config->format::getFileExtension();
         $file_location  = $this->config->dir.'/';

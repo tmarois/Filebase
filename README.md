@@ -61,7 +61,7 @@ The Default Format Class: `JSON`
 ```
 
 
-## (3) GET
+## (3) Get | FindAll
 
 After you've loaded up your database config, then you can use the `get()` method to retrieve a single document of data.
 

@@ -34,6 +34,29 @@ class Config
         {
             $this->{$key} = $value;
         }
+
+        $this->validateFormatClass();
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * format
+    *
+    * kind of a quick fix since we are using static methods,
+    * currently need to instantiate teh class to check instanceof why??
+    *
+    * Checks the format of the database being accessed
+    */
+    protected function validateFormatClass()
+    {
+        $format_class = new $this->format;
+        if (!$format_class instanceof Format\FormatInterface)
+        {
+            throw new \Exception('Format Class must be an instance of Filebase\Format\FormatInterface');
+        }
     }
 
 
