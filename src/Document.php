@@ -105,9 +105,7 @@ class Document
     public function __set($name, $value)
     {
         if (is_array($value)) $value = (object) $value;
-
         $this->{$name} = $value;
-        // $this->{$name} = $this->__database->arrayToObject($value);
     }
 
 
@@ -130,6 +128,7 @@ class Document
     /**
     * getId
     *
+    * @return mixed $__id
     */
     public function getId()
     {
@@ -143,6 +142,7 @@ class Document
     /**
     * setId
     *
+    * @param mixed $id
     */
     public function setId($id)
     {
@@ -156,6 +156,10 @@ class Document
     /**
     * createdAt
     *
+    * When this document was created (or complete replaced)
+    *
+    * @param string $format php date format (default Y-m-d H:i:s)
+    * @return string date format
     */
     public function createdAt($format = 'Y-m-d H:i:s')
     {
@@ -171,8 +175,12 @@ class Document
 
 
     /**
-    * createdAt
+    * updatedAt
     *
+    * When this document was updated
+    *
+    * @param string $format php date format (default Y-m-d H:i:s)
+    * @return string date format
     */
     public function updatedAt($format = 'Y-m-d H:i:s')
     {
@@ -190,8 +198,9 @@ class Document
     /**
     * setCreatedAt
     *
+    * @param int $created_at php time()
     */
-    public function setCreatedAt($created_at)
+    public function setCreatedAt(int $created_at)
     {
         $this->__created_at = $created_at;
     }
@@ -203,8 +212,9 @@ class Document
     /**
     * setuUpdatedAt
     *
+    * @param int $updated_at php time()
     */
-    public function setUpdatedAt($updated_at)
+    public function setUpdatedAt(int $updated_at)
     {
         $this->__updated_at = $updated_at;
     }
