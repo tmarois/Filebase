@@ -4,7 +4,16 @@
 class Database
 {
 
+    /**
+    * $config
+    *
+    * Stores all the configuration object settings
+    * \Filebase\Config
+    */
     protected $config;
+
+
+    //--------------------------------------------------------------------
 
 
     /**
@@ -21,16 +30,22 @@ class Database
 
 
     /**
-    * findAll
+    * findAll()
     *
+    * Finds all documents in database directory.
+    * Then returns you a list of those documents.
+    *
+    * @param bool $include_documents (include all document objects in array)
+    *
+    * @return array $items
     */
-    public function findAll($open = false)
+    public function findAll($include_documents = false)
     {
         $file_extension = $this->config->format::getFileExtension();
         $file_location  = $this->config->dir.'/';
 
-        $all = Filesystem::getAllFiles($file_location,$file_extension);
-        if ($open==true)
+        $items = Filesystem::getAllFiles($file_location,$file_extension);
+        if ($include_documents==true)
         {
             $items = [];
 
@@ -42,7 +57,7 @@ class Database
             return $items;
         }
 
-        return $all;
+        return $items;
     }
 
 
@@ -52,11 +67,16 @@ class Database
     /**
     * get
     *
+    * retrieves a single result (file)
     *
+    * @param mixed $id
+    *
+    * @return $document \Filebase\Document object
     */
     public function get($id)
     {
         $data = $this->read($id);
+
         $document = new Document($this);
         $document->setId($id);
 
@@ -78,7 +98,10 @@ class Database
     /**
     * set
     *
+    * @param $document \Filebase\Document object
+    * @param mixed $data should be an array
     *
+    * @return $document \Filebase\Document object
     */
     public function set(Document $document, $data)
     {
@@ -101,7 +124,10 @@ class Database
     /**
     * save
     *
+    * @param $document \Filebase\Document object
+    * @param mixed $data should be an array, new data to replace all existing data within
     *
+    * @return (bool) true or false if file was saved
     */
     public function save(Document $document, $wdata)
     {
@@ -154,7 +180,8 @@ class Database
     /**
     * delete
     *
-    *
+    * @param $document \Filebase\Document object
+    * @return (bool) true/false if file was deleted
     */
     public function delete(Document $document)
     {
