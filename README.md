@@ -6,19 +6,19 @@ Flat File Database
 
 Use [Composer](http://getcomposer.org/) to install package.
 
-Run `composer require timothymarois/flatfile` or add to your main `composer.json` file.
+Run `composer require timothymarois/filebase` or add to your main `composer.json` file.
 
 
 ## Usage
 
 ```php
 // configuration to your database
-$config = \Flatfile\Database::config([
+$config = \Filebase\Database::config([
     'database' => 'path/to/database',
-    'format'   => \Flatfile\Format\Json::class
+    'format'   => \Filebase\Format\Json::class
 ]);
 
-$my_database = new \Flatfile\Database($config);
+$my_database = new \Filebase\Database($config);
 
 // load up a single item
 $item = $my_database->get('4325663');
@@ -33,9 +33,23 @@ $item->save();
 ```
 
 
-## Create / Update items
+## Create / Update Documents
 
-As listed above example, its **very simple**. `$item->save()`, the `save()` method will either **Create** or **Update** an existing item by default. It will log all changes with `createdAt` and `updatedAt`.
+As listed in the above example, its **very simple**. Use `$item->save()`, the `save()` method will either **Create** or **Update** an existing document by default. It will log all changes with `createdAt` and `updatedAt`. If you want to replace *all* data within a single document pass the new data in the `save($data)` method, otherwise don't pass any data to allow it to save the current instance.
+
+```php
+
+// this will save the current document, and adding or replacing "title" variable
+// but will leave existing variables unchanged.
+$item->title = 'My Document';
+$item->save()
+
+// this will replace all data within the document
+item->save([
+    'title' => 'My Document'
+])
+
+```
 
 You can change the date output format by sending in a php date format within the parameter of  `createdAt($date_format)` and `updatedAt($date_format)`.
 
