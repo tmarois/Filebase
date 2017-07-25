@@ -20,6 +20,13 @@ class Config
     public $format = Format\Json::class;
 
 
+    /**
+    * $validate
+    *
+    */
+    public $validate = [];
+
+
     //--------------------------------------------------------------------
 
 

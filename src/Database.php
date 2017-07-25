@@ -90,20 +90,18 @@ class Database
     {
         $content = $this->read($id);
 
+        $document = new Document($this);
+        $document->setId($id);
+
         if ($content)
         {
-            $document = new Document($this);
-            $document->setId($id);
-
             if (isset($content['__created_at'])) $document->setCreatedAt($content['__created_at']);
             if (isset($content['__updated_at'])) $document->setUpdatedAt($content['__updated_at']);
 
             $this->set($document,(isset($content['data']) ? $content['data'] : []));
-
-            return $document;
         }
 
-        return false;
+        return $document;
     }
 
 
