@@ -14,7 +14,7 @@ Run `composer require timothymarois/filebase` or add to your main `composer.json
 ```php
 // configuration to your database
 $config = \Filebase\Database::config([
-    'database' => 'path/to/database',
+    'dir'      => 'path/to/database/dir',
     'format'   => \Filebase\Format\Json::class
 ]);
 
@@ -31,6 +31,14 @@ $item->last_name  = 'Smith';
 // Or it will create a new object using the id "4325663"
 $item->save();
 ```
+
+
+### Config Options
+
+|Name				|Type		|Default Value	|Description														|
+|---				|---		|---				|---														|
+|dir				|string				|the current working directory			|The directory where the database files are stored (this should be somewhere that is not web accessible) e.g. /path/to/database/			|
+|format			|object		|null		|The formatter class used to encode/decode data				|
 
 
 ## Create / Update Documents
@@ -89,3 +97,14 @@ $item->delete()
 // returns the items as an array instead of object
 $item->toArray()
 ```
+
+
+## Why Filebase?
+
+I originally built Filebase because I needed more flexibility and control over the database files, how they are stored, type of format stored, query filtration and designed with very intuitive API methods.
+
+Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](https://github.com/fire015/flintstone)
+
+## Contributions
+
+Accepting contributions and feedback. Send in any issues and pull requests.
