@@ -65,13 +65,9 @@ class Database
         if ($data)
         {
             if (isset($data->__created_at)) $this->document->setCreatedAt($data->__created_at);
-            if (isset($data->__updated_at)) $this->document->setuUpdatedAt($data->__updated_at);
+            if (isset($data->__updated_at)) $this->document->setUpdatedAt($data->__updated_at);
 
-            foreach($data as $key => $value)
-            {
-                if (is_array($value)) $value = (object) $value;
-                $this->document->{$key} = $value;
-            }
+            $this->set($data);
         }
 
         return $this->document;
@@ -109,12 +105,25 @@ class Database
     *
     *
     */
-    public function save(\Flatfile\Document $document)
+    public function save(\Flatfile\Document $document, $wdata)
     {
+        $id             = $document->getId();
         $file_extension = $this->config->format::getFileExtension();
-        $file_location  = $this->config->database.'/'.\Flatfile\Filesystem::validateName($document->getId()).'.'.$file_extension;
+        $file_location  = $this->config->database.'/'.\Flatfile\Filesystem::validateName($id).'.'.$file_extension;
+        $created        = $document->createdAt(false);
 
-        if (!\Flatfile\Filesystem::read($file_location) || $document->createdAt()==false)
+        if (isset($wdata))
+        {
+            $document = new \Flatfile\Document( $this );
+            $document->setId($id);
+
+            $this->document = $document;
+
+            $document->set($wdata);
+            $document->setCreatedAt($created);
+        }
+
+        if (!\Flatfile\Filesystem::read($file_location) || $created==false)
         {
             $document->setCreatedAt(time());
         }

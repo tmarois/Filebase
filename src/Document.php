@@ -32,6 +32,7 @@ class Document
     {
         $data = (object) [];
         $vars = get_object_vars($this);
+
         foreach($vars as $k=>$v)
         {
             if (in_array($k,['__database','__id'])) continue;
@@ -49,9 +50,9 @@ class Document
     * save
     *
     */
-    public function save()
+    public function save($data)
     {
-        return $this->__database->save($this);
+        return $this->__database->save($this,$data);
     }
 
 
@@ -160,7 +161,7 @@ class Document
     {
         if (!$this->__created_at) return false;
 
-        if ($format != '') return date($format,$this->__created_at);
+        if ($format !== false) return date($format,$this->__created_at);
 
         return $this->__created_at;
     }
@@ -177,7 +178,7 @@ class Document
     {
         if (!$this->__updated_at) return false;
 
-        if ($format != '') return date($format,$this->__updated_at);
+        if ($format !== false) return date($format,$this->__updated_at);
 
         return $this->__updated_at;
     }
