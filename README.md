@@ -49,6 +49,7 @@ $config = \Filebase\Database::config([
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
+|`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#5-validation) for more details |
 
 
 ## (2) Formatting
@@ -119,7 +120,7 @@ echo $updated_at;
 ```
 
 
-## (5) Validation
+## (5) Validation *(optional)*
 
 When invoking `save()` method, the document will be checked for validation rules (if set).
 These rules MUST pass in order for the document to save. The rules will shoot off an error message if validation has failed.
@@ -141,37 +142,16 @@ $config = \Filebase\Database::config([
 ]);
 ```
 
+In the above example `name` and `description` array keys would be replaced with your own that match your data.
+
 **Validation rules:**
 
 |Name				|Description		|Description		                |
 |---				|---		                                            |---		|
 |`type`				|`string`, `str`, `integer`, `int`, `array`, `arr`		|Checks if the variable is the current type		|
 |`required`			|`true`, `false`		                                |Checks if the variable is on the document		|
-|`default`			|-		                                                |Adds this default value if none exist   		|
+|`default`			|		                                                |Adds this default value if none exist   		|
 
-
-## API (Methods)
-
-```php
-// sets the configuration
-$db::config()
-
-// gets a single item by ID (loads up in the instance)
-$db->get()
-
-// returns all the entries within the database instance
-$db->findAll()
-
-
-// saves the current item in instance
-$item->save()
-
-// deletes the current item in instance
-$item->delete()
-
-// returns the items as an array instead of object
-$item->toArray()
-```
 
 
 ## Why Filebase?
