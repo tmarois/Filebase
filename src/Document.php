@@ -50,7 +50,7 @@ class Document
     * save
     *
     */
-    public function save($data)
+    public function save($data = '')
     {
         return $this->__database->save($this,$data);
     }

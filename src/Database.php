@@ -23,6 +23,19 @@ class Database
     public function __construct(Config $config)
     {
         $this->config = $config;
+
+        // Check directory and create it if it doesn't exist
+        if (!is_dir($this->config->dir))
+        {
+            if (!@mkdir($this->config->dir, 0777, true))
+            {
+                throw new \RuntimeException(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->dir));
+            }
+        }
+        else if (!is_writable($this->config->dir))
+        {
+            throw new \RuntimeException(sprintf('`%s` is not writable.', $this->config->dir));
+        }
     }
 
 
@@ -129,14 +142,14 @@ class Database
     *
     * @return (bool) true or false if file was saved
     */
-    public function save(Document $document, $wdata)
+    public function save(Document $document, $wdata = '')
     {
         $id             = $document->getId();
         $file_extension = $this->config->format::getFileExtension();
         $file_location  = $this->config->dir.'/'.Filesystem::validateName($id).'.'.$file_extension;
         $created        = $document->createdAt(false);
 
-        if (isset($wdata))
+        if (isset($wdata) && $wdata !== '')
         {
             $document = new Document( $this );
             $document->setId($id);
