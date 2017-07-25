@@ -35,6 +35,8 @@ $item->save();
 
 ### Config Options
 
+The config is *required* when defining your database. The options are *optional* as they have their own defaults.
+
 ```php
 $config = \Filebase\Database::config([
     'dir'      => 'path/to/database/dir',
@@ -43,9 +45,9 @@ $config = \Filebase\Database::config([
 ```
 
 |Name				|Type		|Default Value	    |Description												|
-|---				|---		|---				|---														|
-|`dir`				|string		|current directory  |The directory where the database files are stored. 	    |
-|`format`			|object		|null		        |The format class used to encode/decode data				|
+|---				|---		|---			         	|---														|
+|`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
+|`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
 
 
 ## Create / Update Documents
