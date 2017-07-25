@@ -34,7 +34,7 @@ $item->save();
 ```
 
 
-### Config Options
+## (1) Config Options
 
 The config is *required* when defining your database. The options are *optional* as they have their own defaults.
 
@@ -51,31 +51,55 @@ $config = \Filebase\Database::config([
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
 
 
-### Change Format Class
+## (2) Formatting
 
 You can write your own or change the existing format class in the config. The methods in the class must be `static` and the class must implement `\Filebase\Format\FormatInterface`
 
-Current Default `JSON` Format Class:
+The Default Format Class: `JSON`
 ```php
 \Filebase\Format\Json::class
 ```
 
 
-## Create / Update Documents
+## (3) GET
+
+After you've loaded up your database config, then you can use the `get()` method to retrieve a single document of data.
+
+```php
+$item = $db->get('4325663');
+```
+
+You can also use `findAll()` to retrieve every document within the database directory.
+
+```php
+$items = $db->findAll();
+```
+
+## (4) Create | Update | Delete
 
 As listed in the above example, its **very simple**. Use `$item->save()`, the `save()` method will either **Create** or **Update** an existing document by default. It will log all changes with `createdAt` and `updatedAt`. If you want to replace *all* data within a single document pass the new data in the `save($data)` method, otherwise don't pass any data to allow it to save the current instance.
 
 ```php
 
-// this will save the current document, and adding or replacing "title" variable
-// but will leave existing variables unchanged.
+// SAVE or CREATE
+// this will save the current data and any changed variables
+// but it will leave existing variables that you did not modify unchanged.
+// This will also create a document if none exist.
 $item->title = 'My Document';
 $item->save()
 
-// this will replace all data within the document
+// This will replace all data within the document
+// Allows you to reset the document and put in fresh data
+// Ignoring any above changes or changes to variables, since
+// This sets its own within the save method.
 $item->save([
     'title' => 'My Document'
-])
+]);
+
+// DELETE
+// This will delete the current item
+// This action can not be undone.
+$item->delete();
 
 ```
 

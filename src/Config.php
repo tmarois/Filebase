@@ -26,6 +26,7 @@ class Config
     /**
     * __construct
     *
+    * This sets all the config variables (replacing its defaults)
     */
     public function __construct($config)
     {
