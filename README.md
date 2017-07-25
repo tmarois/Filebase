@@ -8,7 +8,6 @@ Use [Composer](http://getcomposer.org/) to install package.
 
 Run `composer require timothymarois/filebase` or add to your main `composer.json` file.
 
-
 ## Usage
 
 ```php
@@ -101,7 +100,7 @@ $item->toArray()
 
 ## Why Filebase?
 
-I originally built Filebase because I needed more flexibility and control over the database files, how they are stored, type of format stored, query filtration and designed with very intuitive API methods.
+I originally built Filebase because I needed more flexibility and control over the database files, how they are stored, type of format stored, query filtration and to design with very intuitive API methods.
 
 Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](https://github.com/fire015/flintstone)
 
