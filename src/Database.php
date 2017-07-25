@@ -6,14 +6,12 @@ class Database
 
     protected $config;
 
-    protected $document;
-
 
     /**
     * __construct
     *
     */
-    public function __construct(\Flatfile\Config $config)
+    public function __construct(Config $config)
     {
         $this->config = $config;
     }
@@ -31,7 +29,7 @@ class Database
         $file_extension = $this->config->format::getFileExtension();
         $file_location  = $this->config->database.'/';
 
-        $all = \Flatfile\Filesystem::getAllFiles($file_location,$file_extension);
+        $all = Filesystem::getAllFiles($file_location,$file_extension);
         if ($open==true)
         {
             $items = [];
@@ -59,18 +57,18 @@ class Database
     public function get($id)
     {
         $data = $this->read($id);
-        $this->document = new \Flatfile\Document($this);
-        $this->document->setId($id);
+        $document = new Document($this);
+        $document->setId($id);
 
         if ($data)
         {
-            if (isset($data->__created_at)) $this->document->setCreatedAt($data->__created_at);
-            if (isset($data->__updated_at)) $this->document->setUpdatedAt($data->__updated_at);
+            if (isset($data->__created_at)) $document->setCreatedAt($data->__created_at);
+            if (isset($data->__updated_at)) $document->setUpdatedAt($data->__updated_at);
 
-            $this->set($data);
+            $this->set($document,$data);
         }
 
-        return $this->document;
+        return $document;
     }
 
 
@@ -82,18 +80,18 @@ class Database
     *
     *
     */
-    public function set($data)
+    public function set(Document $document, $data)
     {
         if ($data)
         {
             foreach($data as $key => $value)
             {
                 if (is_array($value)) $value = (object) $value;
-                $this->document->{$key} = $value;
+                $document->{$key} = $value;
             }
         }
 
-        return $this->document;
+        return $document;
     }
 
 
@@ -105,25 +103,22 @@ class Database
     *
     *
     */
-    public function save(\Flatfile\Document $document, $wdata)
+    public function save(Document $document, $wdata)
     {
         $id             = $document->getId();
         $file_extension = $this->config->format::getFileExtension();
-        $file_location  = $this->config->database.'/'.\Flatfile\Filesystem::validateName($id).'.'.$file_extension;
+        $file_location  = $this->config->database.'/'.Filesystem::validateName($id).'.'.$file_extension;
         $created        = $document->createdAt(false);
 
         if (isset($wdata))
         {
-            $document = new \Flatfile\Document( $this );
+            $document = new Document( $this );
             $document->setId($id);
-
-            $this->document = $document;
-
             $document->set($wdata);
             $document->setCreatedAt($created);
         }
 
-        if (!\Flatfile\Filesystem::read($file_location) || $created==false)
+        if (!Filesystem::read($file_location) || $created==false)
         {
             $document->setCreatedAt(time());
         }
@@ -132,7 +127,7 @@ class Database
 
         $data = $this->config->format::encode( $document->saveAs() );
 
-        return \Flatfile\Filesystem::write($file_location,$data);
+        return Filesystem::write($file_location,$data);
     }
 
 
@@ -147,9 +142,9 @@ class Database
     public function read($name)
     {
         $file_extension = $this->config->format::getFileExtension();
-        $file_location  = $this->config->database.'/'.\Flatfile\Filesystem::validateName($name).'.'.$file_extension;
+        $file_location  = $this->config->database.'/'.Filesystem::validateName($name).'.'.$file_extension;
 
-        return $this->config->format::decode( \Flatfile\Filesystem::read($file_location) );
+        return $this->config->format::decode( Filesystem::read($file_location) );
     }
 
 
@@ -164,9 +159,9 @@ class Database
     public function delete(\Flatfile\Document $document)
     {
         $file_extension = $this->config->format::getFileExtension();
-        $file_location  = $this->config->database.'/'.\Flatfile\Filesystem::validateName($document->getId()).'.'.$file_extension;
+        $file_location  = $this->config->database.'/'.Filesystem::validateName($document->getId()).'.'.$file_extension;
 
-        return \Flatfile\Filesystem::delete($file_location);
+        return Filesystem::delete($file_location);
     }
 
 
@@ -181,7 +176,7 @@ class Database
     */
     public static function config(array $options)
     {
-        return new \Flatfile\Config($options);
+        return new Config($options);
     }
 
 
@@ -192,7 +187,7 @@ class Database
     * toArray
     *
     */
-    public function toArray(\Flatfile\Document $document)
+    public function toArray(Document $document)
     {
         $vars = get_object_vars($document);
         return $this->objectToArray($vars);

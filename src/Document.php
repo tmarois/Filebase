@@ -78,7 +78,7 @@ class Document
     */
     public function set($data)
     {
-        return $this->__database->set($data);
+        return $this->__database->set($this,$data);
     }
 
 
