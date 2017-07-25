@@ -45,7 +45,7 @@ $item->title = 'My Document';
 $item->save()
 
 // this will replace all data within the document
-item->save([
+$item->save([
     'title' => 'My Document'
 ])
 

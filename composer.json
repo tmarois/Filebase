@@ -1,6 +1,8 @@
 {
 	"description": "A very simple Flat-file (serverless) Database",
+	"keywords": ["flat", "file", "database", "document", "flat-file"],
 	"name": "timothymarois/filebase",
+	"homepage": "https://github.com/timothymarois/Filebase",
 	"type": "package",
 	"licence": "MIT",
 	"autoload": {
