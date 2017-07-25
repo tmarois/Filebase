@@ -1,4 +1,4 @@
-<?php  namespace Flatfile;
+<?php  namespace Filebase;
 
 
 class Database
@@ -156,7 +156,7 @@ class Database
     *
     *
     */
-    public function delete(\Flatfile\Document $document)
+    public function delete(Document $document)
     {
         $file_extension = $this->config->format::getFileExtension();
         $file_location  = $this->config->database.'/'.Filesystem::validateName($document->getId()).'.'.$file_extension;

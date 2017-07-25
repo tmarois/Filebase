@@ -1,4 +1,4 @@
-<?php namespace Flatfile\Format;
+<?php namespace Filebase\Format;
 
 interface FormatInterface
 {

@@ -1,4 +1,4 @@
-<?php  namespace Flatfile;
+<?php  namespace Filebase;
 
 
 class Document
