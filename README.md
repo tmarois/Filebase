@@ -126,3 +126,10 @@ Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](ht
 ## Contributions
 
 Accepting contributions and feedback. Send in any issues and pull requests.
+
+
+## TODO
+
+- Data Validation (new config option)
+- Indexing (adding indexed "tag like")
+- Querying (searching for fields, and pulling in multiple doc results)

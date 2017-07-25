@@ -118,7 +118,7 @@ class Document
     */
     public function find($key)
     {
-        return $this->{$key};
+        return (isset($this->{$key}) ? $this->{$key} : null);
     }
 
 
