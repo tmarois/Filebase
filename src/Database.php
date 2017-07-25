@@ -88,17 +88,17 @@ class Database
     */
     public function get($id)
     {
-        $data = $this->read($id);
+        $content  = $this->read($id);
 
         $document = new Document($this);
         $document->setId($id);
 
-        if ($data)
+        if ($content)
         {
-            if (isset($data->__created_at)) $document->setCreatedAt($data->__created_at);
-            if (isset($data->__updated_at)) $document->setUpdatedAt($data->__updated_at);
+            if (isset($content['__created_at'])) $document->setCreatedAt($content['__created_at']);
+            if (isset($content['__updated_at'])) $document->setUpdatedAt($content['__updated_at']);
 
-            $this->set($document,$data);
+            $this->set($document,(isset($content['data']) ? $content['data'] : []));
         }
 
         return $document;
@@ -229,8 +229,7 @@ class Database
     */
     public function toArray(Document $document)
     {
-        $vars = get_object_vars($document);
-        return $this->objectToArray($vars);
+        return $this->objectToArray( $document->getData() );
     }
 
 

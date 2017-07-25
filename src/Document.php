@@ -10,6 +10,8 @@ class Document
     private $__created_at;
     private $__updated_at;
 
+    private $data = [];
+
 
     /**
     * __construct
@@ -109,8 +111,7 @@ class Document
     */
     public function __set($name, $value)
     {
-        if (is_array($value)) $value = (object) $value;
-        $this->{$name} = $value;
+        $this->data[$name] = $value;
     }
 
 
@@ -118,17 +119,15 @@ class Document
 
 
     /**
-    * find
+    * __get
     *
-    * This method only finds the property and returns its value
-    * Instead of you searching if the property exist. (only 1st level properties)
-    *
-    * @param mixed $key
-    * @return object property (returns null if does not exist)
     */
-    public function find($key)
+    public function __get($name)
     {
-        return (isset($this->{$key}) ? $this->{$key} : null);
+        if (array_key_exists($name, $this->data))
+        {
+            return $this->data[$name];
+        }
     }
 
 
@@ -157,6 +156,20 @@ class Document
     public function getId()
     {
         return $this->__id;
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * getData
+    *
+    * @return mixed data
+    */
+    public function getData()
+    {
+        return $this->data;
     }
 
 
