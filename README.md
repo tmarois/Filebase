@@ -1,5 +1,5 @@
 # Filebase
-Flat File Database
+A Very Simple Flat File Database Storage.
 
 
 ## Installation
@@ -35,10 +35,17 @@ $item->save();
 
 ### Config Options
 
-|Name				|Type		|Default Value	|Description														|
+```php
+$config = \Filebase\Database::config([
+    'dir'      => 'path/to/database/dir',
+    'format'   => \Filebase\Format\Json::class
+]);
+```
+
+|Name				|Type		|Default Value	    |Description												|
 |---				|---		|---				|---														|
-|`dir`				|string				|the current working directory			|The directory where the database files are stored (this should be somewhere that is not web accessible) e.g. /path/to/database/			|
-|`format`			|object		|null		|The formatter class used to encode/decode data				|
+|`dir`				|string		|current directory  |The directory where the database files are stored. 	    |
+|`format`			|object		|null		        |The format class used to encode/decode data				|
 
 
 ## Create / Update Documents
@@ -101,9 +108,9 @@ $item->toArray()
 
 ## Why Filebase?
 
-I originally built Filebase because I needed more flexibility and control over the database files, how they are stored, type of format stored, query filtration and to design with very intuitive API methods.
+I originally built Filebase because I needed more flexibility, control over the database files, how they are stored, query filtration and to design with very intuitive API methods.
 
-Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](https://github.com/fire015/flintstone)
+Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](https://github.com/fire015/flintstone).
 
 ## Contributions
 
