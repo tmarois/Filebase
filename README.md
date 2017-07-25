@@ -49,7 +49,7 @@ $config = \Filebase\Database::config([
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
-|`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#5-validation) for more details |
+|`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#5-validation-optional) for more details |
 
 
 ## (2) Formatting
@@ -146,11 +146,11 @@ In the above example `name` and `description` array keys would be replaced with 
 
 **Validation rules:**
 
-|Name				|Description		|Description		                |
+|Name				|Allowed Values		|Description		                |
 |---				|---		                                            |---		|
 |`type`				|`string`, `str`, `integer`, `int`, `array`, `arr`		|Checks if the variable is the current type		|
 |`required`			|`true`, `false`		                                |Checks if the variable is on the document		|
-|`default`			|		                                                |Adds this default value if none exist   		|
+|`default`			| (Any)		                                                |Adds this default value if none exist   		|
 
 
 
@@ -167,7 +167,6 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 
 ## TODO
 
-- Data Validation (new config option)
 - Indexing (adding indexed "tag like")
 - Querying (searching for fields, and pulling in multiple doc results)
 - Auto-Increment ID or Create a hash ID
