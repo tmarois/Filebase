@@ -49,6 +49,16 @@ $config = \Filebase\Database::config([
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
 
 
+### Change Format Class
+
+You can write your own or change the existing format class in the config. The methods in the class must be `static` and the class must implement `\Filebase\Format\FormatInterface`
+
+Current Default `JSON` Format Class:
+```php
+\Filebase\Format\Json::class
+```
+
+
 ## Create / Update Documents
 
 As listed in the above example, its **very simple**. Use `$item->save()`, the `save()` method will either **Create** or **Update** an existing document by default. It will log all changes with `createdAt` and `updatedAt`. If you want to replace *all* data within a single document pass the new data in the `save($data)` method, otherwise don't pass any data to allow it to save the current instance.
@@ -82,14 +92,6 @@ $updated_at = $item->updatedAt();
 echo $updated_at;
 ```
 
-
-### Change Format Class
-
-You can write your own or change the existing format class in the config. The methods in the class must be `static` and the class must implement `\Filebase\Format\FormatInterface`
-
-```php
-\Filebase\Format\Json::class
-```
 
 ## API (Methods)
 
