@@ -13,8 +13,7 @@ Run `composer require timothymarois/filebase` or add to your main `composer.json
 ```php
 // configuration to your database
 $config = \Filebase\Database::config([
-    'dir'      => 'path/to/database/dir',
-    'format'   => \Filebase\Format\Json::class
+    'dir' => 'path/to/database/dir'
 ]);
 
 $my_database = new \Filebase\Database($config);
@@ -83,6 +82,14 @@ $updated_at = $item->updatedAt();
 echo $updated_at;
 ```
 
+
+### Change Format Class
+
+You can write your own or change the existing format class in the config. The methods in the class must be `static` and the class must implement `\Filebase\Format\FormatInterface`
+
+```php
+\Filebase\Format\Json::class
+```
 
 ## API (Methods)
 
