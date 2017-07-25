@@ -77,16 +77,34 @@ class Validate
     {
         switch($type)
         {
-            case 'string': case 'str':
-                if (is_string($variable)) return true;
+            case 'string':
+            case 'str':
+
+                if (is_string($variable))
+                {
+                    return true;
+                }
+
                 break;
 
-            case 'integer': case 'int':
-                if (is_integer($variable)) return true;
+            case 'integer':
+            case 'int':
+
+                if (is_integer($variable))
+                {
+                    return true;
+                }
+
                 break;
 
-            case 'array': case 'arr':
-                if (is_array($variable)) return true;
+            case 'array':
+            case 'arr':
+            
+                if (is_array($variable))
+                {
+                    return true;
+                }
+
                 break;
 
             default:
