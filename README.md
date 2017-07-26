@@ -159,7 +159,7 @@ Item filters allow you to customize the results. *NOTE these filters only run on
 This example will output all the emails of users who are blocked.
 
 ```php
-$users = $fielddb->get('users')->customFilter('status',function($item) {
+$users = $fielddb->get('users')->customFilter('data',function($item) {
     return (($item['status']=='blocked') ? $item['email'] : false);
 });
 ```
