@@ -20,17 +20,21 @@ $config = \Filebase\Database::config([
 
 $my_database = new \Filebase\Database($config);
 
-// load up a single item "4325663.json"
-$item = $my_database->get('4325663');
+// in this example, you would replace user_name with the actual user name.
+// It would technically be stored as user_name.json
+$item = $my_database->get('user_name');
 
-// Set Variables
-$item->first_name = 'John';
-$item->last_name  = 'Smith';
+// display property variables
+echo $item->first_name;
+echo $item->last_name;
+echo $item->email;
 
-// This will either save current changes to the object
-// Or it will create a new object using the id "4325663"
-// Saves to "4325663.json"
+// change existing or add new values
+$item->email = 'example@example.com';
+
+// quickly just use, and thats it!
 $item->save();
+
 ```
 
 
@@ -135,14 +139,23 @@ $config = \Filebase\Database::config([
         ],
         'description' => [
             'type' => 'string',
-            'default' => '',
             'required' => false
+        ],
+        'emails' => [
+            'type'     => 'array',
+            'required' => true
+        ],
+        'config' => [
+            'settings' => [
+                'type'     => 'array',
+                'required' => true
+            ]
         ]
     ]
 ]);
 ```
 
-In the above example `name` and `description` array keys would be replaced with your own that match your data.
+In the above example `name`, `description`, `emails` and `config` array keys would be replaced with your own that match your data. Notice that `config` has a nested array `settings`, yes you can nest validations.
 
 **Validation rules:**
 
@@ -154,12 +167,14 @@ In the above example `name` and `description` array keys would be replaced with 
 
 ## (6) Custom Filters
 
-Item filters allow you to customize the results. *NOTE these filters only run on a single document*. In cause you have an array of items within one document. Let's say "users", then you could create a filter to show you all the users that have a specific tag, or field matching a specific value.
+*NOTE Custom filters only run on a single document*
+
+Item filters allow you to customize the results, and do simple querying. These filters are great if you have an array of items within one document. Let's say you store "users" as an array in `users.json`, then you could create a filter to show you all the users that have a specific tag, or field matching a specific value.
 
 This example will output all the emails of users who are blocked.
 
 ```php
-$users = $fielddb->get('users')->customFilter('data',function($item) {
+$users = $db->get('users')->customFilter('data',function($item) {
     return (($item['status']=='blocked') ? $item['email'] : false);
 });
 ```
