@@ -13,12 +13,10 @@ Run `composer require timothymarois/filebase` or add to your main `composer.json
 ## Usage
 
 ```php
-// configuration to your database
-$config = \Filebase\Database::config([
+// setting the access and configration to your database
+$my_database = new \Filebase\Database([
     'dir' => 'path/to/database/dir'
 ]);
-
-$my_database = new \Filebase\Database($config);
 
 // in this example, you would replace user_name with the actual user name.
 // It would technically be stored as user_name.json
@@ -43,7 +41,7 @@ $item->save();
 The config is *required* when defining your database. The options are *optional* as they have their own defaults.
 
 ```php
-$config = \Filebase\Database::config([
+$db = new \Filebase\Database([
     'dir'      => 'path/to/database/dir',
     'format'   => \Filebase\Format\Json::class
 ]);
@@ -130,7 +128,7 @@ When invoking `save()` method, the document will be checked for validation rules
 These rules MUST pass in order for the document to save. The rules will shoot off an error message if validation has failed.
 
 ```php
-$config = \Filebase\Database::config([
+$db = new \Filebase\Database([
     'dir' => '/path/to/database/dir',
     'validate' => [
         'name'   => [
@@ -182,7 +180,7 @@ $users = $db->get('users')->customFilter('data',function($item) {
 
 ## Why Filebase?
 
-I originally built Filebase because I needed more flexibility, control over the database files, how they are stored, query filtration and to design with very intuitive API methods.
+I originally built Filebase because I needed more flexibility, control over the database files, how they are stored, query filtration and a design with very intuitive API methods.
 
 Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](https://github.com/fire015/flintstone).
 
@@ -193,6 +191,8 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 
 ## TODO
 
-- Indexing (adding indexed "tag like")
+- Indexing (adding indexed "tags" for all document searching)
+- Indexing (single document filtering, applied with all `save()` actions from validation closure)
 - Querying (searching for fields, and pulling in multiple doc results)
+- Infinite Custom Filter Search (ability to access a filter from validation)
 - Auto-Increment ID or Create a hash ID

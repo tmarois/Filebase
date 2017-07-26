@@ -158,7 +158,7 @@ class Document
         foreach($items as $item)
         {
             $i = $function($item);
-            if ($i!==false) {
+            if ($i!==false || is_null($i)) {
                 $r[] = $function($item);
             }
         }

@@ -20,9 +20,9 @@ class Database
     * __construct
     *
     */
-    public function __construct(Config $config)
+    public function __construct(array $config)
     {
-        $this->config = $config;
+        $this->config = new Config($config);
 
         // Check directory and create it if it doesn't exist
         if (!is_dir($this->config->dir))
@@ -202,21 +202,6 @@ class Database
         $file_location  = $this->config->dir.'/'.Filesystem::validateName($document->getId()).'.'.$file_extension;
 
         return Filesystem::delete($file_location);
-    }
-
-
-    //--------------------------------------------------------------------
-
-
-    /**
-    * config
-    *
-    * static
-    *
-    */
-    public static function config(array $options)
-    {
-        return new Config($options);
     }
 
 
