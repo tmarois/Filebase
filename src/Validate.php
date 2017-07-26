@@ -44,7 +44,7 @@ class Validate
     {
         foreach($rules as $key => $rule)
         {
-            if (!isset($rule['type'],$rule['required'],$rule['default']) && isset($document[$key]))
+            if (!isset($rule['type'],$rule['required']) && isset($document[$key]))
             {
                 self::validateLoop($document[$key],$object,$rules[$key]);
 
@@ -129,6 +129,38 @@ class Validate
         }
 
         return false;
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * hasCustomFilter
+    *
+    * @return
+    */
+    public static function hasCustomFilter(Document $object,$rules = false,$search = [])
+    {
+        if ($rules === false)
+        {
+            $rules = $object->getDatabase()->getConfig()->validate;
+        }
+
+        foreach($rules as $k => $rule)
+        {
+            if (isset($rule['custom_filter'],$rule['type']) && $rule['type'] == 'array')
+            {
+                $search[$k] = $rule['custom_filter'];
+            }
+
+            if (is_array($k))
+            {
+                $search[$k] = self::hasCustomFilter($object,$k,$search);
+            }
+        }
+
+        return $search;
     }
 
 

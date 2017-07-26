@@ -148,7 +148,7 @@ In the above example `name` and `description` array keys would be replaced with 
 
 |Name				|Allowed Values		|Description		                |
 |---				|---		                                            |---		|
-|`type`				|`string`, `str`, `integer`, `int`, `array`, `arr`		|Checks if the variable is the current type		|
+|`type`				|`string`, `str`, `integer`, `int`, `array`		|Checks if the variable is the current type		|
 |`required`			|`true`, `false`		                                |Checks if the variable is on the document		|
 |`default`			| (Any)		                                                |Adds this default value if none exist   		|
 

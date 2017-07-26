@@ -137,6 +137,65 @@ class Document
 
 
     /**
+    * customFilter
+    *
+    * Allows you to run a custom function around each item
+    *
+    * @param string $field
+    * @param callable $function
+    * @return array $r items that the callable function returned
+    */
+    public function customFilter(string $field, callable $function)
+    {
+        $items = $this->getItemsFromCustomFilter($field);
+
+        $r = [];
+        foreach($items as $item)
+        {
+            $i = $function($item);
+            if ($i!==false) {
+                $r[] = $function($item);
+            }
+        }
+
+        return $r;
+
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * getDatabase
+    *
+    * @return $database
+    */
+    public function getItemsFromCustomFilter($field = '')
+    {
+        $keys = Validate::hasCustomFilter($this);
+
+        $data = $this->getData();
+
+        foreach($keys as $k => $grp)
+        {
+            if ($grp == $field)
+            {
+                if ($data[$k])
+                {
+                    return $data[$k];
+                }
+            }
+        }
+
+        return [];
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
     * getDatabase
     *
     * @return $database
