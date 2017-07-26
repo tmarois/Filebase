@@ -150,8 +150,19 @@ In the above example `name` and `description` array keys would be replaced with 
 |---				|---		                                            |---		|
 |`type`				|`string`, `str`, `integer`, `int`, `array`		|Checks if the variable is the current type		|
 |`required`			|`true`, `false`		                                |Checks if the variable is on the document		|
-|`default`			| (Any)		                                                |Adds this default value if none exist   		|
 
+
+## (6) Custom Filters
+
+Item filters allow you to customize the results. *NOTE these filters only run on a single document*. In cause you have an array of items within one document. Let's say "users", then you could create a filter to show you all the users that have a specific tag, or field matching a specific value.
+
+This example will output all the emails of users who are blocked.
+
+```php
+$users = $fielddb->get('users')->customFilter('status',function($item) {
+    return (($item['status']=='blocked') ? $item['email'] : false);
+});
+```
 
 
 ## Why Filebase?

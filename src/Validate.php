@@ -138,7 +138,7 @@ class Validate
     /**
     * hasCustomFilter
     *
-    * @return
+    * CURRENTLY NOT USED
     */
     public static function hasCustomFilter(Document $object,$rules = false,$search = [])
     {

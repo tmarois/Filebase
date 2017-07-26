@@ -147,7 +147,12 @@ class Document
     */
     public function customFilter(string $field, callable $function)
     {
-        $items = $this->getItemsFromCustomFilter($field);
+        $items = $this->{$field};
+
+        if (!is_array($items) || empty($items))
+        {
+            return [];
+        }
 
         $r = [];
         foreach($items as $item)
@@ -167,9 +172,9 @@ class Document
 
 
     /**
-    * getDatabase
+    * getItemsFromCustomFilter
     *
-    * @return $database
+    * currently NOT USED
     */
     public function getItemsFromCustomFilter($field = '')
     {
