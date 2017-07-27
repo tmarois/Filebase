@@ -155,11 +155,11 @@ class Document
         }
 
         $r = [];
-        foreach($items as $item)
+        foreach($items as $index => $item)
         {
             $i = $function($item);
             if ($i!==false || is_null($i)) {
-                $r[] = $function($item);
+                $r[$index] = $function($item);
             }
         }
 
@@ -342,7 +342,10 @@ class Document
         $parts   = explode('.', $field);
         $context = $this->data;
 
-        if ($field=='data') return $context;
+        if ($field=='data')
+        {
+            return $context;
+        }
 
         foreach($parts as $part)
         {
