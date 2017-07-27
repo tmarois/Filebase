@@ -342,6 +342,8 @@ class Document
         $parts   = explode('.', $field);
         $context = $this->data;
 
+        if ($field=='data') return $context;
+
         foreach($parts as $part)
         {
             if (trim($part) == '')

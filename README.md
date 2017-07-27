@@ -56,9 +56,10 @@ Usage Example (all options)
 
 ```php
 $db = new \Filebase\Database([
-    'dir'      => 'path/to/database/dir',
-    'format'   => \Filebase\Format\Json::class,
-    'cache'    => true,
+    'dir'           => 'path/to/database/dir',
+    'format'        => \Filebase\Format\Json::class,
+    'cache'         => true,
+    'cache_expires' => 1800,
     'validate' => [
         'name'   => [
             'type' => 'string',
