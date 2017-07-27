@@ -98,10 +98,10 @@ echo $db->get($user_id)->createdAt();
 
 // grabbing a specific field "tags" within the user
 // in this case, tags might come back as an array ["php","html","javascript"]
-$user_tags $db->get($user_id)->field('tags');
+$user_tags = $db->get($user_id)->field('tags');
 
 // or if "tags" is nested in the user data, such as aboutme->tags
-$user_tags $db->get($user_id)->field('aboutme.tags');
+$user_tags = $db->get($user_id)->field('aboutme.tags');
 
 // and of course you can do this as well for getting "tags"
 $user = $db->get($user_id);
@@ -138,7 +138,41 @@ $item->delete();
 
 ```
 
-## (5) Validation *(optional)*
+
+## (5) Database Methods
+
+```php
+$db = new \Filebase\Database($config);
+```
+
+Here is a list of methods you can use on the database class.
+
+|Method|Details|
+|---|---|
+|`get()`                          | Refer to [get()](https://github.com/timothymarois/Filebase#3-get-and-methods) |
+|`findAll()`                      | Returns all Documents in database |
+|`count()`                        | Number of documents in database |
+|`flush(true)`                    | Deletes all documents |
+|`query()`                        | More documentation needed here |
+
+Examples
+
+```php
+$users = new \Filebase\Database([
+    'dir' => '/storage/users',
+]);
+
+// displays number of users in the database
+echo $users->count();
+
+// deletes all users in the database
+// this action CAN NOT be undone (be warned)
+$users->flush(true);
+
+```
+
+
+## (6) Validation *(optional)*
 
 When invoking `save()` method, the document will be checked for validation rules (if set).
 These rules MUST pass in order for the document to save. The rules will shoot off an error message if validation has failed.
@@ -179,7 +213,7 @@ In the above example `name`, `description`, `emails` and `config` array keys wou
 |`required`			|`true`, `false`		                                |Checks if the variable is on the document		|
 
 
-## (6) Custom Filters
+## (7) Custom Filters
 
 *NOTE Custom filters only run on a single document*
 
