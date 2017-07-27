@@ -79,7 +79,7 @@ $item = $db->get($user_id);
 
 `get()` returns `\Filebase\Document` object and has its own methods which you can call.
 
-|Name|Details|
+|Method|Details|
 |---|---|
 |`save()`                         | Saves document in current state |
 |`delete()`                       | Deletes current document (can not be undone) |
@@ -102,6 +102,11 @@ $user_tags $db->get($user_id)->field('tags');
 
 // or if "tags" is nested in the user data, such as aboutme->tags
 $user_tags $db->get($user_id)->field('aboutme.tags');
+
+// and of course you can do this as well for getting "tags"
+$user = $db->get($user_id);
+$user_tags = $user->tags;
+$user_tags = $user->aboutme->tags;
 ```
 
 
