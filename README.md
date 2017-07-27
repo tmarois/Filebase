@@ -1,5 +1,5 @@
 # Filebase
-A Simple but Powerful Flat File Database Storage.
+A Simple but Powerful Flat File Database Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/timothymarois/Filebase#2-formatting) the way you like).
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
 
@@ -12,7 +12,7 @@ Filebase is simple by design, but also has enough features for even the more adv
 * Custom filters
 * Caching (queries)
 * File locking (on save)
-* Customizable format classes (encode/decode)
+* Customizable formatting (encode/decode)
 * Validation (on save)
 
 
@@ -307,3 +307,4 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 - Custom filters (regex on property names ??)
 - Auto-Increment ID or Create a hash ID
 - Tests (unit testing??)
+- Internal validations..security etc.
