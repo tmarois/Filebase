@@ -284,7 +284,55 @@ $users = $db->get('users')->customFilter('list.users',function($item) {
 ```
 
 ## (8) Queries
-... waiting for some amazing documentation!
+
+Queries allow you to search **multiple documents** and return only the ones that match your criteria.
+
+If caching is enabled, queries will use `findAll()` and then cache results for the next run.
+
+```php
+// Simple (equal to) Query
+// return all the users that are blocked.
+$users = $userdb->query()
+    ->where(['status' => 'blocked'])
+    ->results();
+
+// Stackable WHERE clauses
+// return all the users who are blocked,
+// AND have the tag "php"
+
+$users = $userdb->query()
+    ->where('status','=','blocked')
+    ->where('tag','IN','php')
+    ->results();
+
+// You can also use `.` dot delimiter to use on nested keys
+$users = $userdb->query()
+    ->where('status.language.english','=','blocked')
+    ->results();
+```
+
+To run the query use `results()`
+
+### Methods:
+
+- `where()` param: `array` for simple equal too. OR `where($field, $operator, $value)`
+- `andWhere()` *optional* see `where()`, uses the logical `AND`
+- `orWhere()` *optional* see `where()`, this uses the logical `OR`
+- `results()` This will return all the document objects.
+
+### Comparison Operators:
+
+|Name				|Details|
+|---				|---|
+|`=` or `==`        |Equality|
+|`===`              |Strict Equality|
+|`!=`               |Not Equals|
+|`!==`              |Strict Not Equals|
+|`>`                |Greater than|
+|`>=`               |Greater than or equal|
+|`<`                |Less than|
+|`<=`               |Less than or equal|
+|`IN`               |Checks if the value is within array of field|
 
 
 ## (9) Caching
@@ -310,3 +358,4 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 - Auto-Increment ID or Create a hash ID
 - Tests (unit testing??)
 - Internal validations..security etc.
+- Query sortby and orderby
