@@ -325,4 +325,51 @@ class Document
 
     //--------------------------------------------------------------------
 
+
+    /**
+    * field
+    *
+    * Gets property based on a string
+    *
+    * You can also use string separated by dots for nested arrays
+    * key_1.key_2.key_3 etc
+    *
+    * @param string $field
+    * @return string $context property
+    */
+    public function field($field, $data = [])
+    {
+        $parts   = explode('.', $field);
+        $context = $this->data;
+
+        foreach($parts as $part)
+        {
+            if (trim($part) == '')
+            {
+                return false;
+            }
+
+            if (is_object($context))
+            {
+                if(!property_exists($context, $part))
+                {
+                    return false;
+                }
+
+                $context = $context->{$part};
+            }
+            else if (is_array($context))
+            {
+                if(!array_key_exists($part, $context))
+                {
+                    return false;
+                }
+
+                $context = $context[$part];
+            }
+        }
+
+        return $context;
+    }
+
 }
