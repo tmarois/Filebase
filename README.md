@@ -64,19 +64,39 @@ The Default Format Class: `JSON`
 ```
 
 
-## (3) Get | FindAll
+## (3) GET (and methods)
 
 After you've loaded up your database config, then you can use the `get()` method to retrieve a single document of data.
 
 ```php
-$item = $db->get('4325663');
+
+// my user id
+$user_id = '92832711';
+
+// get the user information by id
+$item = $db->get($user_id);
 ```
 
-You can also use `findAll()` to retrieve every document within the database directory.
+`get()` returns `\Filebase\Document` object and has its own methods which you can call.
+
+|Name|Params|Returns|Info|
+|---|---|---|---|
+|`->save()`                         | (none) |`bool` (true/false)    |Saves document in current state|
+|`->delete()`                       | (none) |`bool` (true/false)    |Deletes current document (can not be undone)|
+|`->toArray()`                      | (none) |array of items in document    | |
+|`->getId()`                        | (none) |Document Id    | |
+|`->createdAt()`                    | `Date` Format |Date Format (default Y-m-d H:i:s)    |When document was created|
+|`->updatedAt()`                    | `Date` Format |Date Format (default Y-m-d H:i:s)    |When document was updated|
+|`->field('main_key.nested_key')`   | `key` (a key from the array which you want to find)		|(string) Value of field    |You can also use `.` dot delimiter to find values from nested arrays |
+|`->customFilter()`                 | `field`, `closure` |Items that matched filter criteria   |Refer to the [Custom Filters](https://github.com/timothymarois/Filebase#6-custom-filters)|
+
+Example:
 
 ```php
-$items = $db->findAll();
+// get the timestamp when the user was created
+echo $db->get($user_id)->createdAt();
 ```
+
 
 ## (4) Create | Update | Delete
 
@@ -105,22 +125,6 @@ $item->save([
 $item->delete();
 
 ```
-
-You can change the date output format by sending in a php date format within the parameter of  `createdAt($date_format)` and `updatedAt($date_format)`.
-
-```php
-$created_at = $item->createdAt();
-
-// by default Y-m-d H:i:s
-echo $created_at;
-
-
-$updated_at = $item->updatedAt();
-
-// by default Y-m-d H:i:s
-echo $updated_at;
-```
-
 
 ## (5) Validation *(optional)*
 

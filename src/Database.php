@@ -52,25 +52,32 @@ class Database
     *
     * @return array $items
     */
-    public function findAll($include_documents = true)
+    public function findAll($include_documents = true, $data_only = false)
     {
         $file_extension = $this->config->format::getFileExtension();
         $file_location  = $this->config->dir.'/';
 
-        $items = Filesystem::getAllFiles($file_location,$file_extension);
+        $all_items = Filesystem::getAllFiles($file_location,$file_extension);
         if ($include_documents==true)
         {
             $items = [];
 
-            foreach($all as $a)
+            foreach($all_items as $a)
         	{
-        		$items[] = $this->get($a);
+                if ($data_only === true)
+                {
+                    $items[] = $this->get($a)->getData();
+                }
+                else
+                {
+                    $items[] = $this->get($a);
+                }
         	}
 
             return $items;
         }
 
-        return $items;
+        return $all_items;
     }
 
 
@@ -135,6 +142,21 @@ class Database
 
 
     /**
+    * count
+    *
+    *
+    * @return int $total
+    */
+    public function count()
+    {
+        return count($this->findAll(false));
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
     * save
     *
     * @param $document \Filebase\Document object
@@ -167,6 +189,20 @@ class Database
         $data = $this->config->format::encode( $document->saveAs() );
 
         return Filesystem::write($file_location,$data);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * query
+    *
+    *
+    */
+    public function query()
+    {
+        return new Query($this);
     }
 
 

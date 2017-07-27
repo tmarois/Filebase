@@ -337,7 +337,7 @@ class Document
     * @param string $field
     * @return string $context property
     */
-    public function field($field, $data = [])
+    public function field($field)
     {
         $parts   = explode('.', $field);
         $context = $this->data;
