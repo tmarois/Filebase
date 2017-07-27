@@ -1,9 +1,11 @@
 # Filebase
-A Simple but Powerful Flat File Database Storage. Filebase is simple by design, but also has enough features for even the more advanced.
+A Simple but Powerful Flat File Database Storage.
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
 
 ### Features
+
+Filebase is simple by design, but also has enough features for even the more advanced.
 
 * Key-value and Multidimensional Data Storing
 * Querying data
@@ -70,9 +72,9 @@ $db = new \Filebase\Database([
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
+|`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#5-validation-optional) for more details |
 |`cache`			|bool		|false   |Stores [query](https://github.com/timothymarois/Filebase#78-queries) results into cache for faster loading.				|
 |`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
-|`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#5-validation-optional) for more details |
 
 
 ## (2) Formatting
@@ -188,6 +190,20 @@ $users = new \Filebase\Database([
 // displays number of users in the database
 echo $users->count();
 
+
+// Find All Users and display their email addresses
+
+$users->findAll();
+foreach($users as $user)
+{
+    echo $user->email;
+
+    // you can also run GET methods on each user (document found)
+    // Displays when the user was created.
+    echo $user->createdAt();
+}
+
+
 // deletes all users in the database
 // this action CAN NOT be undone (be warned)
 $users->flush(true);
@@ -245,6 +261,9 @@ Item filters allow you to customize the results, and do simple querying. These f
 This example will output all the emails of users who are blocked.
 
 ```php
+// Use [data] for all items within the document
+// But be sure that each array item uses the same format
+
 $users = $db->get('users')->customFilter('data',function($item) {
     return (($item['status']=='blocked') ? $item['email'] : false);
 });
@@ -252,14 +271,8 @@ $users = $db->get('users')->customFilter('data',function($item) {
 // Nested Arrays?
 // This uses NESTED properties. If the users array was stored as an array inside [list]
 // You can also use `.` dot delimiter to get arrays from nested arrays
-$users = $db->get('users')->customFilter('list.users',function($item) {
-    return (($item['status']=='blocked') ? $item['email'] : false);
-});
 
-// Whole array?
-// Use [data] for all items within the document
-// But be sure that each array item uses the same format
-$users = $db->get('users')->customFilter('data',function($item) {
+$users = $db->get('users')->customFilter('list.users',function($item) {
     return (($item['status']=='blocked') ? $item['email'] : false);
 });
 ```
