@@ -80,15 +80,15 @@ $item = $db->get($user_id);
 `get()` returns `\Filebase\Document` object and has its own methods which you can call.
 
 |Name|Details|
-|---|---|---|---|
-|`save()`                         | Saves document in current state|
-|`delete()`                       | Deletes current document (can not be undone)|
+|---|---|
+|`save()`                         | Saves document in current state |
+|`delete()`                       | Deletes current document (can not be undone) |
 |`toArray()`                      | Array of items in document |
 |`getId()`                        | Document Id |
-|`createdAt()`                    | Document was created (default Y-m-d H:i:s)|
-|`updatedAt()`                    | Document was updated (default Y-m-d H:i:s)|
+|`createdAt()`                    | Document was created (default Y-m-d H:i:s) |
+|`updatedAt()`                    | Document was updated (default Y-m-d H:i:s) |
 |`field()`                        | You can also use `.` dot delimiter to find values from nested arrays |
-|`customFilter()`                 | Refer to the [Custom Filters](https://github.com/timothymarois/Filebase#6-custom-filters)|
+|`customFilter()`                 | Refer to the [Custom Filters](https://github.com/timothymarois/Filebase#6-custom-filters) |
 
 Example:
 
