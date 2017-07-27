@@ -24,17 +24,29 @@ class Config
     * $cache
     * Caching for queries
     *
+    * default true
     */
-    public $cache = false;
+    public $cache = true;
 
 
     /**
     * $cache_time
     * When should cache be cleared?
     *
-    * default 30 minutes
+    * default (1800 seconds) 30 minutes
     */
     public $cache_expires = 1800;
+
+
+    /**
+    * $pretty
+    *
+    * if true, saves the data as human readable
+    * Otherwise, its difficult to understand.
+    *
+    * default true
+    */
+    public $pretty = true;
 
 
     /**
