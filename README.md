@@ -59,7 +59,7 @@ $db = new \Filebase\Database([
     'dir'      => 'path/to/database/dir',
     'format'   => \Filebase\Format\Json::class,
     'cache'    => true,
-    ''validate' => [
+    'validate' => [
         'name'   => [
             'type' => 'string',
             'required' => true
@@ -72,7 +72,7 @@ $db = new \Filebase\Database([
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
-|`cache`			|bool		|false   |Stores [query](https://github.com/timothymarois/Filebase#7-queries) results into cache for faster loading.				|
+|`cache`			|bool		|false   |Stores [query](https://github.com/timothymarois/Filebase#78-queries) results into cache for faster loading.				|
 |`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#5-validation-optional) for more details |
 
 
@@ -176,7 +176,7 @@ Here is a list of methods you can use on the database class.
 |`findAll()`                      | Returns all Documents in database |
 |`count()`                        | Number of documents in database |
 |`flush(true)`                    | Deletes all documents |
-|`query()`                        | More documentation needed here |
+|`query()`                        | Refer to the [Queries](https://github.com/timothymarois/Filebase#8-queries) |
 
 Examples
 
@@ -250,6 +250,9 @@ $users = $db->get('users')->customFilter('data',function($item) {
 });
 ```
 
+## (8) Queries
+...
+
 
 ## Why Filebase?
 
@@ -270,3 +273,4 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 - Infinite Custom Filter Search (not just 1 level)
 - Auto-Increment ID or Create a hash ID
 - Query Caching
+- Tests (unit testing??)
