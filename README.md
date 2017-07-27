@@ -254,6 +254,12 @@ $users = $db->get('users')->customFilter('data',function($item) {
 ...
 
 
+## (9) Caching
+If caching is enabled, it will automatically store your results from queries into sub-directories within your database directory.
+
+Caching will only be used if a specific cache is within the less than the expire time, otherwise it will use live data and automatically replace the existing cache for next time use.
+
+
 ## Why Filebase?
 
 I originally built Filebase because I needed more flexibility, control over the database files, how they are stored, query filtration and a design with very intuitive API methods.
