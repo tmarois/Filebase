@@ -147,7 +147,7 @@ class Document
     */
     public function customFilter(string $field, callable $function)
     {
-        $items = $this->{$field};
+        $items = $this->field($field);
 
         if (!is_array($items) || empty($items))
         {
