@@ -1,7 +1,19 @@
 # Filebase
-A Very Simple Flat File Database Storage.
+A Simple but Powerful Flat File Database Storage.
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
+
+### Features
+
+Filebase is simple by design, but also has enough features for even the more advanced.
+
+* Key-Value and Multidimensional Data Storing
+* Querying data
+* Custom filters
+* Caching (queries)
+* File locking
+* Customizable format classes (encode/decode)
+* Validation
 
 
 ## Installation
@@ -38,12 +50,19 @@ $item->save();
 
 ## (1) Config Options
 
-The config is *required* when defining your database. The options are *optional* as they have their own defaults.
+The config is *required* when defining your database. The options are *optional* since they have defaults.
+
+Usage Example (all options)
 
 ```php
 $db = new \Filebase\Database([
     'dir'      => 'path/to/database/dir',
-    'format'   => \Filebase\Format\Json::class
+    'format'   => \Filebase\Format\Json::class,
+    'cache'    => true,
+    'name'   => [
+        'type' => 'string',
+        'required' => true
+    ],
 ]);
 ```
 
@@ -51,10 +70,13 @@ $db = new \Filebase\Database([
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
+|`cache`			|bool		|false   |Stores [query](https://github.com/timothymarois/Filebase#6-custom-filters) results into cache for faster loading.				|
 |`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#5-validation-optional) for more details |
 
 
 ## (2) Formatting
+
+Format Class is what defines the encoding and decoding of data within your database directories/files.
 
 You can write your own or change the existing format class in the config. The methods in the class must be `static` and the class must implement `\Filebase\Format\FormatInterface`
 
@@ -244,5 +266,6 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 - Indexing (adding indexed "tags" for all document searching)
 - Indexing (single document filtering, applied with all `save()` actions from validation closure)
 - Querying (searching for fields, and pulling in multiple doc results)
-- Infinite Custom Filter Search (ability to access a filter from validation)
+- Infinite Custom Filter Search (not just 1 level)
 - Auto-Increment ID or Create a hash ID
+- Query Caching
