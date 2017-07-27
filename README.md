@@ -1,19 +1,17 @@
 # Filebase
-A Simple but Powerful Flat File Database Storage.
+A Simple but Powerful Flat File Database Storage. Filebase is simple by design, but also has enough features for even the more advanced.
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
 
 ### Features
 
-Filebase is simple by design, but also has enough features for even the more advanced.
-
-* Key-Value and Multidimensional Data Storing
+* Key-value and Multidimensional Data Storing
 * Querying data
 * Custom filters
 * Caching (queries)
-* File locking
+* File locking (on save)
 * Customizable format classes (encode/decode)
-* Validation
+* Validation (on save)
 
 
 ## Installation
@@ -73,12 +71,13 @@ $db = new \Filebase\Database([
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
 |`cache`			|bool		|false   |Stores [query](https://github.com/timothymarois/Filebase#78-queries) results into cache for faster loading.				|
+|`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
 |`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#5-validation-optional) for more details |
 
 
 ## (2) Formatting
 
-Format Class is what defines the encoding and decoding of data within your database directories/files.
+Format Class is what defines the encoding and decoding of data within your database files.
 
 You can write your own or change the existing format class in the config. The methods in the class must be `static` and the class must implement `\Filebase\Format\FormatInterface`
 
@@ -155,7 +154,7 @@ $item->save([
 ]);
 
 // DELETE
-// This will delete the current item
+// This will delete the current document
 // This action can not be undone.
 $item->delete();
 
@@ -176,6 +175,7 @@ Here is a list of methods you can use on the database class.
 |`findAll()`                      | Returns all Documents in database |
 |`count()`                        | Number of documents in database |
 |`flush(true)`                    | Deletes all documents |
+|`flushCache()`                   | Clears all the cache |
 |`query()`                        | Refer to the [Queries](https://github.com/timothymarois/Filebase#8-queries) |
 
 Examples
@@ -198,7 +198,7 @@ $users->flush(true);
 ## (6) Validation *(optional)*
 
 When invoking `save()` method, the document will be checked for validation rules (if set).
-These rules MUST pass in order for the document to save. The rules will shoot off an error message if validation has failed.
+These rules MUST pass in order for the document to save.
 
 ```php
 $db = new \Filebase\Database([
@@ -232,8 +232,8 @@ In the above example `name`, `description`, `emails` and `config` array keys wou
 
 |Name				|Allowed Values		|Description		                |
 |---				|---		                                            |---		|
-|`type`				|`string`, `str`, `integer`, `int`, `array`		|Checks if the variable is the current type		|
-|`required`			|`true`, `false`		                                |Checks if the variable is on the document		|
+|`type`				|`string`, `str`, `integer`, `int`, `array`		|Checks if the property is the current type		|
+|`required`			|`true`, `false`		                                |Checks if the property is on the document		|
 
 
 ## (7) Custom Filters
@@ -248,6 +248,20 @@ This example will output all the emails of users who are blocked.
 $users = $db->get('users')->customFilter('data',function($item) {
     return (($item['status']=='blocked') ? $item['email'] : false);
 });
+
+// Nested Arrays?
+// This uses NESTED properties. If the users array was stored as an array inside [list]
+// You can also use `.` dot delimiter to get arrays from nested arrays
+$users = $db->get('users')->customFilter('list.users',function($item) {
+    return (($item['status']=='blocked') ? $item['email'] : false);
+});
+
+// Whole array?
+// Use [data] for all items within the document
+// But be sure that each array item uses the same format
+$users = $db->get('users')->customFilter('data',function($item) {
+    return (($item['status']=='blocked') ? $item['email'] : false);
+});
 ```
 
 ## (8) Queries
@@ -257,7 +271,7 @@ $users = $db->get('users')->customFilter('data',function($item) {
 ## (9) Caching
 If caching is enabled, it will automatically store your results from queries into sub-directories within your database directory.
 
-Caching will only be used if a specific cache is within the less than the expire time, otherwise it will use live data and automatically replace the existing cache for next time use.
+Cached queries will only be used if a specific saved cache is less than the expire time, otherwise it will use live data and automatically replace the existing cache for next time use.
 
 
 ## Why Filebase?
@@ -276,7 +290,6 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 - Indexing (adding indexed "tags" for all document searching)
 - Indexing (single document filtering, applied with all `save()` actions from validation closure)
 - Querying (searching for fields, and pulling in multiple doc results)
-- Infinite Custom Filter Search (not just 1 level)
+- Custom filters (regex on property names ??)
 - Auto-Increment ID or Create a hash ID
-- Query Caching
 - Tests (unit testing??)

@@ -21,6 +21,23 @@ class Config
 
 
     /**
+    * $cache
+    * Caching for queries
+    *
+    */
+    public $cache = false;
+
+
+    /**
+    * $cache_time
+    * When should cache be cleared?
+    *
+    * default 30 minutes
+    */
+    public $cache_expires = 1800;
+
+
+    /**
     * $validate
     *
     */
