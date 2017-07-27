@@ -79,22 +79,29 @@ $item = $db->get($user_id);
 
 `get()` returns `\Filebase\Document` object and has its own methods which you can call.
 
-|Name|Params|Returns|Info|
+|Name|Details|
 |---|---|---|---|
-|`->save()`                         | (none) |`bool` (true/false)    |Saves document in current state|
-|`->delete()`                       | (none) |`bool` (true/false)    |Deletes current document (can not be undone)|
-|`->toArray()`                      | (none) |array of items in document    | |
-|`->getId()`                        | (none) |Document Id    | |
-|`->createdAt()`                    | `Date` Format |Date Format (default Y-m-d H:i:s)    |When document was created|
-|`->updatedAt()`                    | `Date` Format |Date Format (default Y-m-d H:i:s)    |When document was updated|
-|`->field('main_key.nested_key')`   | `key` (a key from the array which you want to find)		|(string) Value of field    |You can also use `.` dot delimiter to find values from nested arrays |
-|`->customFilter()`                 | `field`, `closure` |Items that matched filter criteria   |Refer to the [Custom Filters](https://github.com/timothymarois/Filebase#6-custom-filters)|
+|`save()`                         | Saves document in current state|
+|`delete()`                       | Deletes current document (can not be undone)|
+|`toArray()`                      | Array of items in document |
+|`getId()`                        | Document Id |
+|`createdAt()`                    | Document was created (default Y-m-d H:i:s)|
+|`updatedAt()`                    | Document was updated (default Y-m-d H:i:s)|
+|`field()`                        | You can also use `.` dot delimiter to find values from nested arrays |
+|`customFilter()`                 | Refer to the [Custom Filters](https://github.com/timothymarois/Filebase#6-custom-filters)|
 
 Example:
 
 ```php
 // get the timestamp when the user was created
 echo $db->get($user_id)->createdAt();
+
+// grabbing a specific field "tags" within the user
+// in this case, tags might come back as an array ["php","html","javascript"]
+$user_tags $db->get($user_id)->field('tags');
+
+// or if "tags" is nested in the user data, such as aboutme->tags
+$user_tags $db->get($user_id)->field('aboutme.tags');
 ```
 
 
