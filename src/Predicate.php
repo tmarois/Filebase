@@ -36,7 +36,7 @@ class Predicate
             throw new \InvalidArgumentException('Predicate Error: Must have 3 arguments passed - '.count($arg).' given');
         }
 
-        if (!in_array($arg[1],$this->allowed_operators))
+        if (!in_array($arg[1], $this->allowed_operators))
         {
             throw new \InvalidArgumentException('Predicate Error: Unknown Operator '.$arg[1]);
         }

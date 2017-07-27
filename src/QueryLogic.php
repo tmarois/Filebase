@@ -156,11 +156,10 @@ class QueryLogic
                 return true;
             case ($operator === 'IN' && in_array($value, (array) $d_value)):
                 return true;
-            default :
+            default:
                 return false;
         }
 
-        return false;
     }
 
 

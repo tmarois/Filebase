@@ -10,7 +10,7 @@ class Query extends QueryLogic
     */
     public function where(...$arg)
     {
-        $this->addPredicate('and',$arg);
+        $this->addPredicate('and', $arg);
 
         return $this;
     }
@@ -25,7 +25,7 @@ class Query extends QueryLogic
     */
     public function andWhere(...$arg)
     {
-        $this->addPredicate('and',$arg);
+        $this->addPredicate('and', $arg);
 
         return $this;
     }
@@ -40,7 +40,7 @@ class Query extends QueryLogic
     */
     public function orWhere(...$arg)
     {
-        $this->addPredicate('or',$arg);
+        $this->addPredicate('or', $arg);
 
         return $this;
     }
@@ -68,7 +68,7 @@ class Query extends QueryLogic
                 {
                     if ($value == '') continue;
 
-                    $this->predicate->add($logic,$this->formatWhere($key,$value));
+                    $this->predicate->add($logic, $this->formatWhere($key, $value));
                 }
             }
         }

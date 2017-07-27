@@ -56,7 +56,7 @@ class Document
     {
         if (Validate::valid($this))
         {
-            return $this->__database->save($this,$data);
+            return $this->__database->save($this, $data);
         }
 
         return false;
@@ -85,7 +85,7 @@ class Document
     */
     public function set($data)
     {
-        return $this->__database->set($this,$data);
+        return $this->__database->set($this, $data);
     }
 
 
@@ -268,7 +268,7 @@ class Document
     {
         if (!$this->__created_at) return false;
 
-        if ($format !== false) return date($format,$this->__created_at);
+        if ($format !== false) return date($format, $this->__created_at);
 
         return $this->__created_at;
     }
@@ -289,7 +289,7 @@ class Document
     {
         if (!$this->__updated_at) return false;
 
-        if ($format !== false) return date($format,$this->__updated_at);
+        if ($format !== false) return date($format, $this->__updated_at);
 
         return $this->__updated_at;
     }

@@ -57,7 +57,7 @@ class Database
         $file_extension = $this->config->format::getFileExtension();
         $file_location  = $this->config->dir.'/';
 
-        $all_items = Filesystem::getAllFiles($file_location,$file_extension);
+        $all_items = Filesystem::getAllFiles($file_location, $file_extension);
         if ($include_documents==true)
         {
             $items = [];
@@ -188,7 +188,7 @@ class Database
 
         $data = $this->config->format::encode( $document->saveAs() );
 
-        return Filesystem::write($file_location,$data);
+        return Filesystem::write($file_location, $data);
     }
 
 
