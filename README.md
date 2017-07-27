@@ -298,24 +298,21 @@ $users = $userdb->query()
 
 // Stackable WHERE clauses
 // return all the users who are blocked,
-// AND have the tag "php"
-
+// AND have "php" within the tag array
 $users = $userdb->query()
     ->where('status','=','blocked')
     ->where('tag','IN','php')
     ->results();
 
 // You can also use `.` dot delimiter to use on nested keys
-$users = $userdb->query()
-    ->where('status.language.english','=','blocked')
-    ->results();
+$users = $userdb->query()->where('status.language.english','=','blocked')->results();
 ```
 
 To run the query use `results()`
 
 ### Methods:
 
-- `where()` param: `array` for simple equal too. OR `where($field, $operator, $value)`
+- `where()` param `array` for simple "equal to" OR `where($field, $operator, $value)`
 - `andWhere()` *optional* see `where()`, uses the logical `AND`
 - `orWhere()` *optional* see `where()`, this uses the logical `OR`
 - `results()` This will return all the document objects.
@@ -332,7 +329,7 @@ To run the query use `results()`
 |`>=`               |Greater than or equal|
 |`<`                |Less than|
 |`<=`               |Less than or equal|
-|`IN`               |Checks if the value is within array of field|
+|`IN`               |Checks if the value is within a array|
 
 
 ## (9) Caching
