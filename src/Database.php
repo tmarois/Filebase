@@ -186,7 +186,7 @@ class Database
 
         $document->setUpdatedAt(time());
 
-        $data = $this->config->format::encode( $document->saveAs() );
+        $data = $this->config->format::encode( $document->saveAs(), $this->config->pretty );
 
         return Filesystem::write($file_location, $data);
     }
@@ -207,6 +207,7 @@ class Database
 
 
     //--------------------------------------------------------------------
+
 
 
     /**
@@ -261,6 +262,21 @@ class Database
         {
             throw new \Exception("Database Flush failed. You must send in TRUE to confirm action.");
         }
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * flushCache
+    *
+    *
+    */
+    public function flushCache()
+    {
+        $cache = new Cache($this);
+        return $cache->flush();
     }
 
 

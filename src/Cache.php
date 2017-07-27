@@ -13,6 +13,14 @@ class Cache
 
 
     /**
+    * $cache_database
+    *
+    * \Filebase\Database
+    */
+    protected $cache_database;
+
+
+    /**
     * $key
     *
     */
@@ -28,6 +36,12 @@ class Cache
     public function __construct(Database $database)
     {
         $this->database = $database;
+
+        $this->cache_database  = new \Filebase\Database([
+    		'dir' => $this->database->getConfig()->dir.'/__cache',
+            'cache' => false,
+            'pretty' => false
+    	]);
     }
 
 
@@ -69,7 +83,46 @@ class Cache
     */
     public function flush()
     {
-        return false;
+        return $this->cache_database->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * expired()
+    *
+    * @param $time (date format)
+    * @return bool (true/false)
+    */
+    public function expired($time)
+    {
+        if ( (strtotime($time)+$this->database->getConfig()->cache_expires) > time() )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * getDocuments()
+    *
+    */
+    public function getDocuments($documents)
+    {
+        $d = [];
+        foreach($documents as $document)
+        {
+            $d[] = $this->database->get($document);
+        }
+
+        return $d;
     }
 
 
@@ -87,7 +140,19 @@ class Cache
             throw new \Exception('You must supply a cache key using setKey to get cache data.');
         }
 
-        return false;
+        $cache_doc = $this->cache_database->get( $this->getKey() );
+
+        if (!$cache_doc->toArray())
+        {
+            return false;
+        }
+
+        if ( $this->expired( $cache_doc->updatedAt() ) )
+        {
+            return false;
+        }
+
+        return $this->getDocuments($cache_doc->toArray());
     }
 
 
@@ -104,6 +169,8 @@ class Cache
         {
             throw new \Exception('You must supply a cache key using setKey to store cache data.');
         }
+
+        return $this->cache_database->get( $this->getKey() )->set($data)->save();
     }
 
 

@@ -20,6 +20,14 @@ class QueryLogic
     protected $predicate;
 
 
+    /**
+    * $cache
+    *
+    * \Filebase\Cache
+    */
+    protected $cache = false;
+
+
     //--------------------------------------------------------------------
 
 
@@ -31,6 +39,11 @@ class QueryLogic
     {
         $this->database  = $database;
         $this->predicate = new Predicate();
+
+        if ($this->database->getConfig()->cache===true)
+        {
+            $this->cache = new Cache($this->database);
+        }
     }
 
 
@@ -43,11 +56,37 @@ class QueryLogic
     */
     public function run()
     {
-        $documents = $this->database->findAll(true,false);
+        $predicates = $this->predicate->get();
+        $documents  = [];
 
-        if ($predicates = $this->predicate->get())
+        if ($predicates && !empty($predicates))
         {
+            if ($this->cache !== false)
+            {
+                $this->cache->setKey(json_encode($predicates));
+
+                if ($cached_documents = $this->cache->get())
+                {
+                    return $cached_documents;
+                }
+            }
+
+            $documents = $this->database->findAll(true,false);
             $documents = $this->filter($documents, $predicates);
+
+            if ($this->cache !== false)
+            {
+                if ($cached_documents === false)
+                {
+                    $dsave = [];
+                    foreach($documents as $document)
+                    {
+                        $dsave[] = $document->getId();
+                    }
+
+                    $this->cache->store($dsave);
+                }
+            }
         }
 
         return $documents;
