@@ -58,8 +58,9 @@ class QueryLogic
     {
         $predicates = $this->predicate->get();
         $documents  = [];
+        $cached_documents = false;
 
-        if ($predicates && !empty($predicates))
+        if (!empty($predicates))
         {
             if ($this->cache !== false)
             {

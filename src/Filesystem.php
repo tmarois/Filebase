@@ -88,7 +88,7 @@ class Filesystem
             throw new \Exception(sprintf('`%s` is not a valid file name.', $name));
         }
 
-        return $name;
+        return true;
     }
 
 

@@ -83,7 +83,7 @@ class Cache
     */
     public function flush()
     {
-        return $this->cache_database->flush(true);
+        $this->cache_database->flush(true);
     }
 
 

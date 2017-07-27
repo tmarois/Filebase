@@ -276,7 +276,7 @@ class Database
     public function flushCache()
     {
         $cache = new Cache($this);
-        return $cache->flush();
+        $cache->flush();
     }
 
 

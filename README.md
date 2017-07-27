@@ -2,9 +2,9 @@
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
 
-A Simple but Powerful Flat File Database Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/timothymarois/Filebase#2-formatting) the way you like).
+A Simple but Powerful **Flat File Database** Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/timothymarois/Filebase#2-formatting) the way you like).
 
-You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in version control and pass them to your team without having out-of-sync SQL databases. Doesn't that sound awesome?
+You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in **version control** and pass them to your team without having out-of-sync SQL databases. Doesn't that sound awesome?
 
 ### Features
 

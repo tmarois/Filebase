@@ -96,7 +96,6 @@ class Validate
         {
             case 'string':
             case 'str':
-
                 if (is_string($variable))
                 {
                     return true;
@@ -106,7 +105,6 @@ class Validate
 
             case 'integer':
             case 'int':
-
                 if (is_integer($variable))
                 {
                     return true;
@@ -116,7 +114,6 @@ class Validate
 
             case 'array':
             case 'arr':
-
                 if (is_array($variable))
                 {
                     return true;
