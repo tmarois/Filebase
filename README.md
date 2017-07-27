@@ -1,9 +1,10 @@
 # Filebase
+
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
+
 A Simple but Powerful Flat File Database Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/timothymarois/Filebase#2-formatting) the way you like).
 
 You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in version control and pass them to your team without having out-of-sync SQL databases. Doesn't that sound awesome?
-
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
 
 ### Features
 
@@ -62,6 +63,7 @@ $db = new \Filebase\Database([
     'format'        => \Filebase\Format\Json::class,
     'cache'         => true,
     'cache_expires' => 1800,
+    'pretty'        => true,
     'validate' => [
         'name'   => [
             'type' => 'string',
@@ -75,9 +77,10 @@ $db = new \Filebase\Database([
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
-|`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#5-validation-optional) for more details |
-|`cache`			|bool		|false   |Stores [query](https://github.com/timothymarois/Filebase#78-queries) results into cache for faster loading.				|
+|`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#6-validation-optional) for more details |
+|`cache`			|bool		|false   |Stores [query](https://github.com/timothymarois/Filebase#8-queries) results into cache for faster loading.				|
 |`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
+|`pretty`	    	|bool		|true   |Store the data for human readability? Pretty Print	|
 
 
 ## (2) Formatting
@@ -115,7 +118,7 @@ $item = $db->get($user_id);
 |`createdAt()`                    | Document was created (default Y-m-d H:i:s) |
 |`updatedAt()`                    | Document was updated (default Y-m-d H:i:s) |
 |`field()`                        | You can also use `.` dot delimiter to find values from nested arrays |
-|`customFilter()`                 | Refer to the [Custom Filters](https://github.com/timothymarois/Filebase#6-custom-filters) |
+|`customFilter()`                 | Refer to the [Custom Filters](https://github.com/timothymarois/Filebase#7-custom-filters) |
 
 Example:
 
@@ -299,7 +302,6 @@ Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](ht
 ## Contributions
 
 Accepting contributions and feedback. Send in any issues and pull requests.
-
 
 ## TODO
 
