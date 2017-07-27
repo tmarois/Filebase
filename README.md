@@ -1,5 +1,7 @@
 # Filebase
-A Simple but Powerful Flat File Database Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/timothymarois/Filebase#2-formatting) the way you like). You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in version control and pass them to your team without having out-of-sync SQL databases. Doesn't that sound awesome?
+A Simple but Powerful Flat File Database Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/timothymarois/Filebase#2-formatting) the way you like).
+
+You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in version control and pass them to your team without having out-of-sync SQL databases. Doesn't that sound awesome?
 
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
 
@@ -279,7 +281,7 @@ $users = $db->get('users')->customFilter('list.users',function($item) {
 ```
 
 ## (8) Queries
-...
+... waiting for some amazing documentation!
 
 
 ## (9) Caching
@@ -303,8 +305,6 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 
 - Indexing (adding indexed "tags" for all document searching)
 - Indexing (single document filtering, applied with all `save()` actions from validation closure)
-- Querying (searching for fields, and pulling in multiple doc results)
-- Custom filters (regex on property names ??)
 - Auto-Increment ID or Create a hash ID
 - Tests (unit testing??)
 - Internal validations..security etc.
