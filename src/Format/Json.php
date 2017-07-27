@@ -21,9 +21,12 @@ class Json implements FormatInterface
     * encode
     *
     */
-    public static function encode($data)
+    public static function encode($data = [],$pretty = true)
     {
-        return json_encode($data, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+        $p = 1;
+        if ($pretty==true) $p = JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES;
+
+        return json_encode($data, $p);
     }
 
 
