@@ -39,10 +39,10 @@ echo $item->first_name;
 echo $item->last_name;
 echo $item->email;
 
-// change existing or add new values
+// change existing or add new properties
 $item->email = 'example@example.com';
 
-// quickly just use, and thats it!
+// need to save? thats easy!
 $item->save();
 
 ```
@@ -59,10 +59,12 @@ $db = new \Filebase\Database([
     'dir'      => 'path/to/database/dir',
     'format'   => \Filebase\Format\Json::class,
     'cache'    => true,
-    'name'   => [
-        'type' => 'string',
-        'required' => true
-    ],
+    ''validate' => [
+        'name'   => [
+            'type' => 'string',
+            'required' => true
+        ]
+    ]
 ]);
 ```
 
@@ -70,7 +72,7 @@ $db = new \Filebase\Database([
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
-|`cache`			|bool		|false   |Stores [query](https://github.com/timothymarois/Filebase#6-custom-filters) results into cache for faster loading.				|
+|`cache`			|bool		|false   |Stores [query](https://github.com/timothymarois/Filebase#7-queries) results into cache for faster loading.				|
 |`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#5-validation-optional) for more details |
 
 
@@ -91,7 +93,6 @@ The Default Format Class: `JSON`
 After you've loaded up your database config, then you can use the `get()` method to retrieve a single document of data.
 
 ```php
-
 // my user id
 $user_id = '92832711';
 
