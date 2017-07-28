@@ -1,6 +1,6 @@
 # Filebase
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
+[![Build Status](https://travis-ci.org/timothymarois/Filebase.svg?branch=master)](https://travis-ci.org/timothymarois/Filebase) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
 
 A Simple but Powerful **Flat File Database** Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/timothymarois/Filebase#2-formatting) the way you like).
 

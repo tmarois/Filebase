@@ -1,11 +1,22 @@
-<phpunit bootstrap="./vendor/autoload.php" colors="true">
-    <testsuites>
+<phpunit
+         backupGlobals="false"
+		 backupStaticAttributes="false"
+		 bootstrap="vendor/autoload.php"
+		 colors="true"
+		 convertErrorsToExceptions="true"
+		 convertNoticesToExceptions="true"
+		 convertWarningsToExceptions="true"
+		 processIsolation="false"
+		 stopOnFailure="false"
+		 syntaxCheck="true"
+		 verbose="true" >
+    <testsuites name="Filebase Test Case">
         <testsuite name="All">
             <directory>./test</directory>
         </testsuite>
     </testsuites>
     <filter>
-        <whitelist>
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
