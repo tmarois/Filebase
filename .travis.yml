@@ -1,0 +1,19 @@
+language: php
+
+php:
+  - 7
+  - 7.1
+  - 7.2
+
+sudo: required
+dist: precise
+
+install:
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install --dev --no-interaction
+
+script:
+  - php vendor/bin/phpunit -c phpunit.xml.dist
+
+after_success:
+  - travis_retry php tests/bin/coveralls.phar

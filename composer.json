@@ -5,9 +5,14 @@
 	"homepage": "https://github.com/timothymarois/Filebase",
 	"type": "package",
 	"licence": "MIT",
+
+	"require-dev": {
+		"phpunit/phpunit": "^6.0"
+	},
+
 	"autoload": {
 		"psr-4": {
-			"Filebase\\": "src/"
+			"Filebase\\": ["src/", "test/"]
 		}
 	}
 }
