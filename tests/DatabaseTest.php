@@ -13,7 +13,8 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $db->get('test1')->set(['key'=>'value'])->save();
         $db->get('test2')->set(['key'=>'value'])->save();
 
-        $this->assertEquals(0, $db->flush(true));
+        // true for all documents to be deleted.
+        $this->assertEquals(true, $db->flush(true));
     }
 
 }
