@@ -1,7 +1,7 @@
 <?php  namespace Filebase;
 
 
-class DocumentTest extends \PHPUnit_Framework_TestCase
+class DocumentTest extends \PHPUnit\Framework\TestCase
 {
 
     public function testGetDocumentValue()
