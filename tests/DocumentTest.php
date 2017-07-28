@@ -40,6 +40,18 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    public function testPropertySetValueNull()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $test = $db->get('test');
+
+        $this->assertEquals(null, $test->key);
+    }
+
+
     public function testArraySetValueSave()
     {
         $db = new \Filebase\Database([
@@ -155,6 +167,50 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(date('Y-m-d'), $createdAt);
         $this->assertEquals(date('Y-m-d'), $updatedAt);
+    }
+
+
+    public function testNoFormatDates()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $db->get('test')->set(['key'=>'value'])->save();
+
+        $createdAt = $db->get('test')->createdAt(false);
+        $updatedAt = $db->get('test')->updatedAt(false);
+
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d',$createdAt));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d',$updatedAt));
+    }
+
+
+    public function testCustomFilter()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_users_database'
+        ]);
+
+        $u = [];
+        $u[] = [
+            'email' => 'email@email.com',
+            'status' => 'blocked'
+        ];
+
+        $u[] = [
+            'email' => 'notblocked@email.com',
+            'status' => 'enabled'
+        ];
+
+        $db->get('users')->set($u)->save();
+
+        $users = $db->get('users')->customFilter('data',function($item) {
+            return (($item['status']=='blocked') ? $item['email'] : false);
+        });
+
+        $this->assertEquals(1, count($users));
+        $this->assertEquals('email@email.com', $users[0]);
     }
 
 
