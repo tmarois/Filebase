@@ -113,4 +113,36 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('newid', $test->getId());
     }
 
+
+    public function testFieldMethod()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $db->get('user')->set(['email'=>'example@example.com'])->save();
+
+        $f = $db->get('user')->field('email');
+
+        $this->assertEquals('example@example.com', $f);
+    }
+
+
+    public function testNestedFieldMethod()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $db->get('user')->set([
+            'profile' => [
+                'email' => 'example@example.com'
+            ]
+        ])->save();
+
+        $f = $db->get('user')->field('profile.email');
+
+        $this->assertEquals('example@example.com', $f);
+    }
+
 }
