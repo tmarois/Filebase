@@ -29,7 +29,10 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
 
         $documents = $db->findAll(false);
 
+        // should have 2 docs
         $this->assertEquals(2, count($documents));
+
+        // check if these equal correctly
         $this->assertEquals('test1', $documents[0]);
         $this->assertEquals('test2', $documents[1]);
     }
@@ -47,8 +50,9 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
 
         $documents = $db->findAll(true,true);
 
+        // should only have 1 doc
         $this->assertEquals(1, count($documents));
-        $this->assertEquals(['key'=>'value'], $documents);
+        $this->assertEquals(['key'=>'value'], $documents[0]);
     }
 
 }
