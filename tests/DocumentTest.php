@@ -17,6 +17,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('value', $test->key);
     }
 
+
     public function testToArray()
     {
         $db = new \Filebase\Database([
@@ -28,6 +29,20 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $test = $db->get('test')->toArray();
 
         $this->assertEquals('value', $test['key']);
+    }
+
+
+    public function testDelete()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $db->get('test')->set(['key'=>'value'])->save();
+
+        $test = $db->get('test')->delete();
+
+        $this->assertEquals(true, $test);
     }
 
 
