@@ -142,6 +142,22 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    public function testFormatDates()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $db->get('test')->set(['key'=>'value'])->save();
+
+        $createdAt = $db->get('test')->createdAt('Y-m-d');
+        $updatedAt = $db->get('test')->updatedAt('Y-m-d');
+
+        $this->assertEquals(date('Y-m-d'), $createdAt);
+        $this->assertEquals(date('Y-m-d'), $updatedAt);
+    }
+
+
     /*public function testFieldMethod()
     {
         $db = new \Filebase\Database([
