@@ -172,35 +172,6 @@ class Document
 
 
     /**
-    * getItemsFromCustomFilter
-    *
-    * currently NOT USED
-    */
-    public function getItemsFromCustomFilter($field = '')
-    {
-        $keys = Validate::hasCustomFilter($this);
-
-        $data = $this->getData();
-
-        foreach($keys as $k => $grp)
-        {
-            if ($grp == $field)
-            {
-                if ($data[$k])
-                {
-                    return $data[$k];
-                }
-            }
-        }
-
-        return [];
-    }
-
-
-    //--------------------------------------------------------------------
-
-
-    /**
     * getDatabase
     *
     * @return $database

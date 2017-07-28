@@ -132,33 +132,4 @@ class Validate
     //--------------------------------------------------------------------
 
 
-    /**
-    * hasCustomFilter
-    *
-    * CURRENTLY NOT USED
-    */
-    public static function hasCustomFilter(Document $object,$rules = false,$search = [])
-    {
-        if ($rules === false)
-        {
-            $rules = $object->getDatabase()->getConfig()->validate;
-        }
-
-        foreach($rules as $k => $rule)
-        {
-            if (isset($rule['custom_filter'],$rule['type']) && $rule['type'] == 'array')
-            {
-                $search[$k] = $rule['custom_filter'];
-            }
-
-            if (is_array($k))
-            {
-                $search[$k] = self::hasCustomFilter($object,$k,$search);
-            }
-        }
-
-        return $search;
-    }
-
-
 }

@@ -4,6 +4,17 @@
 class DocumentTest extends \PHPUnit\Framework\TestCase
 {
 
+    public function testSave()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_save'
+        ]);
+
+        $test = $db->get('test')->set(['key'=>'value'])->save();
+
+        $this->assertEquals(true, $test);
+    }
+
     public function testArraySetValue()
     {
         $db = new \Filebase\Database([
@@ -11,6 +22,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $test = $db->get('test')->set(['key'=>'value']);
+
         $this->assertEquals('value', $test->key);
     }
 
@@ -114,35 +126,51 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function testFieldMethod()
+    public function testDates()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/test_database'
         ]);
 
-        $db->get('user')->set(['email'=>'example@example.com'])->save();
+        $db->get('test')->set(['key'=>'value'])->save();
 
-        $f = $db->get('user')->field('email');
+        $createdAt = strtotime($db->get('test')->createdAt());
+        $updatedAt = strtotime($db->get('test')->updatedAt());
 
-        $this->assertEquals('example@example.com', $f);
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d',$createdAt));
+        $this->assertEquals(date('Y-m-d'), date('Y-m-d',$updatedAt));
     }
 
 
-    public function testNestedFieldMethod()
+    /*public function testFieldMethod()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_user_database'
+        ]);
+
+        $db->get('user_test_email_1')->set(['email'=>'example@example.com'])->save();
+
+        $f = $db->get('user_test_email_1')->field('email');
+
+        $this->assertEquals('example@example.com', $f);
+    }*/
+
+
+    /*public function testNestedFieldMethod()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/test_database'
         ]);
 
-        $db->get('user')->set([
+        $db->get('user_test_email_2')->set([
             'profile' => [
                 'email' => 'example@example.com'
             ]
         ])->save();
 
-        $f = $db->get('user')->field('profile.email');
+        $f = $db->get('user_test_email_2')->field('profile.email');
 
         $this->assertEquals('example@example.com', $f);
-    }
+    }*/
 
 }
