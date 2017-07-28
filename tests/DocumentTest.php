@@ -4,15 +4,58 @@
 class DocumentTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testGetDocumentValue()
+    public function testValue()
     {
-        $db = new \Filebase\Database();
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
         $db->get('test')->set(['key'=>'value'])->save();
 
         $test = $db->get('test');
 
-        $this->assertEquals('value', $test->value);
+        $this->assertEquals('value', $test->key);
+    }
 
+    public function testToArray()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $db->get('test')->set(['key'=>'value'])->save();
+
+        $test = $db->get('test')->toArray();
+
+        $this->assertEquals('value', $test['key']);
+    }
+
+
+    public function testGetId()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $db->get('test')->set(['key'=>'value'])->save();
+
+        $test = $db->get('test');
+
+        $this->assertEquals('test', $test->getId());
+    }
+
+
+    public function testSetId()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $db->get('test')->set(['key'=>'value'])->save();
+
+        $test = $db->get('test')->setId('newid');
+
+        $this->assertEquals('newid', $test->getId());
     }
 
 }

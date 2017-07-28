@@ -250,6 +250,8 @@ class Document
     public function setId($id)
     {
         $this->__id = $id;
+
+        return $this;
     }
 
 
