@@ -257,6 +257,15 @@ class Database
             {
                 Filesystem::delete($this->config->dir.'/'.$document.'.'.$this->config->format::getFileExtension());
             }
+
+            if ($this->count() === 0)
+            {
+                return true;
+            }
+            else
+            {
+                throw new \Exception("Could not delete all database files in ".$this->config->dir);
+            }
         }
         else
         {

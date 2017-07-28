@@ -4,13 +4,53 @@
 class DocumentTest extends \PHPUnit\Framework\TestCase
 {
 
-    public function testValue()
+    public function testArraySetValue()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $test = $db->get('test')->set(['key'=>'value']);
+        $this->assertEquals('value', $test->key);
+    }
+
+
+    public function testPropertySetValue()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $test = $db->get('test');
+        $test->key = 'value';
+
+        $this->assertEquals('value', $test->key);
+    }
+
+
+    public function testArraySetValueSave()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/test_database'
         ]);
 
         $db->get('test')->set(['key'=>'value'])->save();
+
+        $test = $db->get('test');
+
+        $this->assertEquals('value', $test->key);
+    }
+
+
+    public function testPropertySetValueSave()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_database'
+        ]);
+
+        $test = $db->get('test');
+        $test->key = 'value';
+        $test->save();
 
         $test = $db->get('test');
 
