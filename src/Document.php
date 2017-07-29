@@ -16,6 +16,7 @@ class Document
     /**
     * __construct
     *
+    * Sets the database property
     */
     public function __construct($database)
     {
@@ -49,15 +50,18 @@ class Document
 
 
     /**
-    * save
+    * save()
     *
+    * Saving the document to disk (file)
+    *
+    * @param mixed $data (optional, only if you want to "replace" entire doc data)
+    * @return @see \Filebase\Database save()
     */
     public function save($data = '')
     {
-        if (Validate::valid($this))
-        {
-            return $this->__database->save($this, $data);
-        }
+        Validate::valid($this);
+
+        return $this->__database->save($this, $data);
     }
 
 
@@ -67,6 +71,9 @@ class Document
     /**
     * delete
     *
+    * Deletes document from disk (file)
+    *
+    * @return @see \Filebase\Database delete()
     */
     public function delete()
     {
@@ -289,6 +296,8 @@ class Document
     public function setCreatedAt($created_at)
     {
         $this->__created_at = $created_at;
+
+        return $this;
     }
 
 
@@ -303,6 +312,8 @@ class Document
     public function setUpdatedAt($updated_at)
     {
         $this->__updated_at = $updated_at;
+
+        return $this;
     }
 
 
