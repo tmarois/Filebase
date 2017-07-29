@@ -7,7 +7,8 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     public function testWhereQueryCount()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases/users_1'
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
         ]);
 
         $db->flush(true);
@@ -24,7 +25,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     	 	->where('name','=','John')
     		->results();
 
-        $this->assertEquals(10, $db->count());
+        $this->assertEquals($db->count(), count($results));
 
         $db->flush(true);
         $db->flushCache();
@@ -34,7 +35,8 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     public function testWhereQueryWhereCount()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases/users_1'
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
         ]);
 
         $db->flush(true);
@@ -53,7 +55,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             ->andWhere('email','==','john@example.com')
     		->results();
 
-        $this->assertEquals(10, $db->count());
+        $this->assertEquals($db->count(), count($results));
 
         $db->flush(true);
         $db->flushCache();
@@ -89,6 +91,44 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     		->results();
 
         $this->assertEquals(5, count($results));
+
+        $db->flush(true);
+        $db->flushCache();
+    }
+
+
+
+    public function testOrWhereQueryCount()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        for ($x = 1; $x <= 10; $x++)
+    	{
+    		$user = $db->get(uniqid());
+
+            if ($x < 6)
+            {
+                $user->name = 'John';
+            }
+            else
+            {
+                $user->name = 'Max';
+            }
+
+    		$user->save();
+    	}
+
+        $results = $db->query()
+    	 	->where('name','=','John')
+            ->orWhere('name','=','Max')
+    		->results();
+
+        $this->assertEquals($db->count(), count($results));
 
         $db->flush(true);
         $db->flushCache();
