@@ -286,7 +286,7 @@ class Document
     *
     * @param int $created_at php time()
     */
-    public function setCreatedAt(int $created_at)
+    public function setCreatedAt($created_at)
     {
         $this->__created_at = $created_at;
     }
@@ -300,7 +300,7 @@ class Document
     *
     * @param int $updated_at php time()
     */
-    public function setUpdatedAt(int $updated_at)
+    public function setUpdatedAt($updated_at)
     {
         $this->__updated_at = $updated_at;
     }
