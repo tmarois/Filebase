@@ -352,6 +352,5 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 
 - Indexing (adding indexed "tags" for all document searching)
 - Indexing (single document filtering, applied with all `save()` actions from validation closure)
-- Auto-Increment ID or Create a hash ID
 - Internal validations..security etc.
-- Query sortby and orderby
+- Cache driver (to use on other services like memcached, redis etc)

@@ -1,6 +1,6 @@
 {
-	"description": "A very simple Flat-file (serverless) Database",
-	"keywords": ["flat", "file", "database", "document", "flat-file"],
+	"description": "A Simple but Powerful Flat File Database Storage.",
+	"keywords": ["filebase", "key-value","file-files", "flat", "file", "database", "document", "flat-file", "serverless"],
 	"name": "timothymarois/filebase",
 	"homepage": "https://github.com/timothymarois/Filebase",
 	"type": "package",
