@@ -19,6 +19,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
         $db->get('test')->set(['name'=>'value'])->save();
 
         $this->assertEquals(true, true);
+
+        $db->flush(true);
     }
 
 
@@ -48,6 +50,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
         $db->get('test')->set($array)->save();
 
         $this->assertEquals(true, true);
+
+        $db->flush(true);
     }
 
 }

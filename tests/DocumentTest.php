@@ -9,11 +9,11 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $test = $db->get('test')->set(['key'=>'value'])->save();
 
         $this->assertEquals(true, $test);
+
+        $db->flush(true);
     }
 
 
@@ -23,11 +23,11 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $test = $db->get('test')->set(['key'=>'value']);
 
         $this->assertEquals('value', $test->key);
+
+        $db->flush(true);
     }
 
 
@@ -37,12 +37,12 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $test = $db->get('test');
         $test->key = 'value';
 
         $this->assertEquals('value', $test->key);
+
+        $db->flush(true);
     }
 
 
@@ -52,11 +52,11 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $test = $db->get('test');
 
         $this->assertEquals(null, $test->key);
+
+        $db->flush(true);
     }
 
 
@@ -66,13 +66,13 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test')->set(['key'=>'value'])->save();
 
         $test = $db->get('test');
 
         $this->assertEquals('value', $test->key);
+
+        $db->flush(true);
     }
 
 
@@ -82,8 +82,6 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $test = $db->get('test');
         $test->key = 'value';
         $test->save();
@@ -91,6 +89,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $test = $db->get('test');
 
         $this->assertEquals('value', $test->key);
+
+        $db->flush(true);
     }
 
 
@@ -100,13 +100,13 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test')->set(['key'=>'value'])->save();
 
         $test = $db->get('test')->toArray();
 
         $this->assertEquals('value', $test['key']);
+
+        $db->flush(true);
     }
 
 
@@ -116,13 +116,13 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test')->set(['key'=>'value'])->save();
 
         $test = $db->get('test')->delete();
 
         $this->assertEquals(true, $test);
+
+        $db->flush(true);
     }
 
 
@@ -132,13 +132,13 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test')->set(['key'=>'value'])->save();
 
         $test = $db->get('test');
 
         $this->assertEquals('test', $test->getId());
+
+        $db->flush(true);
     }
 
 
@@ -148,13 +148,13 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test')->set(['key'=>'value'])->save();
 
         $test = $db->get('test')->setId('newid');
 
         $this->assertEquals('newid', $test->getId());
+
+        $db->flush(true);
     }
 
 
@@ -164,8 +164,6 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test')->set(['key'=>'value'])->save();
 
         $createdAt = strtotime($db->get('test')->createdAt());
@@ -173,6 +171,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(date('Y-m-d'), date('Y-m-d',$createdAt));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d',$updatedAt));
+
+        $db->flush(true);
     }
 
 
@@ -182,8 +182,6 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test')->set(['key'=>'value'])->save();
 
         $createdAt = $db->get('test')->createdAt('Y-m-d');
@@ -191,6 +189,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(date('Y-m-d'), $createdAt);
         $this->assertEquals(date('Y-m-d'), $updatedAt);
+
+        $db->flush(true);
     }
 
 
@@ -200,8 +200,6 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test')->set(['key'=>'value'])->save();
 
         $createdAt = $db->get('test')->createdAt(false);
@@ -209,6 +207,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(date('Y-m-d'), date('Y-m-d',$createdAt));
         $this->assertEquals(date('Y-m-d'), date('Y-m-d',$updatedAt));
+
+        $db->flush(true);
     }
 
 
@@ -217,8 +217,6 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases'
         ]);
-
-        $db->flush(true);
 
         $u = [];
         $u[] = [
@@ -239,6 +237,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(1, count($users));
         $this->assertEquals('email@email.com', $users[0]);
+
+        $db->flush(true);
     }
 
 
@@ -248,21 +248,16 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
+        $db->get('customfilter_test')->set(['email'=>'time'])->save();
 
-        $u = [
-            'email' => 'email@email.com',
-            'status' => 'blocked'
-        ];
-
-        $db->get('customfilter_test')->set($u)->save();
-
-        $users = $db->get('customfilter_test')->customFilter('data',function($item) {
-            return ((isset($item['status']) && $item['status']=='blocked') ? $item['email'] : false);
+        $users = $db->get('customfilter_test')->customFilter('email',function($item) {
+            return (($item['status']=='blocked') ? $item['email'] : false);
         });
 
         // should be empty array
         $this->assertEquals([],$users);
+
+        $db->flush(true);
     }
 
 
@@ -272,13 +267,13 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('user_test_email_1')->set(['email'=>'example@example.com'])->save();
 
         $f = $db->get('user_test_email_1')->field('email');
 
         $this->assertEquals('example@example.com', $f);
+
+        $db->flush(true);
     }
 
 
@@ -287,8 +282,6 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases'
         ]);
-
-        $db->flush(true);
 
         $db->get('user_test_email_2')->set([
             'profile' => [
@@ -299,6 +292,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $f = $db->get('user_test_email_2')->field('profile.email');
 
         $this->assertEquals('example@example.com', $f);
+
+        $db->flush(true);
     }
 
 
@@ -310,9 +305,9 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $file = $db->get('^*bad_@name%$1#');
+
+        $db->flush(true);
     }
 
 }

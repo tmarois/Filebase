@@ -28,8 +28,6 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test1')->set(['key'=>'value'])->save();
         $db->get('test2')->set(['key'=>'value'])->save();
 
@@ -43,8 +41,6 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test1')->set(['key'=>'value'])->save();
         $db->get('test2')->set(['key'=>'value'])->save();
 
@@ -56,6 +52,8 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         // check if these equal correctly
         $this->assertEquals('test1', $documents[0]);
         $this->assertEquals('test2', $documents[1]);
+
+        $db->flush(true);
     }
 
 
@@ -65,8 +63,6 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $db->flush(true);
-
         $db->get('test')->set(['key'=>'value'])->save();
 
         $documents = $db->findAll(true,true);
@@ -74,6 +70,8 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         // should only have 1 doc
         $this->assertEquals(1, count($documents));
         $this->assertEquals(['key'=>'value'], $documents[0]);
+
+        $db->flush(true);
     }
 
 }
