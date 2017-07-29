@@ -267,4 +267,16 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('example@example.com', $f);
     }
 
+
+    public function testBadNameException()
+    {
+        $this->expectException(\Exception::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_user_database'
+        ]);
+
+        $file = $db->get('^*bad_@name%$1#');
+    }
+
 }
