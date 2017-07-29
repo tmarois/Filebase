@@ -8,7 +8,7 @@ class Validate
      * valid
      *
      * @param object document $object
-     * @return bool (true/false)
+     * @return bool ( true ) if no exception is fired
      */
     public static function valid(Document $object)
     {
@@ -26,6 +26,7 @@ class Validate
     /**
     * getValidateRules
     *
+    * @param \Filebase\Document
     * @return database->config
     */
     public static function getValidateRules(Document $object)
@@ -39,8 +40,14 @@ class Validate
 
     /**
     * validateLoop
+    *
+    * Loops over the document and finds invaild data
+    * Throws an exception if found, otherwise returns nothing
+    *
+    * @param array (of document data)
+    * @return vold
     */
-    public static function validateLoop($document,$object,$rules)
+    protected static function validateLoop($document,$object,$rules)
     {
         foreach($rules as $key => $rule)
         {
@@ -56,10 +63,20 @@ class Validate
     }
 
 
+    //--------------------------------------------------------------------
+
+
     /**
     * validateRules
+    *
+    * Checks "valid.type"
+    * Checks "valid.requred"
+    *
+    * Throws exception error if matches are not met.
+    *
+    * @return \Filebase\Document Object
     */
-    public static function validateRules($document,$key,$rules,$object)
+    protected static function validateRules($document,$key,$rules,$object)
     {
         // checks variable type
         if (isset($document[$key],$rules['valid.type']))
@@ -94,8 +111,11 @@ class Validate
     /**
     * checkType
     *
+    * Checks type of variable and sees if it matches
+    *
+    * @return boolean (true or false)
     */
-    private static function checkType($variable, $type)
+    protected static function checkType($variable, $type)
     {
         switch($type)
         {
