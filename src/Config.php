@@ -88,10 +88,16 @@ class Config
     */
     protected function validateFormatClass()
     {
+        if (!class_exists($this->format))
+        {
+            throw new \Exception('Filebase Error: Missing format class in config.');
+        }
+
         $format_class = new $this->format;
+
         if (!$format_class instanceof Format\FormatInterface)
         {
-            throw new \Exception('Format Class must be an instance of Filebase\Format\FormatInterface');
+            throw new \Exception('Filebase Error: Format Class must be an instance of Filebase\Format\FormatInterface');
         }
     }
 

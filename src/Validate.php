@@ -44,7 +44,7 @@ class Validate
     {
         foreach($rules as $key => $rule)
         {
-            if (!isset($rule['type'],$rule['required']) && isset($document[$key]))
+            if ( (!isset($rule['valid.type']) ) && isset($document[$key]))
             {
                 self::validateLoop($document[$key],$object,$rules[$key]);
 
@@ -62,16 +62,16 @@ class Validate
     public static function validateRules($document,$key,$rules,$object)
     {
         // checks variable type
-        if (isset($document[$key],$rules['type']))
+        if (isset($document[$key],$rules['valid.type']))
         {
-            if (!self::checkType($document[$key],$rules['type']))
+            if (!self::checkType($document[$key],$rules['valid.type']))
             {
-                throw new \Exception('Validation Failed setting variable on '.$object->getId().' - ['.$key.'] does not match type '.$rules['type']);
+                throw new \Exception('Validation Failed setting variable on '.$object->getId().' - ['.$key.'] does not match type '.$rules['valid.type']);
             }
         }
 
         // check if variable is required
-        if (isset($rules['required']) && $rules['required']===true)
+        if (isset($rules['valid.required']) && $rules['valid.required']===true)
         {
             if (!isset($document[$key]))
             {

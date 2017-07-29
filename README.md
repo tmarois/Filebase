@@ -66,8 +66,8 @@ $db = new \Filebase\Database([
     'pretty'        => true,
     'validate' => [
         'name'   => [
-            'type' => 'string',
-            'required' => true
+            'valid.type' => 'string',
+            'valid.required' => true
         ]
     ]
 ]);
@@ -227,21 +227,21 @@ $db = new \Filebase\Database([
     'dir' => '/path/to/database/dir',
     'validate' => [
         'name'   => [
-            'type' => 'string',
-            'required' => true
+            'valid.type' => 'string',
+            'valid.required' => true
         ],
         'description' => [
-            'type' => 'string',
-            'required' => false
+            'valid.type' => 'string',
+            'valid.required' => false
         ],
         'emails' => [
-            'type'     => 'array',
-            'required' => true
+            'valid.type'     => 'array',
+            'valid.required' => true
         ],
         'config' => [
             'settings' => [
-                'type'     => 'array',
-                'required' => true
+                'valid.type'     => 'array',
+                'valid.required' => true
             ]
         ]
     ]
@@ -254,8 +254,8 @@ In the above example `name`, `description`, `emails` and `config` array keys wou
 
 |Name				|Allowed Values		|Description		                |
 |---				|---		                                            |---		|
-|`type`				|`string`, `str`, `integer`, `int`, `array`		|Checks if the property is the current type		|
-|`required`			|`true`, `false`		                                |Checks if the property is on the document		|
+|`valid.type`				|`string`, `str`, `integer`, `int`, `array`		|Checks if the property is the current type		|
+|`valid.required`			|`true`, `false`		                                |Checks if the property is on the document		|
 
 
 ## (7) Custom Filters
