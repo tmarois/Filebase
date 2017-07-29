@@ -194,7 +194,7 @@ class Database
         }
         else
         {
-            return false; 
+            return false;
         }
     }
 
@@ -308,31 +308,6 @@ class Database
     public function toArray(Document $document)
     {
         return $this->objectToArray( $document->getData() );
-    }
-
-
-    //--------------------------------------------------------------------
-
-
-    /**
-    * arrayToObject
-    *
-    */
-    public function arrayToObject($arr)
-    {
-        if (!is_object($arr) && !is_array($arr))
-        {
-            return $arr;
-        }
-
-        $arr = (object) $arr;
-
-        foreach($arr as $key => $value)
-        {
-            $arr->{$key} = $this->arrayToObject($value);
-        }
-
-        return $arr;
     }
 
 
