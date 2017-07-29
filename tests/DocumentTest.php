@@ -15,6 +15,20 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(true, $test);
     }
 
+    public function testSaveOverwrite()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_save'
+        ]);
+
+        $db->get('test')->set(['key'=>'value'])->save();
+        $db->get('test')->save(['newdata'=>'yes']);
+
+        $test = $db->get('test')->toArray();
+
+        $this->assertEquals(['newdata'=>'yes'], $test);
+    }
+
     public function testArraySetValue()
     {
         $db = new \Filebase\Database([
