@@ -64,9 +64,14 @@ class Validate
         // checks variable type
         if (isset($document[$key],$rules['valid.type']))
         {
+            if (!in_array($rules['valid.type'],['string','str','int','integer','arr','array']))
+            {
+                throw new \Exception('Validation Failed: Invaild Property Type "'.$rules['valid.type'].'"');
+            }
+
             if (!self::checkType($document[$key],$rules['valid.type']))
             {
-                throw new \Exception('Validation Failed setting variable on '.$object->getId().' - ['.$key.'] does not match type '.$rules['valid.type']);
+                throw new \Exception('Validation Failed setting variable on '.$object->getId().' - ['.$key.'] does not match type "'.$rules['valid.type'].'"');
             }
         }
 
@@ -122,7 +127,7 @@ class Validate
                 break;
 
             default:
-                return true;
+                return false;
         }
 
         return false;

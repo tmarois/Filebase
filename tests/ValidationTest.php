@@ -66,7 +66,7 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
     public function testOnlyRequiredBad()
     {
         $this->expectException(\Exception::class);
-        
+
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases',
             'validate' => [
@@ -233,6 +233,56 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
 
         $array = [
             'profile' => 123
+        ];
+
+        $db->get('test')->set($array)->save();
+
+        $this->assertEquals(true, true);
+
+        $db->flush(true);
+    }
+
+
+    public function testArrType()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases',
+            'validate' => [
+                'profile'   => [
+                    'valid.type' => 'arr'
+                ]
+            ]
+        ]);
+
+
+        $array = [
+            'profile' => [123]
+        ];
+
+        $db->get('test')->set($array)->save();
+
+        $this->assertEquals(true, true);
+
+        $db->flush(true);
+    }
+
+
+    public function testUnknownType()
+    {
+        $this->expectException(\Exception::class);
+        
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases',
+            'validate' => [
+                'profile'   => [
+                    'valid.type' => 'unknown'
+                ]
+            ]
+        ]);
+
+
+        $array = [
+            'profile' => [123]
         ];
 
         $db->get('test')->set($array)->save();
