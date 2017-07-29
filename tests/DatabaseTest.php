@@ -1,8 +1,36 @@
 <?php  namespace Filebase;
 
 
+class badformat {
+
+}
+
+
 class DatabaseTest extends \PHPUnit\Framework\TestCase
 {
+
+
+    public function testMissingFormatClass()
+    {
+        $this->expectException(\Exception::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases',
+            'format' => ''
+        ]);
+    }
+
+
+    public function testBadFormatClass()
+    {
+        $this->expectException(\Exception::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases',
+            'format' => badformat::class
+        ]);
+    }
+
 
     public function testDatabaseFlushTrue()
     {

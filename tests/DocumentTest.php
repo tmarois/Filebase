@@ -9,9 +9,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
-        $test = $db->get('test')->set(['key'=>'value'])->save();
+        $test = $db->get('test')->save(['key'=>'value']);
+        $val  = $db->get('test')->toArray();
 
-        $this->assertEquals(true, $test);
+        $this->assertEquals(['key'=>'value'], $val);
 
         $db->flush(true);
     }
@@ -158,6 +159,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     }
 
 
+
+    // DATE TESTS
+    //--------------------------------------------------------------------
+
     public function testDates()
     {
         $db = new \Filebase\Database([
@@ -210,6 +215,27 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $db->flush(true);
     }
+
+
+    public function testMissingUpdatedDate()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases'
+        ]);
+
+        $db->get('test')->set(['key'=>'value'])->save();
+
+        $setUpdatedAt = $db->get('test')->setUpdatedAt(null);
+        $setCreatedAt = $db->get('test')->setCreatedAt(null);
+
+        $this->assertEquals(date('Y-m-d'), $setCreatedAt->updatedAt('Y-m-d'));
+        $this->assertEquals(date('Y-m-d'), $setUpdatedAt->updatedAt('Y-m-d'));
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
 
 
     public function testCustomFilter()

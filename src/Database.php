@@ -188,7 +188,14 @@ class Database
 
         $data = $this->config->format::encode( $document->saveAs(), $this->config->pretty );
 
-        return Filesystem::write($file_location, $data);
+        if (Filesystem::write($file_location, $data))
+        {
+            return $document;
+        }
+        else
+        {
+            return false; 
+        }
     }
 
 
