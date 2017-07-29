@@ -58,8 +58,6 @@ class Document
         {
             return $this->__database->save($this, $data);
         }
-
-        return false;
     }
 
 

@@ -214,7 +214,29 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    /*public function testFieldMethod()
+    public function testCustomFilterEmpty()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/test_users_database'
+        ]);
+
+        $u = [
+            'email' => 'email@email.com',
+            'status' => 'blocked'
+        ];
+
+        $db->get('users')->set($u)->save();
+
+        $users = $db->get('users')->customFilter('data',function($item) {
+            return (($item['status']=='blocked') ? $item['email'] : false);
+        });
+
+        // should be empty array
+        $this->assertEquals([],$users);
+    }
+
+
+    public function testFieldMethod()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/test_user_database'
@@ -225,10 +247,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $f = $db->get('user_test_email_1')->field('email');
 
         $this->assertEquals('example@example.com', $f);
-    }*/
+    }
 
 
-    /*public function testNestedFieldMethod()
+    public function testNestedFieldMethod()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/test_database'
@@ -243,6 +265,6 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $f = $db->get('user_test_email_2')->field('profile.email');
 
         $this->assertEquals('example@example.com', $f);
-    }*/
+    }
 
 }
