@@ -10,6 +10,8 @@ class Document
     private $__created_at;
     private $__updated_at;
 
+    private $__cache = false;
+
     private $data = [];
 
 
@@ -38,7 +40,7 @@ class Document
 
         foreach($vars as $k=>$v)
         {
-            if (in_array($k,['__database','__id'])) continue;
+            if (in_array($k,['__database','__id','__cache'])) continue;
             $data->{$k} = $v;
         }
 
@@ -229,6 +231,36 @@ class Document
 
         return $this;
     }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * setCache
+    *
+    * @param boolean $cache
+    */
+    public function setFromCache(bool $cache = true)
+    {
+        $this->__cache = $cache;
+
+        return $this;
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * isCache
+    *
+    */
+    public function isCache()
+    {
+        return $this->__cache;
+    }
+
 
 
     //--------------------------------------------------------------------

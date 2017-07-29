@@ -119,7 +119,7 @@ class Cache
         $d = [];
         foreach($documents as $document)
         {
-            $d[] = $this->database->get($document);
+            $d[] = $this->database->get($document)->setFromCache(true);
         }
 
         return $d;

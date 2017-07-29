@@ -118,6 +118,7 @@ $item = $db->get($user_id);
 |`createdAt()`                    | Document was created (default Y-m-d H:i:s) |
 |`updatedAt()`                    | Document was updated (default Y-m-d H:i:s) |
 |`field()`                        | You can also use `.` dot delimiter to find values from nested arrays |
+|`isCache()`                      | (true/false) if the current document is loaded from cache |
 |`customFilter()`                 | Refer to the [Custom Filters](https://github.com/timothymarois/Filebase#7-custom-filters) |
 
 Example:
