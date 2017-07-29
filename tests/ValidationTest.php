@@ -7,7 +7,7 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
     public function testValidatingStringRequired()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database',
+            'dir' => __DIR__.'/databases',
             'validate' => [
                 'name'   => [
                     'type' => 'string',
@@ -25,7 +25,7 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
     public function testValidatingNestedString()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database',
+            'dir' => __DIR__.'/databases',
             'validate' => [
                 'profile'   => [
                     'type' => 'array',

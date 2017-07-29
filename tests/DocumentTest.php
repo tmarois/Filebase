@@ -3,12 +3,13 @@
 
 class DocumentTest extends \PHPUnit\Framework\TestCase
 {
-
     public function testSave()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_save'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $test = $db->get('test')->set(['key'=>'value'])->save();
 
@@ -19,8 +20,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testArraySetValue()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $test = $db->get('test')->set(['key'=>'value']);
 
@@ -31,8 +34,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testPropertySetValue()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $test = $db->get('test');
         $test->key = 'value';
@@ -44,8 +49,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testPropertySetValueNull()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $test = $db->get('test');
 
@@ -56,8 +63,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testArraySetValueSave()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['key'=>'value'])->save();
 
@@ -70,8 +79,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testPropertySetValueSave()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $test = $db->get('test');
         $test->key = 'value';
@@ -86,8 +97,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testToArray()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['key'=>'value'])->save();
 
@@ -100,8 +113,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testDelete()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['key'=>'value'])->save();
 
@@ -114,8 +129,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testGetId()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['key'=>'value'])->save();
 
@@ -128,8 +145,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testSetId()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['key'=>'value'])->save();
 
@@ -142,8 +161,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testDates()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['key'=>'value'])->save();
 
@@ -158,8 +179,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testFormatDates()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['key'=>'value'])->save();
 
@@ -174,8 +197,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testNoFormatDates()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['key'=>'value'])->save();
 
@@ -190,8 +215,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testCustomFilter()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_users_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $u = [];
         $u[] = [
@@ -218,18 +245,20 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testCustomFilterEmpty()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_users_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $u = [
             'email' => 'email@email.com',
             'status' => 'blocked'
         ];
 
-        $db->get('users')->set($u)->save();
+        $db->get('customfilter_test')->set($u)->save();
 
-        $users = $db->get('users')->customFilter('data',function($item) {
-            return (($item['status']=='blocked') ? $item['email'] : false);
+        $users = $db->get('customfilter_test')->customFilter('data',function($item) {
+            return ((isset($item['status']) && $item['status']=='blocked') ? $item['email'] : false);
         });
 
         // should be empty array
@@ -240,8 +269,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testFieldMethod()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_user_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('user_test_email_1')->set(['email'=>'example@example.com'])->save();
 
@@ -254,8 +285,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testNestedFieldMethod()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('user_test_email_2')->set([
             'profile' => [
@@ -274,8 +307,10 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\Exception::class);
 
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_user_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $file = $db->get('^*bad_@name%$1#');
     }

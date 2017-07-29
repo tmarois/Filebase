@@ -7,8 +7,10 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     public function testDatabaseFlushTrue()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test1')->set(['key'=>'value'])->save();
         $db->get('test2')->set(['key'=>'value'])->save();
@@ -21,10 +23,12 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     public function testDatabaseFlushFalse()
     {
         $this->expectException(\Exception::class);
-        
+
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test1')->set(['key'=>'value'])->save();
         $db->get('test2')->set(['key'=>'value'])->save();
@@ -36,8 +40,10 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     public function testDatabaseFindAllSimple()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_findall_database'
+            'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test1')->set(['key'=>'value'])->save();
         $db->get('test2')->set(['key'=>'value'])->save();
@@ -56,7 +62,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     public function testDatabaseFindAllDataOnly()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/test_findall_database'
+            'dir' => __DIR__.'/databases'
         ]);
 
         $db->flush(true);
