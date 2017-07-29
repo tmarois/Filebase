@@ -56,6 +56,8 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
             'dir' => __DIR__.'/databases'
         ]);
 
+        $db->flush(true);
+
         $db->get('test1')->set(['key'=>'value'])->save();
         $db->get('test2')->set(['key'=>'value'])->save();
 
@@ -68,6 +70,8 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test1')->set(['key'=>'value'])->save();
         $db->get('test2')->set(['key'=>'value'])->save();
@@ -90,6 +94,8 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases'
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['key'=>'value'])->save();
 

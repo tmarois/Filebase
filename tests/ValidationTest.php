@@ -16,6 +16,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
 
+        $db->flush(true);
+
         $db->get('test')->set(['name'=>'value'])->save();
 
         $this->assertEquals(true, true);
@@ -38,6 +40,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
 
+        $db->flush(true);
+
         $db->get('test')->set(['name'=>123])->save();
 
         $db->flush(true);
@@ -54,6 +58,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['name'=>'value'])->save();
 
@@ -75,6 +81,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ]);
+
+        $db->flush(true);
 
         $db->get('test')->set(['name'=>'value'])->save();
 
@@ -99,6 +107,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ]);
+
+        $db->flush(true);
 
 
         $array = [
@@ -133,6 +143,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
 
+        $db->flush(true);
+
 
         $array = [
             'profile' => [
@@ -157,6 +169,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ]);
+
+        $db->flush(true);
 
 
         $array = [
@@ -186,6 +200,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
 
+        $db->flush(true);
+
 
         $array = [
             'profile' => 123
@@ -209,6 +225,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
 
+        $db->flush(true);
+
 
         $array = [
             'profile' => '123'
@@ -229,6 +247,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ]);
+
+        $db->flush(true);
 
 
         $array = [
@@ -254,6 +274,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
             ]
         ]);
 
+        $db->flush(true);
+
 
         $array = [
             'profile' => [123]
@@ -270,7 +292,7 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
     public function testUnknownType()
     {
         $this->expectException(\Exception::class);
-        
+
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases',
             'validate' => [
@@ -279,6 +301,8 @@ class ValidationTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         ]);
+
+        $db->flush(true);
 
 
         $array = [
