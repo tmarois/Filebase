@@ -1,8 +1,8 @@
 # Filebase
 
-[![Build Status](https://travis-ci.org/timothymarois/Filebase.svg?branch=master)](https://travis-ci.org/timothymarois/Filebase) [![Coverage Status](https://coveralls.io/repos/github/timothymarois/Filebase/badge.svg?branch=master)](https://coveralls.io/github/timothymarois/Filebase?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/timothymarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/timothymarois/Filebase/?branch=master)
+[![Build Status](https://travis-ci.org/tmarois/Filebase.svg?branch=master)](https://travis-ci.org/tmarois/Filebase) [![Coverage Status](https://coveralls.io/repos/github/tmarois/Filebase/badge.svg?branch=master)](https://coveralls.io/github/tmarois/Filebase?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/tmarois/Filebase/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/tmarois/Filebase/?branch=master)
 
-A Simple but Powerful **Flat File Database** Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/timothymarois/Filebase#2-formatting) the way you like).
+A Simple but Powerful **Flat File Database** Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/tmarois/Filebase#2-formatting) the way you like).
 
 You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in **version control** and pass them to your team without having out-of-sync SQL databases. Doesn't that sound awesome?
 
@@ -23,7 +23,7 @@ Filebase is simple by design, but also has enough features for even the more adv
 
 Use [Composer](http://getcomposer.org/) to install package.
 
-Run `composer require timothymarois/filebase` or add to your main `composer.json` file.
+Run `composer require tmarois/filebase` or add to your main `composer.json` file.
 
 ## Usage
 
@@ -77,8 +77,8 @@ $db = new \Filebase\Database([
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
-|`validate`			|array		|   |Check [Validation Rules](https://github.com/timothymarois/Filebase#6-validation-optional) for more details |
-|`cache`			|bool		|false   |Stores [query](https://github.com/timothymarois/Filebase#8-queries) results into cache for faster loading.				|
+|`validate`			|array		|   |Check [Validation Rules](https://github.com/tmarois/Filebase#6-validation-optional) for more details |
+|`cache`			|bool		|false   |Stores [query](https://github.com/tmarois/Filebase#8-queries) results into cache for faster loading.				|
 |`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
 |`pretty`	    	|bool		|true   |Store the data for human readability? Pretty Print	|
 
@@ -119,7 +119,7 @@ $item = $db->get($user_id);
 |`updatedAt()`                    | Document was updated (default Y-m-d H:i:s) |
 |`field()`                        | You can also use `.` dot delimiter to find values from nested arrays |
 |`isCache()`                      | (true/false) if the current document is loaded from cache |
-|`customFilter()`                 | Refer to the [Custom Filters](https://github.com/timothymarois/Filebase#7-custom-filters) |
+|`customFilter()`                 | Refer to the [Custom Filters](https://github.com/tmarois/Filebase#7-custom-filters) |
 
 Example:
 
@@ -180,12 +180,12 @@ Here is a list of methods you can use on the database class.
 
 |Method|Details|
 |---|---|
-|`get()`                          | Refer to [get()](https://github.com/timothymarois/Filebase#3-get-and-methods) |
+|`get()`                          | Refer to [get()](https://github.com/tmarois/Filebase#3-get-and-methods) |
 |`findAll()`                      | Returns all Documents in database |
 |`count()`                        | Number of documents in database |
 |`flush(true)`                    | Deletes all documents |
 |`flushCache()`                   | Clears all the cache |
-|`query()`                        | Refer to the [Queries](https://github.com/timothymarois/Filebase#8-queries) |
+|`query()`                        | Refer to the [Queries](https://github.com/tmarois/Filebase#8-queries) |
 
 Examples
 
