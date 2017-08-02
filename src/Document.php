@@ -144,6 +144,32 @@ class Document
 
 
     /**
+    * __isset
+    *
+    */
+    public function __isset($name)
+    {
+        return isset($this->data[$name]);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * __unset
+    *
+    */
+    public function __unset($name)
+    {
+        unset($this->data[$name]);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
     * customFilter
     *
     * Allows you to run a custom function around each item
