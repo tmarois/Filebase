@@ -5,6 +5,16 @@ class Query extends QueryLogic
 {
 
     /**
+    * $documents
+    *
+    */
+    protected $documents = [];
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
     * ->where()
     *
     */
@@ -95,15 +105,37 @@ class Query extends QueryLogic
     * ->results()
     *
     */
-    public function results()
+    public function results($returnArray = true)
     {
-        return parent::run();
+        return parent::run($returnArray);
     }
 
 
     //--------------------------------------------------------------------
 
 
+    /**
+    * toArray
+    *
+    * @param \Filebase\Document
+    * @return array
+    */
+    public function toArray()
+    {
+        $docs = [];
 
+        if (!empty($this->documents))
+        {
+            foreach($this->documents as $document)
+            {
+                $docs[] = (array) $document->getData();
+            }
+        }
+
+        return $docs;
+    }
+
+
+    //--------------------------------------------------------------------
 
 }

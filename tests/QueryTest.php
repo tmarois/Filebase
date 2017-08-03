@@ -46,6 +46,9 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     		$user = $db->get(uniqid());
     		$user->name  = 'John';
             $user->email = 'john@example.com';
+            $user->criteria = [
+                'label' => 'lead'
+            ];
 
     		$user->save();
     	}

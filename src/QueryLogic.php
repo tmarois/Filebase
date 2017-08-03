@@ -54,10 +54,10 @@ class QueryLogic
     * run
     *
     */
-    public function run()
+    public function run($returnArray)
     {
         $predicates = $this->predicate->get();
-        $documents  = [];
+        $this->documents  = [];
         $cached_documents = false;
 
         if (!empty($predicates))
@@ -72,15 +72,15 @@ class QueryLogic
                 }
             }
 
-            $documents = $this->database->findAll(true,false);
-            $documents = $this->filter($documents, $predicates);
+            $this->documents = $this->database->findAll(true,false);
+            $this->documents = $this->filter($this->documents, $predicates);
 
             if ($this->cache !== false)
             {
                 if ($cached_documents === false)
                 {
                     $dsave = [];
-                    foreach($documents as $document)
+                    foreach($this->documents as $document)
                     {
                         $dsave[] = $document->getId();
                     }
@@ -90,7 +90,12 @@ class QueryLogic
             }
         }
 
-        return $documents;
+        if ($returnArray === true)
+        {
+            return $this->toArray();
+        }
+
+        return $this->documents;
     }
 
 
