@@ -21,7 +21,7 @@ class Json implements FormatInterface
     * encode
     *
     */
-    public static function encode($data = [],$pretty = true)
+    public static function encode($data = [], $pretty = true)
     {
         $p = 1;
         if ($pretty==true) $p = JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES;
@@ -39,7 +39,7 @@ class Json implements FormatInterface
     */
     public static function decode($data)
     {
-        return json_decode($data,1);
+        return json_decode($data, 1);
     }
 
 

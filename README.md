@@ -316,7 +316,8 @@ To run the query use `results()`
 - `where()` param `array` for simple "equal to" OR `where($field, $operator, $value)`
 - `andWhere()` *optional* see `where()`, uses the logical `AND`
 - `orWhere()` *optional* see `where()`, this uses the logical `OR`
-- `results()` This will return all the document objects.
+- `results()` This will return all the document data as an array.
+- `resultDocuments()` This will return all the document objects
 
 ### Comparison Operators:
 
@@ -325,6 +326,7 @@ To run the query use `results()`
 |`=` or `==`        |Equality|
 |`===`              |Strict Equality|
 |`!=`               |Not Equals|
+|`NOT`              |Not Equals (same as `!=`)|
 |`!==`              |Strict Not Equals|
 |`>`                |Greater than|
 |`>=`               |Greater than or equal|

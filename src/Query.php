@@ -60,14 +60,14 @@ class Query extends QueryLogic
 
 
     /**
-    * add
+    * addPredicate
     *
     */
     protected function addPredicate($logic,$arg)
     {
         if (count($arg) == 3)
         {
-            $this->predicate->add($logic,$arg);
+            $this->predicate->add($logic, $arg);
         }
 
         if (count($arg) == 1)
@@ -92,9 +92,22 @@ class Query extends QueryLogic
     * formatWhere
     *
     */
-    protected function formatWhere($key,$value)
+    protected function formatWhere($key, $value)
     {
         return [$key,'==',$value];
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * ->getDocuments()
+    *
+    */
+    public function getDocuments()
+    {
+        return $this->documents;
     }
 
 
@@ -105,9 +118,22 @@ class Query extends QueryLogic
     * ->results()
     *
     */
-    public function results($returnArray = true)
+    public function results()
     {
-        return parent::run($returnArray);
+        return parent::run()->toArray();
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * ->resultDocuments()
+    *
+    */
+    public function resultDocuments()
+    {
+        return parent::run()->getDocuments();
     }
 
 

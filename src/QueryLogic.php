@@ -54,7 +54,7 @@ class QueryLogic
     * run
     *
     */
-    public function run($returnArray)
+    public function run()
     {
         $predicates = $this->predicate->get();
         $this->documents  = [];
@@ -68,7 +68,9 @@ class QueryLogic
 
                 if ($cached_documents = $this->cache->get())
                 {
-                    return $cached_documents;
+                    $this->documents = $cached_documents;
+
+                    return $this;
                 }
             }
 
@@ -90,12 +92,7 @@ class QueryLogic
             }
         }
 
-        if ($returnArray === true)
-        {
-            return $this->toArray();
-        }
-
-        return $this->documents;
+        return $this;
     }
 
 
@@ -190,6 +187,8 @@ class QueryLogic
                 return true;
             case ($operator === '!==' && $d_value !== $value):
                 return true;
+            case (strtoupper($operator) === 'NOT' && $d_value != $value):
+                return true;
             case ($operator === '>'  && $d_value >  $value):
                 return true;
             case ($operator === '>=' && $d_value >= $value):
@@ -198,9 +197,9 @@ class QueryLogic
                 return true;
             case ($operator === '>=' && $d_value >= $value):
                 return true;
-            case ($operator === 'IN' && in_array($d_value, (array) $value)):
+            case (strtoupper($operator) === 'IN' && in_array($d_value, (array) $value)):
                 return true;
-            case ($operator === 'IN' && in_array($value, (array) $d_value)):
+            case (strtoupper($operator) === 'IN' && in_array($value, (array) $d_value)):
                 return true;
             default:
                 return false;
