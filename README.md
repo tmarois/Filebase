@@ -23,7 +23,11 @@ Filebase is simple by design, but also has enough features for even the more adv
 
 Use [Composer](http://getcomposer.org/) to install package.
 
-Run `composer require tmarois/filebase` or add to your main `composer.json` file.
+Run `composer require tmarois/filebase` for the current 1.0 release.
+
+You can also do `composer require tmarois/filebase 1.*` to receive all the latest features when released under version 1
+
+If you want to modify the `composer.json` manually, add `"tmarois/filebase" : "1.*"` to your `required`
 
 ## Usage
 
@@ -357,3 +361,4 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 - Indexing (single document filtering, applied with all `save()` actions from validation closure)
 - Internal validations..security etc.
 - Cache driver (to use on other services like memcached, redis etc)
+- Query "LIKE" operator, using regex format
