@@ -195,7 +195,7 @@ class QueryLogic
                 return true;
             case ($operator === '<'  && $d_value <  $value):
                 return true;
-            case ($operator === '>=' && $d_value >= $value):
+            case ($operator === '<=' && $d_value <= $value):
                 return true;
             case (strtoupper($operator) === 'IN' && in_array($d_value, (array) $value)):
                 return true;

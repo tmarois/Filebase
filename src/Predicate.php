@@ -10,7 +10,17 @@ class Predicate
     * Allowed operators within the query
     */
     protected $allowed_operators = [
-        '=','==','===','!=','!==','>','<','=>','<=','IN','NOT'
+        '=',
+        '==',
+        '===',
+        '!=',
+        '!==',
+        '>',
+        '<',
+        '>=',
+        '<=',
+        'IN',
+        'NOT'
     ];
 
 

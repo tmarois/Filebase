@@ -29,13 +29,13 @@ Run `composer require tmarois/filebase` or add to your main `composer.json` file
 
 ```php
 // setting the access and configration to your database
-$my_database = new \Filebase\Database([
+$database = new \Filebase\Database([
     'dir' => 'path/to/database/dir'
 ]);
 
 // in this example, you would replace user_name with the actual user name.
 // It would technically be stored as user_name.json
-$item = $my_database->get('user_name');
+$item = $database->get('user_name');
 
 // display property values
 echo $item->first_name;
@@ -101,10 +101,10 @@ After you've loaded up your database config, then you can use the `get()` method
 
 ```php
 // my user id
-$user_id = '92832711';
+$userId = '92832711';
 
 // get the user information by id
-$item = $db->get($user_id);
+$item = $db->get($userId);
 ```
 
 `get()` returns `\Filebase\Document` object and has its own methods which you can call.
@@ -125,17 +125,17 @@ Example:
 
 ```php
 // get the timestamp when the user was created
-echo $db->get($user_id)->createdAt();
+echo $db->get($userId)->createdAt();
 
 // grabbing a specific field "tags" within the user
 // in this case, tags might come back as an array ["php","html","javascript"]
-$user_tags = $db->get($user_id)->field('tags');
+$user_tags = $db->get($userId)->field('tags');
 
 // or if "tags" is nested in the user data, such as aboutme->tags
-$user_tags = $db->get($user_id)->field('aboutme.tags');
+$user_tags = $db->get($userId)->field('aboutme.tags');
 
 // and of course you can do this as well for getting "tags"
-$user = $db->get($user_id);
+$user = $db->get($userId);
 $user_tags = $user->tags;
 $user_tags = $user->aboutme->tags;
 ```
@@ -293,20 +293,20 @@ If caching is enabled, queries will use `findAll()` and then cache results for t
 ```php
 // Simple (equal to) Query
 // return all the users that are blocked.
-$users = $userdb->query()
+$users = $db->query()
     ->where(['status' => 'blocked'])
     ->results();
 
 // Stackable WHERE clauses
 // return all the users who are blocked,
 // AND have "php" within the tag array
-$users = $userdb->query()
+$users = $db->query()
     ->where('status','=','blocked')
     ->where('tag','IN','php')
     ->results();
 
 // You can also use `.` dot delimiter to use on nested keys
-$users = $userdb->query()->where('status.language.english','=','blocked')->results();
+$users = $db->query()->where('status.language.english','=','blocked')->results();
 ```
 
 To run the query use `results()`
