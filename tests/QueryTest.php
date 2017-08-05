@@ -277,8 +277,6 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     		$user->save();
         }
 
-        $count = $db->count();
-
         // test that it limits the results to "2" (total query pulls "5")
         $test1 = $db->query()->where('rank','=',150)->limit(2)->results();
 
@@ -291,6 +289,62 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(2, (count($test1)));
         $this->assertEquals(3, (count($test2)));
         $this->assertEquals('Apple', $test3[0]['name']);
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * testSorting()
+    *
+    * TEST CASE:
+    * - Creates 6 company profiles
+    * - Sorts them by DESC/ASC
+    *
+    *
+    */
+    public function testSorting()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_orderby',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $companies = ['Google'=>150, 'Apple'=>180, 'Microsoft'=>120, 'Amex'=>20, 'Hooli'=>50, 'Amazon'=>140];
+
+        foreach($companies as $company=>$rank)
+        {
+            $user = $db->get(uniqid());
+    		$user->name    = $company;
+            $user->rank['reviews'] = $rank;
+            $user->status  = 'enabled';
+    		$user->save();
+        }
+
+        // test that they are ordered by name ASC (check first, second, and last)
+        $test1 = $db->query()->where('status','=','enabled')->orderBy('name', 'ASC')->results();
+        $this->assertEquals(['first'=>'Amazon','second'=>'Amex','last'=>'Microsoft'], ['first'=>$test1[0]['name'],'second'=>$test1[1]['name'],'last'=>$test1[5]['name']]);
+
+        // test that they are ordered by name ASC (check first, second, and last)
+        $test2 = $db->query()->where('status','=','enabled')->limit(3)->orderBy('name', 'ASC')->results();
+        $this->assertEquals(['Amazon','Amex','Apple'], [$test2[0]['name'],$test2[1]['name'],$test2[2]['name']]);
+
+        // test that they are ordered by name DESC (check first, second, and last)
+        $test3 = $db->query()->where('status','=','enabled')->limit(3)->orderBy('name', 'DESC')->results();
+        $this->assertEquals(['Microsoft','Hooli','Google'], [$test3[0]['name'],$test3[1]['name'],$test3[2]['name']]);
+
+        // test that they are ordered by rank nested [reviews] DESC
+        $test4 = $db->query()->where('status','=','enabled')->limit(3)->orderBy('rank.reviews', 'DESC')->results();
+        $this->assertEquals(['Apple','Google','Amazon'], [$test4[0]['name'],$test4[1]['name'],$test4[2]['name']]);
+
+        // test that they are ordered by rank nested [reviews] ASC
+        $test5 = $db->query()->where('status','=','enabled')->limit(3)->orderBy('rank.reviews', 'ASC')->results();
+        $this->assertEquals(['Amex','Hooli','Microsoft'], [$test5[0]['name'],$test5[1]['name'],$test5[2]['name']]);
 
         $db->flush(true);
     }

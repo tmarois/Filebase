@@ -322,8 +322,17 @@ $users = $db->query()
 // You can also use `.` dot delimiter to use on nested keys
 $users = $db->query()->where('status.language.english','=','blocked')->results();
 
-// how about find all users that have a gmail account?
+// Limit Example: Same query as above, except we only want to limit the results to 10
+$users = $db->query()->where('status.language.english','=','blocked')->limit(10)->results();
+
+// Query LIKE Example: how about find all users that have a gmail account?
 $usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->results();
+
+// OrderBy Example: From the above query, what if you want to order the results by nested array (profile name?)
+$usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->orderBy('profile.name', 'ASC')->results();
+
+// or just order the results by email address
+$usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->orderBy('email', 'ASC')->results();
 
 ```
 
@@ -334,6 +343,8 @@ To run the query use `results()` or `resultDocuments()`
 - `where()` param `array` for simple "equal to" OR `where($field, $operator, $value)`
 - `andWhere()` *optional* see `where()`, uses the logical `AND`
 - `orWhere()` *optional* see `where()`, this uses the logical `OR`
+- `limit()` *optional* limit/offset results `limit($number, $offset)`
+- `orderBy()` *optional* orders the results `orderBy($field, $direction)`, `$direction` = `ASC` or `DESC`
 - `results()` This will return all the document data as an array.
 - `resultDocuments()` This will return all the document objects
 

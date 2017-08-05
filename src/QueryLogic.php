@@ -70,6 +70,7 @@ class QueryLogic
                 {
                     $this->documents = $cached_documents;
 
+                    $this->sort();
                     $this->offsetLimit();
 
                     return $this;
@@ -94,6 +95,7 @@ class QueryLogic
             }
         }
 
+        $this->sort();
         $this->offsetLimit();
 
         return $this;
@@ -158,6 +160,36 @@ class QueryLogic
         {
             $this->documents = array_slice($this->documents, $this->offset, $this->limit);
         }
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * sort
+    *
+    */
+    protected function sort()
+    {
+        $orderBy = $this->orderBy;
+        $sortBy  = $this->sortBy;
+
+        if ($orderBy=='')
+        {
+            return false;
+        }
+
+        usort($this->documents, function($a, $b) use ($orderBy, $sortBy) {
+
+            if ($sortBy == 'DESC')
+            {
+                return $b->field($orderBy) <=> $a->field($orderBy);
+            }
+
+            return $a->field($orderBy) <=> $b->field($orderBy);
+        });
+
     }
 
 
