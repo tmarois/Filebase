@@ -4,7 +4,11 @@
 
 A Simple but Powerful **Flat File Database** Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/tmarois/Filebase#2-formatting) the way you like).
 
-You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in **version control** and pass them to your team without having out-of-sync SQL databases. Doesn't that sound awesome?
+You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in **version control** and pass them to your team without having out-of-sync SQL databases.
+
+Doesn't that sound awesome?
+
+With Filebase, you are in complete control. Design your data structure the way you want. Use arrays and objects like you know how in php, and update and share your data with others and teams using version control. Just remember, upgrading your web/apache server is a lot less than your database server.
 
 ### Features
 
@@ -27,6 +31,8 @@ Run `composer require tmarois/filebase` for the latest features under version 1
 
 If you want to modify the `composer.json` manually, add `"tmarois/filebase" : "^1.0"` to your `required`
 
+You do not need to use composer, just download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases.
+
 ## Usage
 
 ```php
@@ -35,7 +41,7 @@ $database = new \Filebase\Database([
     'dir' => 'path/to/database/dir'
 ]);
 
-// in this example, you would search an extra user name
+// in this example, you would search an exact user name
 // It would technically be stored as user_name.json in the directories
 $item = $database->get('kingslayer');
 
@@ -52,7 +58,7 @@ $item->tags  = ['php','developer','html5'];
 $item->save();
 
 // Need to find all the users that have a tag for "php" ?
-$users = $db->query()->where('tag','IN','php')->results();
+$users = $db->query()->where('tags','IN','php')->results();
 
 // Need to search for all the users who use @yahoo.com email addresses?
 $users = $db->query()->where('email','LIKE','@yahoo.com')->results();
