@@ -21,6 +21,7 @@ Filebase is simple by design, but also has enough features for even the more adv
 * File locking (on save)
 * Customizable formatting (encode/decode)
 * Validation (on save)
+* [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) method APIs
 
 
 ## Installation
