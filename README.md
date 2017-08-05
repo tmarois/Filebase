@@ -35,9 +35,9 @@ $database = new \Filebase\Database([
     'dir' => 'path/to/database/dir'
 ]);
 
-// in this example, you would replace user_name with the actual user name.
-// It would technically be stored as user_name.json
-$item = $database->get('user_name');
+// in this example, you would search an extra user name
+// It would technically be stored as user_name.json in the directories
+$item = $database->get('kingslayer');
 
 // display property values
 echo $item->first_name;
@@ -46,9 +46,16 @@ echo $item->email;
 
 // change existing or add new properties
 $item->email = 'example@example.com';
+$item->tags  = ['php','developer','html5'];
 
 // need to save? thats easy!
 $item->save();
+
+// Need to find all the users that have a tag for "php" ?
+$users = $db->query()->where('tag','IN','php')->results();
+
+// Need to search for all the users who use @yahoo.com email addresses?
+$users = $db->query()->where('email','LIKE','@yahoo.com')->results();
 
 ```
 
@@ -295,20 +302,22 @@ If caching is enabled, queries will use `findAll()` and then cache results for t
 ```php
 // Simple (equal to) Query
 // return all the users that are blocked.
-$users = $db->query()
-    ->where(['status' => 'blocked'])
-    ->results();
+$users = $db->query()->where(['status' => 'blocked'])->results();
 
 // Stackable WHERE clauses
 // return all the users who are blocked,
 // AND have "php" within the tag array
 $users = $db->query()
     ->where('status','=','blocked')
-    ->where('tag','IN','php')
+    ->andWhere('tag','IN','php')
     ->results();
 
 // You can also use `.` dot delimiter to use on nested keys
 $users = $db->query()->where('status.language.english','=','blocked')->results();
+
+// how about find all users that have a gmail account?
+$usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->results();
+
 ```
 
 To run the query use `results()`
@@ -335,6 +344,7 @@ To run the query use `results()`
 |`<`                |Less than|
 |`<=`               |Less than or equal|
 |`IN`               |Checks if the value is within a array|
+|`LIKE`             |case-insensitive regex expression search|
 
 
 ## (9) Caching
@@ -359,4 +369,3 @@ Accepting contributions and feedback. Send in any issues and pull requests.
 - Indexing (single document filtering, applied with all `save()` actions from validation closure)
 - Internal validations..security etc.
 - Cache driver (to use on other services like memcached, redis etc)
-- Query "LIKE" operator, using regex format

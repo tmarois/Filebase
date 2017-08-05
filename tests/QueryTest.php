@@ -186,6 +186,75 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     //--------------------------------------------------------------------
 
 
+    /**
+    * testWhereLikeRegex()
+    *
+    * TEST CASE:
+    * - Creates 10 items in database with ["pages" = 5]
+    * - Counts the total items in the database
+    *
+    * FIRST TEST: Greater Than
+    * - Should match "10"
+    *
+    * SECOND TEST: Less Than
+    * - Should match "10"
+    *
+    * THIRD TEST: Less/Greater than "no match"
+    * - Should match "0"
+    *
+    * Comparisons used ">=", ">", "<=", "<"
+    *
+    */
+    public function testWhereLikeRegex()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_like',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        for ($x = 1; $x <= 10; $x++)
+    	{
+    		$user = $db->get(uniqid());
+    		$user->name  = 'John Ellot';
+            $user->email = 'johnellot@example.com';
+    		$user->save();
+    	}
+
+        // the needle
+        $user = $db->get(uniqid());
+        $user->name  = 'Timothy Marois';
+        $user->email = 'timothymarois@email.com';
+        $user->save();
+
+        $count  = $db->count();
+
+        // should return exact match
+        $query1 = $db->query()->where('name','==','Timothy Marois')->results();
+        // this should fail to find anything
+        $query2 = $db->query()->where('name','==','timothy marois')->results();
+
+        // this should find match with regex loose expression
+        $query3 = $db->query()->where('name','LIKE','timothy marois')->results();
+        // this should find match by looking for loose expression on "timothy"
+        $query4 = $db->query()->where('name','LIKE','timothy')->results();
+        // this should find all teh users that have an email address using "@email.com"
+        $query5 = $db->query()->where('email','LIKE','@email.com')->results();
+
+        $this->assertEquals(1, count($query1));
+        $this->assertEquals(0, count($query2));
+        $this->assertEquals(1, count($query3));
+        $this->assertEquals(1, count($query4));
+        $this->assertEquals(1, count($query5));
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
 
 
 

@@ -20,7 +20,8 @@ class Predicate
         '>=',
         '<=',
         'IN',
-        'NOT'
+        'NOT',
+        'LIKE'
     ];
 
 
