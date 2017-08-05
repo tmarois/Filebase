@@ -3,70 +3,82 @@
 
 class DocumentTest extends \PHPUnit\Framework\TestCase
 {
+
+    /**
+    * testSave()
+    *
+    * TEST CASE:
+    * - Save document with data
+    * - Get the document
+    * - Check that the data is there and the document exist
+    *
+    */
     public function testSave()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir'   => __DIR__.'/databases',
+            'cache' => false
         ]);
 
         $db->flush(true);
 
-        $test = $db->get('test')->save(['key'=>'value']);
-        $val  = $db->get('test')->toArray();
+        // save data
+        $doc = $db->get('test_save')->save(['key'=>'value']);
 
-        $this->assertEquals(['key'=>'value'], $val);
+        // get saved data (put into array)
+        $val = $db->get('test_save');
+
+        // should equal...
+        $this->assertEquals('value', $val->key);
 
         $db->flush(true);
     }
 
 
-    public function testArraySetValue()
+    //--------------------------------------------------------------------
+
+
+    /**
+    * testSetValue()
+    *
+    * TEST CASE:
+    * - Using the set method, set the value in object ( DO NOT SAVE )
+    * - Check that the properties are in the object (matching)
+    *
+    */
+    public function testSetValue()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'cache' => false
         ]);
 
         $db->flush(true);
 
-        $test = $db->get('test')->set(['key'=>'value']);
+        // FIRST TEST
+        // use the set() method
+        $test1 = $db->get('test1')->set(['key'=>'value']);
 
-        $this->assertEquals('value', $test->key);
+        $this->assertEquals('value', $test1->key);
 
-        $db->flush(true);
+
+        // SECOND TEST:
+        // use the property setter
+        $test2 = $db->get('test2');
+        $test2->key = 'value';
+
+        $this->assertEquals('value', $test2->key);
+
+
+        // THIRD TEST (null test)
+        $test3 = $db->get('test3');
+
+        $this->assertEquals(null, $test3->key);
+
     }
 
 
-    public function testPropertySetValue()
-    {
-        $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
-        ]);
-
-        $db->flush(true);
-
-        $test = $db->get('test');
-        $test->key = 'value';
-
-        $this->assertEquals('value', $test->key);
-
-        $db->flush(true);
-    }
-
-
-    public function testPropertySetValueNull()
-    {
-        $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
-        ]);
-
-        $db->flush(true);
-
-        $test = $db->get('test');
-
-        $this->assertEquals(null, $test->key);
-
-        $db->flush(true);
-    }
+    //--------------------------------------------------------------------
 
 
     public function testArraySetValueSave()

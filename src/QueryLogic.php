@@ -70,6 +70,8 @@ class QueryLogic
                 {
                     $this->documents = $cached_documents;
 
+                    $this->offsetLimit();
+
                     return $this;
                 }
             }
@@ -91,6 +93,8 @@ class QueryLogic
                 }
             }
         }
+
+        $this->offsetLimit();
 
         return $this;
     }
@@ -138,6 +142,22 @@ class QueryLogic
         }
 
         return $results;
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * offsetLimit
+    *
+    */
+    protected function offsetLimit()
+    {
+        if ($this->limit != 0 || $this->offset != 0)
+        {
+            $this->documents = array_slice($this->documents, $this->offset, $this->limit);
+        }
     }
 
 

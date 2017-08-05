@@ -249,6 +249,56 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     //--------------------------------------------------------------------
 
 
+    /**
+    * testLimitOffset()
+    *
+    * TEST CASE:
+    * - Creates 6 company profiles
+    * - Queries them and limits the results
+    *
+    *
+    */
+    public function testLimitOffset()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_orderby',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $companies = ['Google'=>150, 'Apple'=>150, 'Microsoft'=>150, 'Amex'=>150, 'Hooli'=>20, 'Amazon'=>10];
+
+        foreach($companies as $company=>$rank)
+        {
+            $user = $db->get(uniqid());
+    		$user->name  = $company;
+            $user->rank  = $rank;
+    		$user->save();
+        }
+
+        $count = $db->count();
+
+        // test that it limits the results to "2" (total query pulls "5")
+        $test1 = $db->query()->where('rank','=',150)->limit(2)->results();
+
+        // test the offset, no limit, should be 3 (total query pulls "5")
+        $test2 = $db->query()->where('rank','=',150)->limit(0,1)->results();
+
+        // test that the offset takes off the first array (should return "apple", not "google")
+        $test3 = $db->query()->where('rank','=',150)->limit(1,1)->results();
+
+        $this->assertEquals(2, (count($test1)));
+        $this->assertEquals(3, (count($test2)));
+        $this->assertEquals('Apple', $test3[0]['name']);
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
 
 
 

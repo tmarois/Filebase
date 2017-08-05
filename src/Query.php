@@ -4,6 +4,12 @@
 class Query extends QueryLogic
 {
 
+    protected $limit   = 0;
+    protected $offset  = 0;
+    protected $sortBy  = 'ASC';
+    protected $orderBy = '';
+
+
     /**
     * $documents
     *
@@ -51,6 +57,44 @@ class Query extends QueryLogic
     public function orWhere(...$arg)
     {
         $this->addPredicate('or', $arg);
+
+        return $this;
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * ->limit()
+    *
+    */
+    public function limit($limit, $offset = 0)
+    {
+        $this->limit   = (int) $limit;
+
+        if ($this->limit === 0)
+        {
+            $this->limit = 9999999;
+        }
+
+        $this->offset  = (int) $offset;
+
+        return $this;
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * ->orderBy()
+    *
+    */
+    public function orderBy(string $field, string $sort)
+    {
+        $this->orderBy = $field;
+        $this->sortBy  = $sort;
 
         return $this;
     }
