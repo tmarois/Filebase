@@ -353,6 +353,217 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     //--------------------------------------------------------------------
 
 
+    /**
+    * testWhereIn()
+    *
+    * TEST CASE:
+    * - Testing the Where "IN" operator
+    *
+    *
+    */
+    public function testWhereIn()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $companies = [
+            'Google'=>[
+                'tags' => [
+                    'search','display'
+                ]
+            ],
+            'Facebook'=>[
+                'tags' => [
+                    'social','network'
+                ]
+            ]
+        ];
+
+        foreach($companies as $company=>$tags)
+        {
+            $user = $db->get(uniqid());
+    		$user->name  = $company;
+            $user->tags  = $tags['tags'];
+    		$user->save();
+        }
+
+
+        // test that they are ordered by name ASC (check first, second, and last)
+        $test1 = $db->query()->where('tags','IN','search')->first();
+        $test2 = $db->query()->where('tags','IN','network')->first();
+
+        $this->assertEquals('Google', $test1['name']);
+        $this->assertEquals('Facebook', $test2['name']);
+
+        // this will test the IN clause if name matches one of these
+        $test3 = $db->query()->where('name','IN',['Google','Facebook'])->results();
+
+        $this->assertEquals(2, count($test3));
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * testWithoutWhere()
+    *
+    * TEST CASE:
+    * - Run queries without using Where()
+    * - This will run a findAll()
+    *
+    *
+    */
+    public function testWithoutWhere()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $companies = [
+            'Google'=>[
+                'site' => 'google.com',
+                'type' => 'search'
+            ],
+            'Yahoo'=>[
+                'site' => 'yahoo.com',
+                'type' => 'search'
+            ],
+            'Facebook'=>[
+                'site' => 'facebook.com',
+                'type' => 'social'
+            ]
+        ];
+
+        foreach($companies as $company=>$options)
+        {
+            $user = $db->get(uniqid());
+    		$user->name  = $company;
+            $user->type  = $options['type'];
+            $user->site  = $options['site'];
+    		$user->save();
+        }
+
+
+        // test that they are ordered by name ASC (check first, second, and last)
+        $test1 = $db->query()->orderBy('name', 'DESC')->first();
+
+        $this->assertEquals('Yahoo', $test1['name']);
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * testingBadOperator()
+    *
+    * BAD TEST CASE:
+    * - Tries to run a query with an operator that does not exist.
+    *
+    */
+    public function testingBadOperator()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        // FIRST TEST
+        $db->flush(true);
+
+        $user = $db->get(uniqid());
+        $user->name = 'John';
+        $user->save();
+
+        // standard matches
+        $query = $db->query()->where('name','&','John')->results();
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * testingBadField()
+    *
+    * BAD TEST CASE:
+    * - Tries to run a query with a blank field
+    *
+    */
+    public function testingBadField()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        // FIRST TEST
+        $db->flush(true);
+
+        $user = $db->get(uniqid());
+        $user->name = 'John';
+        $user->save();
+
+        // standard matches
+        $query = $db->query()->where('','=','John')->results();
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * testingMissingQueryArguments()
+    *
+    * BAD TEST CASE:
+    * - Tries to run a query with just a string arg
+    *
+    */
+    public function testingMissingQueryArguments()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $user = $db->get(uniqid());
+        $user->name = 'John';
+        $user->save();
+
+        // standard matches
+        $query = $db->query()->where('John')->results();
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
 
 
 

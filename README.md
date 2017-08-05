@@ -325,18 +325,33 @@ $users = $db->query()->where('status.language.english','=','blocked')->results()
 // Limit Example: Same query as above, except we only want to limit the results to 10
 $users = $db->query()->where('status.language.english','=','blocked')->limit(10)->results();
 
+
+
 // Query LIKE Example: how about find all users that have a gmail account?
 $usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->results();
 
 // OrderBy Example: From the above query, what if you want to order the results by nested array (profile name?)
-$usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->orderBy('profile.name', 'ASC')->results();
+$usersWithGmail = $db->query()
+                    ->where('email','LIKE','@gmail.com')
+                    ->orderBy('profile.name', 'ASC')
+                    ->results();
 
 // or just order the results by email address
-$usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->orderBy('email', 'ASC')->results();
+$usersWithGmail = $db->query()
+                    ->where('email','LIKE','@gmail.com')
+                    ->orderBy('email', 'ASC')
+                    ->results();
+
+
+// this will get the user that has the most page views (and returning 1 result)
+$user = $db->query()->orderBy('page_views', 'DESC')->first();
+// print out the user name
+echo $user['name'];
+
 
 ```
 
-To run the query use `results()` or `resultDocuments()`
+To run the query use `results()` or `resultDocuments()` or `first()` if you want only the first item
 
 ### Methods:
 
@@ -345,6 +360,10 @@ To run the query use `results()` or `resultDocuments()`
 - `orWhere()` *optional* see `where()`, this uses the logical `OR`
 - `limit()` *optional* limit/offset results `limit($number, $offset)`
 - `orderBy()` *optional* orders the results `orderBy($field, $direction)`, `$direction` = `ASC` or `DESC`
+
+These methods execute the query and return results *(do not try to use them together)*
+
+- `first()` Returns only the first query result (if you only want to return 1 item)
 - `results()` This will return all the document data as an array.
 - `resultDocuments()` This will return all the document objects
 

@@ -60,38 +60,44 @@ class QueryLogic
         $this->documents  = [];
         $cached_documents = false;
 
-        if (!empty($predicates))
+        if (empty($predicates))
         {
-            if ($this->cache !== false)
+            $predicates = 'findAll';
+        }
+
+        if ($this->cache !== false)
+        {
+            $this->cache->setKey(json_encode($predicates));
+
+            if ($cached_documents = $this->cache->get())
             {
-                $this->cache->setKey(json_encode($predicates));
+                $this->documents = $cached_documents;
 
-                if ($cached_documents = $this->cache->get())
-                {
-                    $this->documents = $cached_documents;
+                $this->sort();
+                $this->offsetLimit();
 
-                    $this->sort();
-                    $this->offsetLimit();
-
-                    return $this;
-                }
+                return $this;
             }
+        }
 
-            $this->documents = $this->database->findAll(true,false);
+        $this->documents = $this->database->findAll(true,false);
+
+        if ($predicates !== 'findAll')
+        {
             $this->documents = $this->filter($this->documents, $predicates);
+        }
 
-            if ($this->cache !== false)
+        if ($this->cache !== false)
+        {
+            if ($cached_documents === false)
             {
-                if ($cached_documents === false)
+                $dsave = [];
+                foreach($this->documents as $document)
                 {
-                    $dsave = [];
-                    foreach($this->documents as $document)
-                    {
-                        $dsave[] = $document->getId();
-                    }
-
-                    $this->cache->store($dsave);
+                    $dsave[] = $document->getId();
                 }
+
+                $this->cache->store($dsave);
             }
         }
 
@@ -192,28 +198,6 @@ class QueryLogic
 
     }
 
-
-    //--------------------------------------------------------------------
-
-
-    /**
-    * matchDocuments
-    *
-    */
-    public function matchDocuments($documents, $field, $operator, $value)
-    {
-        $docs = [];
-
-        foreach($documents as $document)
-        {
-            if ($this->match($document, $field, $operator, $value)===true)
-            {
-                $docs[] = $document;
-            }
-        }
-
-        return $docs;
-    }
 
 
     //--------------------------------------------------------------------

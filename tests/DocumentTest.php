@@ -81,6 +81,40 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     //--------------------------------------------------------------------
 
 
+    /**
+    * testIssetUnsetUnknown()
+    *
+    * TEST CASE:
+    * - Check if property isset
+    * - Unset property and see if it now returns null
+    *
+    */
+    public function testIssetUnset()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $test = $db->get('test2');
+        $test->key = 'value';
+
+        $this->assertEquals('value', $test->key);
+
+        $this->assertEquals(1, isset($test->key));
+
+        unset($test->key);
+
+        $this->assertEquals(null, ($test->key));
+
+    }
+
+
+    //--------------------------------------------------------------------
+
+
     public function testArraySetValueSave()
     {
         $db = new \Filebase\Database([
