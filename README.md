@@ -15,13 +15,13 @@ With Filebase, you are in complete control. Design your data structure the way y
 Filebase is simple by design, but also has enough features for even the more advanced.
 
 * Key-value and Multidimensional Data Storing
-* Querying data
-* Custom filters
-* Caching (queries)
+* [Querying data](https://github.com/tmarois/Filebase#8-queries)
+* [Custom filters](https://github.com/tmarois/Filebase#7-custom-filters)
+* [Caching](https://github.com/tmarois/Filebase#9-caching) (queries)
 * File locking (on save)
-* Customizable formatting (encode/decode)
-* Validation (on save)
-* [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) method APIs
+* Customizable [formatting](https://github.com/tmarois/Filebase#2-formatting) (encode/decode)
+* [Validation](https://github.com/tmarois/Filebase#6-validation-optional) (on save)
+* [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) (method APIs)
 
 
 ## Installation
@@ -327,7 +327,7 @@ $usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->results();
 
 ```
 
-To run the query use `results()`
+To run the query use `results()` or `resultDocuments()`
 
 ### Methods:
 
