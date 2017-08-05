@@ -199,6 +199,8 @@ class QueryLogic
                 return true;
             case (strtoupper($operator) === 'LIKE' && preg_match('/'.$value.'/is',$d_value)):
                 return true;
+            case (strtoupper($operator) === 'NOT LIKE' && !preg_match('/'.$value.'/is',$d_value)):
+                return true;
             case (strtoupper($operator) === 'IN' && in_array($d_value, (array) $value)):
                 return true;
             case (strtoupper($operator) === 'IN' && in_array($value, (array) $d_value)):

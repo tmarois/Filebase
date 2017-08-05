@@ -21,7 +21,8 @@ class Predicate
         '<=',
         'IN',
         'NOT',
-        'LIKE'
+        'LIKE',
+        'NOT LIKE'
     ];
 
 

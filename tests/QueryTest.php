@@ -190,19 +190,10 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     * testWhereLikeRegex()
     *
     * TEST CASE:
-    * - Creates 10 items in database with ["pages" = 5]
-    * - Counts the total items in the database
+    * - Creates a bunch of items with the same information
+    * - Creates one item with different info (finding the needle)
     *
-    * FIRST TEST: Greater Than
-    * - Should match "10"
-    *
-    * SECOND TEST: Less Than
-    * - Should match "10"
-    *
-    * THIRD TEST: Less/Greater than "no match"
-    * - Should match "0"
-    *
-    * Comparisons used ">=", ">", "<=", "<"
+    * Comparisons used "LIKE", "NOT LIKE", "=="
     *
     */
     public function testWhereLikeRegex()
@@ -241,12 +232,15 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $query4 = $db->query()->where('name','LIKE','timothy')->results();
         // this should find all teh users that have an email address using "@email.com"
         $query5 = $db->query()->where('email','LIKE','@email.com')->results();
+        // this should return 1 as its looking at only the emails not like "@example.com"
+        $query6 = $db->query()->where('email','NOT LIKE','@example.com')->results();
 
         $this->assertEquals(1, count($query1));
         $this->assertEquals(0, count($query2));
         $this->assertEquals(1, count($query3));
         $this->assertEquals(1, count($query4));
         $this->assertEquals(1, count($query5));
+        $this->assertEquals(1, count($query6));
 
         $db->flush(true);
     }

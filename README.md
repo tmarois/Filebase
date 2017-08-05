@@ -352,6 +352,7 @@ To run the query use `results()`
 |`<=`               |Less than or equal|
 |`IN`               |Checks if the value is within a array|
 |`LIKE`             |case-insensitive regex expression search|
+|`NOT LIKE`         |case-insensitive regex expression search (opposite)|
 
 
 ## (9) Caching
