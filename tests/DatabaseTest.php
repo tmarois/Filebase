@@ -48,6 +48,24 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    public function testDatabaseTruncate()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/test_delete'
+        ]);
+
+        $db->flush(true);
+
+        $db->get('test1')->set(['key'=>'value'])->save();
+        $db->get('test2')->set(['key'=>'value'])->save();
+
+        $this->assertEquals(true, $db->truncate());
+
+        $test = $db->get('test2');
+        $this->assertEquals(null, $test->key);
+    }
+
+
     public function testDatabaseFlushFalse()
     {
         $this->expectException(\Exception::class);

@@ -39,6 +39,38 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
 
     /**
+    * testSetIdGetId()
+    *
+    * TEST CASE:
+    * - Set and Get Id
+    *
+    */
+    public function testSetIdGetId()
+    {
+        $db = new \Filebase\Database([
+            'dir'   => __DIR__.'/databases/data_rename',
+            'cache' => false
+        ]);
+
+        // save data
+        $doc = $db->get('name_1')->save(['key'=>'value']);
+        $this->assertEquals('name_1', $doc->getId());
+
+        // delete existing doc so its not duplicated
+        // object still exist, but file has been removed
+        $doc->delete();
+        $this->assertEquals('name_1', $doc->getId());
+
+        // change id and save (new file is created)
+        $doc->setId('name_2')->save();
+        $this->assertEquals('name_2', $doc->getId());
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
     * testSetValue()
     *
     * TEST CASE:

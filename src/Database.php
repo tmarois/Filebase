@@ -246,6 +246,21 @@ class Database
 
     //--------------------------------------------------------------------
 
+    /**
+    * truncate
+    *
+    * Alias for flush(true)
+    *
+    * @return @see flush
+    */
+    public function truncate()
+    {
+        return $this->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
 
     /**
     * flush

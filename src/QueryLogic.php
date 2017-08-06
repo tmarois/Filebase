@@ -241,6 +241,8 @@ class QueryLogic
                 return true;
             case (strtoupper($operator) === 'IN' && in_array($value, (array) $d_value)):
                 return true;
+            case (strtoupper($operator) === 'REGEX' && preg_match($value, $d_value)):
+                return true;
             default:
                 return false;
         }

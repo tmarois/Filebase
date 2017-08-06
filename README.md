@@ -147,13 +147,13 @@ echo $db->get($userId)->createdAt();
 // in this case, tags might come back as an array ["php","html","javascript"]
 $user_tags = $db->get($userId)->field('tags');
 
-// or if "tags" is nested in the user data, such as aboutme->tags
-$user_tags = $db->get($userId)->field('aboutme.tags');
+// or if "tags" is nested in the user data, such as about[tags]
+$user_tags = $db->get($userId)->field('about.tags');
 
 // and of course you can do this as well for getting "tags"
 $user = $db->get($userId);
 $user_tags = $user->tags;
-$user_tags = $user->aboutme->tags;
+$user_tags = $user->about['tags'];
 ```
 
 
@@ -197,10 +197,11 @@ Here is a list of methods you can use on the database class.
 |Method|Details|
 |---|---|
 |`get()`                          | Refer to [get()](https://github.com/tmarois/Filebase#3-get-and-methods) |
-|`findAll()`                      | Returns all Documents in database |
+|`findAll()`                      | Returns all documents in database |
 |`count()`                        | Number of documents in database |
-|`flush(true)`                    | Deletes all documents |
+|`flush(true)`                    | Deletes all documents. |
 |`flushCache()`                   | Clears all the cache |
+|`truncate()`                     | Deletes all documents. Alias of `flush(true)` |
 |`query()`                        | Refer to the [Queries](https://github.com/tmarois/Filebase#8-queries) |
 
 Examples
@@ -330,7 +331,7 @@ $users = $db->query()->where('status.language.english','=','blocked')->limit(10)
 // Query LIKE Example: how about find all users that have a gmail account?
 $usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->results();
 
-// OrderBy Example: From the above query, what if you want to order the results by nested array (profile name?)
+// OrderBy Example: From the above query, what if you want to order the results by nested array
 $usersWithGmail = $db->query()
                     ->where('email','LIKE','@gmail.com')
                     ->orderBy('profile.name', 'ASC')
@@ -347,6 +348,9 @@ $usersWithGmail = $db->query()
 $user = $db->query()->orderBy('page_views', 'DESC')->first();
 // print out the user name
 echo $user['name'];
+
+// What about regex search? Finds emails within a field
+$users = $db->query()->where('email','REGEX','/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i')->results();
 
 
 ```
@@ -383,6 +387,7 @@ These methods execute the query and return results *(do not try to use them toge
 |`IN`               |Checks if the value is within a array|
 |`LIKE`             |case-insensitive regex expression search|
 |`NOT LIKE`         |case-insensitive regex expression search (opposite)|
+|`REGEX`            |Regex search|
 
 
 ## (9) Caching

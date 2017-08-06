@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+### 08/06/2017 - 1.0.5
+* Added new method database class `truncate()` as an alias of `flush(true)`
+* Added `REGEX` as new query operator. Uses `preg_match($regex, $fieldValue)`
+
 ### 08/05/2017 - 1.0.4
 * Added `first()` (if you want to only return the first array of the query result)
 * Ability to use Queries without needing `where()`, can now use queries to find all and order results

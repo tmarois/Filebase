@@ -187,7 +187,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
 
     /**
-    * testWhereLikeRegex()
+    * testWhereLike()
     *
     * TEST CASE:
     * - Creates a bunch of items with the same information
@@ -196,7 +196,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     * Comparisons used "LIKE", "NOT LIKE", "=="
     *
     */
-    public function testWhereLikeRegex()
+    public function testWhereLike()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases/users_like',
@@ -241,6 +241,58 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(1, count($query4));
         $this->assertEquals(1, count($query5));
         $this->assertEquals(1, count($query6));
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * testWhereRegex()
+    *
+    * TEST CASE:
+    * - Testing the use of regex
+    *
+    * Comparisons used "REGEX"
+    *
+    */
+    public function testWhereRegex()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_regex',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        for ($x = 1; $x <= 10; $x++)
+    	{
+    		$user = $db->get(uniqid());
+    		$user->name  = 'John Ellot';
+            $user->email = 'johnellot@example.com';
+    		$user->save();
+    	}
+
+        // the needle (with bad email)
+        $user = $db->get(uniqid());
+        $user->name  = 'Leo Ash';
+        $user->email = 'example@emailcom';
+        $user->save();
+
+        $count  = $db->count();
+
+        // this should find match with regex loose expression
+        $query1 = $db->query()->where('name','REGEX','/leo/i')->results();
+        $query2 = $db->query()->where('name','REGEX','/leo\sash/i')->results();
+
+        // finds all the emails in a field
+        $query3 = $db->query()->where('email','REGEX','/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i')->results();
+
+        $this->assertEquals(1, count($query1));
+        $this->assertEquals(1, count($query2));
+        $this->assertEquals(10, count($query3));
 
         $db->flush(true);
     }
