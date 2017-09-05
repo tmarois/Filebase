@@ -29,7 +29,7 @@ class BackupTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function testBackupSave()
+    public function testBackupCreate()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases/mydatabasetobackup',
@@ -45,7 +45,7 @@ class BackupTest extends \PHPUnit\Framework\TestCase
     		$user->save();
     	}
 
-        $file = $db->backup()->save();
+        $file = $db->backup()->create();
 
         $db->flush(true);
 
@@ -69,7 +69,7 @@ class BackupTest extends \PHPUnit\Framework\TestCase
     		$user->save();
     	}
 
-        $db->backup()->save();
+        $db->backup()->create();
 
         $backups = $db->backup()->find();
 
@@ -94,9 +94,9 @@ class BackupTest extends \PHPUnit\Framework\TestCase
     		$user->save();
     	}
 
-        $db->backup()->save();
-        $db->backup()->save();
-        $last = str_replace('.zip','',$db->backup()->save());
+        $db->backup()->create();
+        $db->backup()->create();
+        $last = str_replace('.zip','',$db->backup()->create());
 
         $backups = $db->backup()->find();
         $backupCurrent = current($backups);

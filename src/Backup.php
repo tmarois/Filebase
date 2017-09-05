@@ -59,7 +59,7 @@ class Backup
     * save()
     *
     */
-    public function save()
+    public function create()
     {
         $backupFile = $this->backupLocation.'/'.time().'.zip';
 

@@ -206,6 +206,7 @@ Here is a list of methods you can use on the database class.
 |`flushCache()`                   | Clears all the cache |
 |`truncate()`                     | Deletes all documents. Alias of `flush(true)` |
 |`query()`                        | Refer to the [Queries](https://github.com/tmarois/Filebase#8-queries) |
+|`backup()`                       | Refer to the [Backups](https://github.com/tmarois/Filebase#10-database-backups) |
 
 Examples
 
@@ -400,28 +401,27 @@ Cached queries will only be used if a specific saved cache is less than the expi
 
 
 ## (10) Database Backups
-By default you can backup your database using `$db->backup()->save()`, this will create a `.zip` file of your entire database based on your `dir` path.
+By default you can backup your database using `$db->backup()->create()`, this will create a `.zip` file of your entire database based on your `dir` path.
 
 ### Methods:
 These methods can be used when invoking `backup()` on your `Database`.
 
-- `save()` Saves a backup of your database (in your backup location `.zip`)
+- `create()` Creates a backup of your database (in your backup location `.zip`)
 - `clean()` Purges all existing backups (`.zip` files in your backup location)
 - `find()` Returns an `array` of all existing backups (array key by `time()` when backup was created)
 
 **Example:**
 
 ```php
-
 // invoke your database
 $database = new \Filebase\Database([
     'dir' => '/storage/users',
     'backupLocation' => '/storage/backup',
 ]);
 
-// save a new backup of your database
+// create a new backup of your database
 // will look something like /storage/backup/1504631092.zip
-$database->backup()->save();
+$database->backup()->create();
 
 // delete all existing backups
 $database->backup()->clean();
