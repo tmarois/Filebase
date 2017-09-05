@@ -39,6 +39,15 @@ class Config
 
 
     /**
+    * $backupLocation
+    * The location to store backups
+    *
+    * default current location
+    */
+    public $backupLocation = '';
+
+
+    /**
     * $pretty
     *
     * if true, saves the data as human readable
@@ -69,6 +78,11 @@ class Config
         foreach ($config as $key => $value)
         {
             $this->{$key} = $value;
+        }
+
+        if (!isset($config['backupLocation']))
+        {
+            $this->backupLocation = $this->dir.'/backups';
         }
 
         $this->validateFormatClass();

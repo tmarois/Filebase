@@ -116,6 +116,27 @@ class Database
 
 
     /**
+    * backup
+    *
+    * @param string $location (optional)
+    *
+    * @return $document \Filebase\Backup object
+    */
+    public function backup($location = '')
+    {
+        if ($location)
+        {
+            return new Backup($location, $this->config);
+        }
+
+        return new Backup($this->config->backupLocation, $this->config);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
     * set
     *
     * @param $document \Filebase\Document object

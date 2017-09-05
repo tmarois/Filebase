@@ -18,10 +18,11 @@ Filebase is simple by design, but also has enough features for even the more adv
 * [Querying data](https://github.com/tmarois/Filebase#8-queries)
 * [Custom filters](https://github.com/tmarois/Filebase#7-custom-filters)
 * [Caching](https://github.com/tmarois/Filebase#9-caching) (queries)
-* File locking (on save)
+* [Database Backups](https://github.com/tmarois/Filebase#10-database-backups)
 * Customizable [formatting](https://github.com/tmarois/Filebase#2-formatting) (encode/decode)
 * [Validation](https://github.com/tmarois/Filebase#6-validation-optional) (on save)
-* [CRUD](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) (method APIs)
+* CRUD (method APIs)
+* File locking (on save)
 
 
 ## Installation
@@ -395,6 +396,17 @@ If caching is enabled, it will automatically store your results from queries int
 
 Cached queries will only be used if a specific saved cache is less than the expire time, otherwise it will use live data and automatically replace the existing cache for next time use.
 
+
+## (10) Database Backups
+By default you can backup your database using `$db->backup()->save()`, this will create a `.zip` file of your entire database based on your `dir` path.
+
+### Methods used with invoking the Backup class:
+These methods can be used when invoking `$db->backup()` on your `Database`.
+
+- `save()` Saves a backup of your database.
+- `clean()` Purges all existing .zip files within the backup location
+- `find()` Returns an `array` of all existing backups (array key by `time()` when backup was created)
+- `rollback()` Restore your database to an existing backup. (by default restores the latest backup if any exist)
 
 ## Why Filebase?
 
