@@ -65,7 +65,8 @@ class Backup
 
         if ($results = $this->zip($this->config->dir, $backupFile))
         {
-            return $backupFile;
+            $basename = basename($backupFile);
+            return $basename;
         }
 
         throw new \Exception('Error backing up database.');
@@ -88,8 +89,10 @@ class Backup
         foreach($files as $file)
         {
             $basename = str_replace('.zip','',basename($file));
-            $backups[$basename] = $file;
+            $backups[$basename] = $this->backupLocation.'/'.$basename.'.zip';
         }
+
+        krsort($backups);
 
         return $backups;
     }

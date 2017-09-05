@@ -78,6 +78,35 @@ class BackupTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    public function testBackupFindSort()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/mydatabasetobackup',
+            'backupLocation' => __DIR__.'/databases/storage/backups'
+        ]);
+
+        $db->flush(true);
+
+        for ($x = 1; $x <= 25; $x++)
+    	{
+    		$user = $db->get(uniqid());
+    		$user->name = 'John';
+    		$user->save();
+    	}
+
+        $db->backup()->save();
+        $db->backup()->save();
+        $last = str_replace('.zip','',$db->backup()->save());
+
+        $backups = $db->backup()->find();
+        $backupCurrent = current($backups);
+
+        $lastBackup = str_replace('.zip','',basename($backupCurrent));
+
+        $this->assertEquals($last,$lastBackup);
+    }
+
+
     public function testBackupCleanup()
     {
         $db = new \Filebase\Database([

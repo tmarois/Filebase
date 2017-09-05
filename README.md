@@ -76,11 +76,12 @@ Usage Example (all options)
 
 ```php
 $db = new \Filebase\Database([
-    'dir'           => 'path/to/database/dir',
-    'format'        => \Filebase\Format\Json::class,
-    'cache'         => true,
-    'cache_expires' => 1800,
-    'pretty'        => true,
+    'dir'            => 'path/to/database/dir',
+    'backupLocation' => 'path/to/database/backup/dir',
+    'format'         => \Filebase\Format\Json::class,
+    'cache'          => true,
+    'cache_expires'  => 1800,
+    'pretty'         => true,
     'validate' => [
         'name'   => [
             'valid.type' => 'string',
@@ -93,6 +94,7 @@ $db = new \Filebase\Database([
 |Name				|Type		|Default Value	    |Description												|
 |---				|---		|---			         	|---														|
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
+|`backupLocation`   |string		|current directory (`/backups`)         |The directory where the backup zip files will be stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
 |`validate`			|array		|   |Check [Validation Rules](https://github.com/tmarois/Filebase#6-validation-optional) for more details |
 |`cache`			|bool		|false   |Stores [query](https://github.com/tmarois/Filebase#8-queries) results into cache for faster loading.				|
@@ -400,13 +402,34 @@ Cached queries will only be used if a specific saved cache is less than the expi
 ## (10) Database Backups
 By default you can backup your database using `$db->backup()->save()`, this will create a `.zip` file of your entire database based on your `dir` path.
 
-### Methods used with invoking the Backup class:
-These methods can be used when invoking `$db->backup()` on your `Database`.
+### Methods:
+These methods can be used when invoking `backup()` on your `Database`.
 
-- `save()` Saves a backup of your database.
-- `clean()` Purges all existing .zip files within the backup location
+- `save()` Saves a backup of your database (in your backup location `.zip`)
+- `clean()` Purges all existing backups (`.zip` files in your backup location)
 - `find()` Returns an `array` of all existing backups (array key by `time()` when backup was created)
-- `rollback()` Restore your database to an existing backup. (by default restores the latest backup if any exist)
+
+**Example:**
+
+```php
+
+// invoke your database
+$database = new \Filebase\Database([
+    'dir' => '/storage/users',
+    'backupLocation' => '/storage/backup',
+]);
+
+// save a new backup of your database
+// will look something like /storage/backup/1504631092.zip
+$database->backup()->save();
+
+// delete all existing backups
+$database->backup()->clean();
+
+// get a list of all existing backups (organized from new to old)
+$backups = $database->backup()->find();
+
+```
 
 ## Why Filebase?
 
