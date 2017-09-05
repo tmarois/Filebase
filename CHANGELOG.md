@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### 09/05/2017 - 1.0.6
+* Added new `backup` class and functionality to create database backups.
+* Added `create()`, `clean()` and `find()` methods on backup class.
+
+Accessible when invoked on your database `$db->backup->create()`, Rollbacks are on the to do list for the next update. This update includes the ability to create new backups and deletes or shows existing backups for your own records. *Restoring from a previous backup is on the todo list.*
+
 ### 08/06/2017 - 1.0.5
 * Added new method database class `truncate()` as an alias of `flush(true)`
 * Added `REGEX` as new query operator. Uses `preg_match($regex, $fieldValue)`
