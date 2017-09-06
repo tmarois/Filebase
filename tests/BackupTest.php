@@ -103,6 +103,8 @@ class BackupTest extends \PHPUnit\Framework\TestCase
 
         $lastBackup = str_replace('.zip','',basename($backupCurrent));
 
+        $db->flush(true);
+
         $this->assertEquals($last,$lastBackup);
     }
 
@@ -154,6 +156,9 @@ class BackupTest extends \PHPUnit\Framework\TestCase
         $db2->backup()->clean();
 
         $items2 = $db2->count();
+
+        $db1->flush(true);
+        $db2->flush(true);
 
         $this->assertEquals($items1,$items2);
 

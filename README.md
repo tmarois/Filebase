@@ -12,17 +12,18 @@ With Filebase, you are in complete control. Design your data structure the way y
 
 ### Features
 
-Filebase is simple by design, but also has enough features for even the more advanced.
+Filebase is simple by design, but has enough features for the more advanced.
 
-* Key-value and Multidimensional Data Storing
+* Key/Value and Array-based Data Storing
 * [Querying data](https://github.com/tmarois/Filebase#8-queries)
 * [Custom filters](https://github.com/tmarois/Filebase#7-custom-filters)
 * [Caching](https://github.com/tmarois/Filebase#9-caching) (queries)
 * [Database Backups](https://github.com/tmarois/Filebase#10-database-backups)
-* Customizable [formatting](https://github.com/tmarois/Filebase#2-formatting) (encode/decode)
+* [Formatting](https://github.com/tmarois/Filebase#2-formatting) (encode/decode)
 * [Validation](https://github.com/tmarois/Filebase#6-validation-optional) (on save)
-* CRUD (method APIs)
+* CRUD (method APIs) [wikipedia](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
 * File locking (on save)
+* Intuitive Method Naming
 
 
 ## Installation
