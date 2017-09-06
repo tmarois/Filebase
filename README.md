@@ -409,6 +409,7 @@ These methods can be used when invoking `backup()` on your `Database`.
 - `create()` Creates a backup of your database (in your backup location `.zip`)
 - `clean()` Purges all existing backups (`.zip` files in your backup location)
 - `find()` Returns an `array` of all existing backups (array key by `time()` when backup was created)
+- `rollback()` Restore an existing backup (latest available), replaces existing database `dir`
 
 **Example:**
 
@@ -428,6 +429,9 @@ $database->backup()->clean();
 
 // get a list of all existing backups (organized from new to old)
 $backups = $database->backup()->find();
+
+// restore an existing backup (latest backup available)
+$database->backup()->rollback();
 
 ```
 

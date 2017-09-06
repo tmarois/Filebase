@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 09/05/2017 - 1.0.7
+* Added `rollback()` method on the backup class. Now the ability to restore an existing back up (latest one available)
+
 ### 09/05/2017 - 1.0.6
 * Added new `backup` class and functionality to create database backups.
 * Added `create()`, `clean()` and `find()` methods on backup class.

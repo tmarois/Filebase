@@ -126,10 +126,10 @@ class Database
     {
         if ($location)
         {
-            return new Backup($location, $this->config);
+            return new Backup($location, $this);
         }
 
-        return new Backup($this->config->backupLocation, $this->config);
+        return new Backup($this->config->backupLocation, $this);
     }
 
 

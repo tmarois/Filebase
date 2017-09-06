@@ -29,13 +29,25 @@ class Backup
 
 
     /**
+    * $database
+    *
+    * \Filebase\Database
+    */
+    protected $database;
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
     * __construct
     *
     */
-    public function __construct($backupLocation = '', Config $config)
+    public function __construct($backupLocation = '', Database $database)
     {
         $this->backupLocation = $backupLocation;
-        $this->config = $config;
+        $this->config = $database->getConfig();
+        $this->database = $database;
 
         // Check directory and create it if it doesn't exist
         if (!is_dir($this->backupLocation))
@@ -110,6 +122,57 @@ class Backup
     public function clean()
     {
         return array_map('unlink', glob(realpath($this->backupLocation)."/*.zip"));
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * rollback()
+    *
+    * Rollback database to the last backup available
+    *
+    */
+    public function rollback()
+    {
+        $backups = $this->find();
+        $restore = current($backups);
+
+        $this->database->truncate();
+
+        return $this->extract($restore, $this->config->dir);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+     * extract()
+     *
+     * @param string $source (zip location)
+     * @param string $target (unload files to location)
+     * @return bool
+     */
+    protected function extract($source = '', $target = '')
+    {
+        if (extension_loaded('zip'))
+        {
+            if (file_exists($source))
+            {
+                $zip = new \ZipArchive();
+                if ($zip->open($source) === TRUE)
+                {
+                    $zip->extractTo($target);
+                    $zip->close();
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 

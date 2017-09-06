@@ -126,4 +126,38 @@ class BackupTest extends \PHPUnit\Framework\TestCase
         $this->assertEmpty($backupAfter);
     }
 
+
+    public function testBackupRestore()
+    {
+        $db1 = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/backupdb',
+            'backupLocation' => __DIR__.'/databases/storage/backupdb'
+        ]);
+
+        for ($x = 1; $x <= 25; $x++)
+    	{
+    		$user = $db1->get(uniqid());
+    		$user->name = 'John';
+    		$user->save();
+    	}
+
+        $db1->backup()->create();
+
+        $items1 = $db1->count();
+
+        $db2 = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/backupdb2',
+            'backupLocation' => __DIR__.'/databases/storage/backupdb'
+        ]);
+
+        $db2->backup()->rollback();
+        $db2->backup()->clean();
+
+        $items2 = $db2->count();
+
+        $this->assertEquals($items1,$items2);
+
+    }
+
+
 }
