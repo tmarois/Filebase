@@ -178,9 +178,24 @@ class Document
     * @param callable $function
     * @return array $r items that the callable function returned
     */
-    public function customFilter(string $field, callable $function)
+    public function customFilter($field = '', $paramOne = '', $paramTwo = '')
     {
         $items = $this->field($field);
+
+        if (is_callable($paramOne))
+        {
+            $function = $paramOne;
+            $param = $paramTwo;
+        }
+        else
+        {
+            if (is_callable($paramTwo))
+            {
+                $function = $paramTwo;
+                $param = $paramOne;
+            }
+        }
+
 
         if (!is_array($items) || empty($items))
         {
@@ -190,9 +205,9 @@ class Document
         $r = [];
         foreach($items as $index => $item)
         {
-            $i = $function($item);
+            $i = $function($item, $param);
             if ($i!==false || is_null($i)) {
-                $r[$index] = $function($item);
+                $r[$index] = $function($item, $param);
             }
         }
 

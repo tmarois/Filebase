@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 09/08/2017 - 1.0.8
+* Updated `customFilter` method to allow passable parameters into closure function. (backwards compatibility allowing param and function arguments to be any order)
+
 ### 09/05/2017 - 1.0.7
 * Added `rollback()` method on the backup class. Now the ability to restore an existing back up (latest one available)
 

@@ -376,6 +376,38 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    public function testCustomFilterParam()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases'
+        ]);
+
+        $db->flush(true);
+
+        $u = [];
+        $u[] = [
+            'email' => 'email@email.com',
+            'status' => 'blocked'
+        ];
+
+        $u[] = [
+            'email' => 'notblocked@email.com',
+            'status' => 'enabled'
+        ];
+
+        $db->get('users')->set($u)->save();
+
+        $users = $db->get('users')->customFilter('data','blocked',function($item, $status) {
+            return (($item['status']==$status) ? $item['email'] : false);
+        });
+
+        $this->assertEquals(1, count($users));
+        $this->assertEquals('email@email.com', $users[0]);
+
+        $db->flush(true);
+    }
+
+
     public function testCustomFilterEmpty()
     {
         $db = new \Filebase\Database([
