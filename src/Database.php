@@ -5,6 +5,17 @@ class Database
 {
 
     /**
+    * VERSION
+    *
+    * Stores the version of Filebase
+    * use $db->getVersion()
+    */
+    const VERSION = '1.0.9';
+
+
+    //--------------------------------------------------------------------
+
+    /**
     * $config
     *
     * Stores all the configuration object settings
@@ -36,6 +47,22 @@ class Database
         {
             throw new \Exception(sprintf('`%s` is not writable.', $this->config->dir));
         }
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * version
+    *
+    * gets the Filebase version
+    *
+    * @return VERSION
+    */
+    public function version()
+    {
+        return self::VERSION;
     }
 
 

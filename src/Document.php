@@ -170,6 +170,22 @@ class Document
 
 
     /**
+    * filter
+    *
+    * Alias of customFilter
+    *
+    * @see customFilter
+    */
+    public function filter($field = 'data', $paramOne = '', $paramTwo = '')
+    {
+        return $this->customFilter($field, $paramOne, $paramTwo);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
     * customFilter
     *
     * Allows you to run a custom function around each item
@@ -178,7 +194,7 @@ class Document
     * @param callable $function
     * @return array $r items that the callable function returned
     */
-    public function customFilter($field = '', $paramOne = '', $paramTwo = '')
+    public function customFilter($field = 'data', $paramOne = '', $paramTwo = '')
     {
         $items = $this->field($field);
 
@@ -206,10 +222,14 @@ class Document
         foreach($items as $index => $item)
         {
             $i = $function($item, $param);
-            if ($i!==false || is_null($i)) {
-                $r[$index] = $function($item, $param);
+
+            if ($i!==false && !is_null($i))
+            {
+                $r[$index] = $i;
             }
         }
+
+        $r = array_values($r);
 
         return $r;
 

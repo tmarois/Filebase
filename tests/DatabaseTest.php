@@ -9,6 +9,15 @@ class badformat {
 class DatabaseTest extends \PHPUnit\Framework\TestCase
 {
 
+    public function testVersion()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases'
+        ]);
+
+        $this->assertRegExp('/[0-9]+\.[0-9]+\.[0-9]+/', $db->version());
+    }
+
 
     public function testMissingFormatClass()
     {

@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### 09/09/2017 - 1.0.9
+* Fixed `customFilter` on #5 issue with array keys not properly resetting.
+* Improved speed of `filter()` since it was running the function closure function twice
+* Added alias of `customFilter()` as `filter()` method.
+* Added `version()` method on database class. `$db->version()` for the Filebase version number.
+
 ### 09/08/2017 - 1.0.8
 * Updated `customFilter` method to allow passable parameters into closure function. (backwards compatibility allowing param and function arguments to be any order)
 

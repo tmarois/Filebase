@@ -397,12 +397,48 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $db->get('users')->set($u)->save();
 
-        $users = $db->get('users')->customFilter('data','blocked',function($item, $status) {
+        $users = $db->get('users')->customFilter('data','enabled',function($item, $status) {
             return (($item['status']==$status) ? $item['email'] : false);
         });
 
         $this->assertEquals(1, count($users));
-        $this->assertEquals('email@email.com', $users[0]);
+        $this->assertEquals('notblocked@email.com', $users[0]);
+
+        $db->flush(true);
+    }
+
+
+
+    public function testCustomFilterParamIndex()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases'
+        ]);
+
+        $db->flush(true);
+
+        $u = [];
+        $u[] = [
+            'email' => 'enabled-email@email.com',
+            'id' => '123',
+            'status' => 'deactive'
+        ];
+
+        $u[] = [
+            'email' => 'enabled-email@email.com',
+            'id' => '321',
+            'status' => 'enabled'
+        ];
+
+        $db->get('users_test_custom')->save($u);
+
+        $users = $db->get('users_test_custom')->filter('data','enabled',function($item, $status) {
+            return (($item['status']==$status) ? $item : false);
+        });
+
+
+        $this->assertEquals(1, count($users));
+        $this->assertEquals('enabled-email@email.com', $users[0]['email']);
 
         $db->flush(true);
     }

@@ -21,7 +21,7 @@ Filebase is simple by design, but has enough features for the more advanced.
 * [Database Backups](https://github.com/tmarois/Filebase#10-database-backups)
 * [Formatting](https://github.com/tmarois/Filebase#2-formatting) (encode/decode)
 * [Validation](https://github.com/tmarois/Filebase#6-validation-optional) (on save)
-* CRUD (method APIs) [wikipedia](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete)
+* CRUD (method APIs)
 * File locking (on save)
 * Intuitive Method Naming
 
@@ -139,7 +139,7 @@ $item = $db->get($userId);
 |`updatedAt()`                    | Document was updated (default Y-m-d H:i:s) |
 |`field()`                        | You can also use `.` dot delimiter to find values from nested arrays |
 |`isCache()`                      | (true/false) if the current document is loaded from cache |
-|`customFilter()`                 | Refer to the [Custom Filters](https://github.com/tmarois/Filebase#7-custom-filters) |
+|`filter()`                       | Refer to the [Custom Filters](https://github.com/tmarois/Filebase#7-custom-filters) |
 
 Example:
 
@@ -200,6 +200,7 @@ Here is a list of methods you can use on the database class.
 
 |Method|Details|
 |---|---|
+|`version()`                      | Current version of your Filebase library |
 |`get()`                          | Refer to [get()](https://github.com/tmarois/Filebase#3-get-and-methods) |
 |`findAll()`                      | Returns all documents in database |
 |`count()`                        | Number of documents in database |
@@ -285,24 +286,24 @@ In the above example `name`, `description`, `emails` and `config` array keys wou
 
 *NOTE Custom filters only run on a single document*
 
-Item filters allow you to customize the results, and do simple querying. These filters are great if you have an array of items within one document. Let's say you store "users" as an array in `users.json`, then you could create a filter to show you all the users that have a specific tag, or field matching a specific value.
+Item filters allow you to customize the results, and do simple querying within the same document. These filters are great if you have an array of items within one document. Let's say you store "users" as an array in `users.json`, then you could create a filter to show you all the users that have a specific tag, or field matching a specific value.
 
 This example will output all the emails of users who are blocked.
 
 ```php
 // Use [data] for all items within the document
-// But be sure that each array item uses the same format
+// But be sure that each array item uses the same format (otherwise except isset errors)
 
-$users = $db->get('users')->customFilter('data',function($item) {
-    return (($item['status']=='blocked') ? $item['email'] : false);
+$users = $db->get('users')->filter('data','blocked',function($item, $status) {
+    return (($item['status']==$status) ? $item['email'] : false);
 });
 
 // Nested Arrays?
 // This uses NESTED properties. If the users array was stored as an array inside [list]
 // You can also use `.` dot delimiter to get arrays from nested arrays
 
-$users = $db->get('users')->customFilter('list.users',function($item) {
-    return (($item['status']=='blocked') ? $item['email'] : false);
+$users = $db->get('users')->filter('list.users','blocked',function($item, $status) {
+    return (($item['status']==$status) ? $item['email'] : false);
 });
 ```
 
@@ -445,6 +446,16 @@ Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](ht
 ## Contributions
 
 Accepting contributions and feedback. Send in any issues and pull requests.
+
+## Sites and Users of Filebase
+
+* [Adwords Management](https://greyscale.com)
+* [Free Games](http://onlinefun.com)
+* [VIP Auto](http://vipautoli.com)
+* [Ideal Internet](http://idealinternet.com)
+* [Script Automate](https://github.com/timothymarois/ScriptAutomate)
+
+*If you are using Filebase on your website, send in a pull request and we will put your site up here.*
 
 ## TODO
 
