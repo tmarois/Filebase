@@ -2,13 +2,13 @@
 
 [![Build Status](https://travis-ci.org/tmarois/Filebase.svg?branch=master)](https://travis-ci.org/tmarois/Filebase) [![Coverage Status](https://coveralls.io/repos/github/tmarois/Filebase/badge.svg?branch=master)](https://coveralls.io/github/tmarois/Filebase?branch=master)
 
-A Simple but Powerful **Flat File Database** Storage. No need for MySQL or a expensive SQL server, in fact you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/tmarois/Filebase#2-formatting) the way you like).
+A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/tmarois/Filebase#2-formatting) the way you like).
 
 You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in **version control** and pass them to your team without having out-of-sync SQL databases.
 
 Doesn't that sound awesome?
 
-With Filebase, you are in complete control. Design your data structure the way you want. Use arrays and objects like you know how in php, and update and share your data with others and teams using version control. Just remember, upgrading your web/apache server is a lot less than your database server.
+With Filebase, you are in complete control. Design your data structure the way you want. Use arrays and objects like you know how in PHP. Update and share your data with others and teams using version control. Just remember, upgrading your web/apache server is a lot less than your database server.
 
 ### Features
 
@@ -30,11 +30,11 @@ Filebase is simple by design, but has enough features for the more advanced.
 
 Use [Composer](http://getcomposer.org/) to install package.
 
-Run `composer require tmarois/filebase` for the latest features under version 1
+Use `composer require tmarois/filebase`
 
 If you want to modify the `composer.json` manually, add `"tmarois/filebase" : "^1.0"` to your `required`
 
-You do not need to use composer, just download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases.
+You do not need to use composer, just download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases. 
 
 ## Usage
 
@@ -443,23 +443,21 @@ I originally built Filebase because I needed more flexibility, control over the 
 
 Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](https://github.com/fire015/flintstone).
 
-## Contributions
-
-Accepting contributions and feedback. Send in any issues and pull requests.
-
 ## Sites and Users of Filebase
 
 * [Adwords Management](https://greyscale.com)
 * [Free Games](http://onlinefun.com)
 * [VIP Auto](http://vipautoli.com)
+* [Timothy Marois](http://timothymarois.com)
 * [Ideal Internet](http://idealinternet.com)
 * [Script Automate](https://github.com/timothymarois/ScriptAutomate)
 
 *If you are using Filebase on your website, send in a pull request and we will put your site up here.*
 
+## Contributions
+
+Accepting contributions and feedback. Send in any issues and pull requests.
+
 ## TODO
 
-- Indexing (adding indexed "tags" for all document searching)
-- Indexing (single document filtering, applied with all `save()` actions from validation closure)
-- Internal validations..security etc.
 - Cache driver (to use on other services like memcached, redis etc)
