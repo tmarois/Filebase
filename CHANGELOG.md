@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 12/11/2017 - 1.0.11
+* Fixed query `sort` which allows for "natural order", issues before would assume "1" and "10" are equal in value, but this has been resolved with this update. Uses php `strnatcasecmp()`, This was fixed for `DESC` order in the previous update. This patch fixes the `ASC` sort order.
+
 ### 12/10/2017 - 1.0.10
 * Fixed query `sort` which allows for "natural order", issues before would assume "1" and "10" are equal in value, but this has been resolved with this update. Uses php `strnatcasecmp()`
 * Added argument `results( false )` - `false` on `results()` method that allows it to return the full document object or (by default = `true`) only the document data.

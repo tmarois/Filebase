@@ -399,6 +399,26 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['Amex','Hooli','Microsoft'], [$test5[0]['name'],$test5[1]['name'],$test5[2]['name']]);
 
         $db->flush(true);
+
+        $companies = ['Google 9', 'Google 3', 'Google 10', 'Google 1', 'Google 2', 'Google 7'];
+
+        foreach($companies as $company)
+        {
+            $user = $db->get(uniqid());
+    		$user->name = $company;
+    		$user->save();
+        }
+
+        // order the results ASC (but inject numbers into strings)
+        $test6 = $db->query()->limit(3)->orderBy('name', 'ASC')->results();
+        $this->assertEquals(['Google 1','Google 2','Google 3'], [$test6[0]['name'],$test6[1]['name'],$test6[2]['name']]);
+
+        // order the results DESC (but inject numbers into strings)
+        $test6 = $db->query()->limit(3)->orderBy('name', 'DESC')->results();
+        $this->assertEquals(['Google 10','Google 9','Google 7'], [$test6[0]['name'],$test6[1]['name'],$test6[2]['name']]);
+
+        $db->flush(true);
+
     }
 
 

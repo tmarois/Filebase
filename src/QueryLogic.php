@@ -188,18 +188,15 @@ class QueryLogic
 
         usort($this->documents, function($a, $b) use ($orderBy, $sortBy) {
 
+            $propA = $a->field($orderBy);
+            $propB = $b->field($orderBy);
+
             if ($sortBy == 'DESC')
             {
-                $propA = $a->field($orderBy);
-                $propB = $b->field($orderBy);
-
-                // strnatcasecmp allows us to test in "natural" order
                 return strnatcasecmp($propB, $propA) <=> strnatcasecmp($propA, $propB);
-                
-                // return $b->field($orderBy) <=> $a->field($orderBy);
             }
 
-            return $a->field($orderBy) <=> $b->field($orderBy);
+            return strnatcasecmp($propA, $propB) <=> strnatcasecmp($propB, $propA);
 
         });
 
