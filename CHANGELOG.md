@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### 12/10/2017 - 1.0.10
+* Fixed query `sort` which allows for "natural order", issues before would assume "1" and "10" are equal in value, but this has been resolved with this update. Uses php `strnatcasecmp()`
+* Added argument `results( false )` - `false` on `results()` method that allows it to return the full document object or (by default = `true`) only the document data.
+* Added argument `first( false )` - `false` on `first()` method that allows it to return the full document object or (by default = `true`) only the document data.
+* Minor additions to the documentation.
+
 ### 09/09/2017 - 1.0.9
 * Fixed `customFilter` on #5 issue with array keys not properly resetting.
 * Improved speed of `filter()` since it was running the function closure function twice

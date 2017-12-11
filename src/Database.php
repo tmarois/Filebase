@@ -10,7 +10,7 @@ class Database
     * Stores the version of Filebase
     * use $db->getVersion()
     */
-    const VERSION = '1.0.9';
+    const VERSION = '1.0.10';
 
 
     //--------------------------------------------------------------------
@@ -76,6 +76,7 @@ class Database
     * Then returns you a list of those documents.
     *
     * @param bool $include_documents (include all document objects in array)
+    * @param bool $data_only (if true only return the documents data not the full object)
     *
     * @return array $items
     */

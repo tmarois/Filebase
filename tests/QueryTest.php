@@ -432,6 +432,11 @@ class QueryTest extends \PHPUnit\Framework\TestCase
                 'tags' => [
                     'social','network'
                 ]
+            ],
+            'Microsoft'=>[
+                'tags' => [
+                    'windows','xbox','search'
+                ]
             ]
         ];
 
@@ -445,11 +450,26 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
 
         // test that they are ordered by name ASC (check first, second, and last)
-        $test1 = $db->query()->where('tags','IN','search')->first();
+        $test1 = $db->query()->where('tags','IN','display')->first();
         $test2 = $db->query()->where('tags','IN','network')->first();
+        $test3 = $db->query()->where('tags','IN','windows')->first();
+        $test4 = $db->query()->where('tags','IN','search')->results();
 
+        // testing the object return boolean argument
+        $test5 = $db->query()->where('tags','IN','search')->results(false);
+        $test6 = $db->query()->where('tags','IN','search')->results(true);
+
+        // make sure the results equal the right names
         $this->assertEquals('Google', $test1['name']);
         $this->assertEquals('Facebook', $test2['name']);
+        $this->assertEquals('Microsoft', $test3['name']);
+
+        // check if the method createdAt() exists or not based on the argument boolean
+        $this->assertEquals(true, method_exists($test5[0], 'createdAt'));
+        $this->assertEquals(false, method_exists($test6[0], 'createdAt'));
+
+        // check if the results = 2
+        $this->assertEquals(2, count($test4));
 
         // this will test the IN clause if name matches one of these
         $test3 = $db->query()->where('name','IN',['Google','Facebook'])->results();
@@ -508,6 +528,11 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         // test that they are ordered by name ASC (check first, second, and last)
         $test1 = $db->query()->orderBy('name', 'DESC')->first();
+        $test2 = $db->query()->orderBy('name', 'DESC')->first( false );
+        $test3 = $db->query()->orderBy('name', 'DESC')->first( true );
+
+        $this->assertEquals(true, method_exists($test2, 'createdAt'));
+        $this->assertEquals(false, method_exists($test3, 'createdAt'));
 
         $this->assertEquals('Yahoo', $test1['name']);
 
@@ -611,6 +636,41 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $db->flush(true);
     }
+
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * testUserNameQuery()
+    *
+    *
+    */
+    public function testUserNameQuery()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_names',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        for ($x = 1; $x <= 10; $x++)
+    	{
+    		$user = $db->get(uniqid());
+    		$user->name = 'John '.$x;
+            $user->contact['email'] = 'john@john.com';
+    		$user->save();
+    	}
+
+        $userAccount = $db->query()->orderBy('name', 'DESC')->first();
+
+        $this->assertEquals('John 10', $userAccount['name']);
+
+        $db->flush(true);
+    }
+
 
 
     //--------------------------------------------------------------------

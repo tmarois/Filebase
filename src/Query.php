@@ -119,6 +119,7 @@ class Query extends QueryLogic
     /**
     * ->getDocuments()
     *
+    *
     */
     public function getDocuments()
     {
@@ -132,10 +133,17 @@ class Query extends QueryLogic
     /**
     * ->results()
     *
+    * @param bool $data_only - default:true (if true only return the documents data not the full object)
+    *
     */
-    public function results()
+    public function results( $data_only = true )
     {
-        return parent::run()->toArray();
+        if ($data_only === true)
+        {
+            return parent::run()->toArray();
+        }
+
+        return $this->resultDocuments();
     }
 
 
@@ -158,10 +166,18 @@ class Query extends QueryLogic
     /**
     * ->first()
     *
+    * @param bool $data_only - default:true (if true only return the documents data not the full object)
+    *
     */
-    public function first()
+    public function first( $data_only = true )
     {
-        $results = parent::run()->toArray();
+        if ($data_only === true)
+        {
+            $results = parent::run()->toArray();
+            return current($results);
+        }
+
+        $results = parent::run()->getDocuments();
         return current($results);
     }
 

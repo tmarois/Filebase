@@ -34,7 +34,7 @@ Use `composer require tmarois/filebase`
 
 If you want to modify the `composer.json` manually, add `"tmarois/filebase" : "^1.0"` to your `required`
 
-You do not need to use composer, just download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases. 
+You do not need to use composer, just download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases.
 
 ## Usage
 
@@ -350,8 +350,8 @@ $usersWithGmail = $db->query()
                     ->results();
 
 
-// this will get the user that has the most page views (and returning 1 result)
-$user = $db->query()->orderBy('page_views', 'DESC')->first();
+// this will return the first user in the list based on ascending order of user name.
+$user = $db->query()->orderBy('name', 'ASC')->first();
 // print out the user name
 echo $user['name'];
 
@@ -361,7 +361,7 @@ $users = $db->query()->where('email','REGEX','/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2
 
 ```
 
-To run the query use `results()` or `resultDocuments()` or `first()` if you want only the first item
+To run the query use `results()` or `resultDocuments()` or if you only want to return the first item use `first()`
 
 ### Methods:
 
@@ -374,8 +374,8 @@ To run the query use `results()` or `resultDocuments()` or `first()` if you want
 These methods execute the query and return results *(do not try to use them together)*
 
 - `first()` Returns only the first query result (if you only want to return 1 item)
-- `results()` This will return all the document data as an array.
-- `resultDocuments()` This will return all the document objects
+- `results()` This will return all the document data as an array. Passing the argument of `false` will be the same as `resultDocuments()` (returning the full document), but default it's set to `true` and only returns the data array of your documents.
+- `resultDocuments()` This will return all the document objects, or you can do `results(false)` which is the alias.
 
 ### Comparison Operators:
 

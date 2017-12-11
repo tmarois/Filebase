@@ -190,14 +190,20 @@ class QueryLogic
 
             if ($sortBy == 'DESC')
             {
-                return $b->field($orderBy) <=> $a->field($orderBy);
+                $propA = $a->field($orderBy);
+                $propB = $b->field($orderBy);
+
+                // strnatcasecmp allows us to test in "natural" order
+                return strnatcasecmp($propB, $propA) <=> strnatcasecmp($propA, $propB);
+                
+                // return $b->field($orderBy) <=> $a->field($orderBy);
             }
 
             return $a->field($orderBy) <=> $b->field($orderBy);
+
         });
 
     }
-
 
 
     //--------------------------------------------------------------------
