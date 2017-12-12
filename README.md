@@ -376,7 +376,7 @@ To run the query use `results()` or if you only want to return the first item us
 
 |Method                 |Arguments                              |Details
 |---                    |---                                    |---|
-|`select()`             | `array` or `string` (comma separated) | Select only the fields you wish to return (for each document) |
+|`select()`             | `array` or `string` (comma separated) | Select only the fields you wish to return (for each document), usage: `field1,field2` |
 |`where()`              | `mixed`                               | `array` for simple "equal to" OR `where($field, $operator, $value)` |
 |`andWhere()`           | `mixed`                               | see `where()`, uses the logical `AND` |
 |`orWhere()`            | `mixed`                               | see `where()`, this uses the logical `OR` |
@@ -391,8 +391,8 @@ The below **methods execute the query** and return results *(do not try to use t
 |`count()`              | Counts and returns the number of documents in results. |
 |`first()`              | Returns only the first document in results. |
 |`last()`               | Returns only the last document in results. |
-|`results()`            | This will return all the documents and their data as an array. Passing the argument of `false` will be the same as `resultDocuments()` (returning the full document objects) |
-|`resultDocuments()`    | This will return all the document objects, or you can do `results(false)` which is the alias. |
+|`results()`            | This will return all the documents found and their data as an array. Passing the argument of `false` will be the same as `resultDocuments()` (returning the full document objects) |
+|`resultDocuments()`    | This will return all the documents found and their data as document objects, or you can do `results(false)` which is the alias. |
 
 ### Comparison Operators:
 
