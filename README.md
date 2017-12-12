@@ -359,23 +359,40 @@ echo $user['name'];
 $users = $db->query()->where('email','REGEX','/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i')->results();
 
 
+// Find all users that have gmail addresses and only returning their name and age fields (excluding the rest)
+$users = $db->query()->select('name,age')->where('email','LIKE','@gmail.com')->results();
+
+// Instead of returning users, how about just count how many users are found.
+$totalUsers = $db->query()->where('email','LIKE','@gmail.com')->count();
+
+
 ```
 
-To run the query use `results()` or `resultDocuments()` or if you only want to return the first item use `first()`
+To run the query use `results()` or if you only want to return the first item use `first()`
 
-### Methods:
+### Query Methods:
 
-- `where()` param `array` for simple "equal to" OR `where($field, $operator, $value)`
-- `andWhere()` *optional* see `where()`, uses the logical `AND`
-- `orWhere()` *optional* see `where()`, this uses the logical `OR`
-- `limit()` *optional* limit/offset results `limit($number, $offset)`
-- `orderBy()` *optional* orders the results `orderBy($field, $direction)`, `$direction` = `ASC` or `DESC`
+*These methods are optional and they are stackable*
 
-These methods execute the query and return results *(do not try to use them together)*
+|Method                 |Arguments                              |Details
+|---                    |---                                    |---|
+|`select()`             | `array` or `string` (comma separated) | Select only the fields you wish to return (for each document) |
+|`where()`              | `mixed`                               | `array` for simple "equal to" OR `where($field, $operator, $value)` |
+|`andWhere()`           | `mixed`                               | see `where()`, uses the logical `AND` |
+|`orWhere()`            | `mixed`                               | see `where()`, this uses the logical `OR` |
+|`limit()`              | `int`                                 | How many documents to return |
+|`orderBy()`            | `field` , `sort order`                | Order documents by a specific field and order by `ASC` or `DESC` |
 
-- `first()` Returns only the first query result (if you only want to return 1 item)
-- `results()` This will return all the document data as an array. Passing the argument of `false` will be the same as `resultDocuments()` (returning the full document), but default it's set to `true` and only returns the data array of your documents.
-- `resultDocuments()` This will return all the document objects, or you can do `results(false)` which is the alias.
+
+The below **methods execute the query** and return results *(do not try to use them together)*
+
+|Method                 |Details|
+|---                    |---|
+|`count()`              | Counts and returns the number of documents in results. |
+|`first()`              | Returns only the first document in results. |
+|`last()`               | Returns only the last document in results. |
+|`results()`            | This will return all the documents and their data as an array. Passing the argument of `false` will be the same as `resultDocuments()` (returning the full document objects) |
+|`resultDocuments()`    | This will return all the document objects, or you can do `results(false)` which is the alias. |
 
 ### Comparison Operators:
 

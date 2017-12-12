@@ -104,6 +104,20 @@ class QueryLogic
         $this->sort();
         $this->offsetLimit();
 
+        if (is_array($this->fields) && !empty($this->fields))
+        {
+            foreach($this->documents as $index => $document)
+            {
+                $fields = [];
+                foreach($this->fields as $fieldTarget)
+                {
+                    $fields[ $fieldTarget ] = $document->field($fieldTarget);
+                }
+
+                $this->documents[$index] = $fields;
+            }
+        }
+
         return $this;
     }
 

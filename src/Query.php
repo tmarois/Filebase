@@ -4,6 +4,7 @@
 class Query extends QueryLogic
 {
 
+    protected $fields  = [];
     protected $limit   = 0;
     protected $offset  = 0;
     protected $sortBy  = 'ASC';
@@ -18,6 +19,28 @@ class Query extends QueryLogic
 
 
     //--------------------------------------------------------------------
+
+
+    /**
+    * ->select()
+    *
+    * Set the selected fields you wish to return from each document
+    *
+    */
+    public function select($fields)
+    {
+        if (is_string($fields))
+        {
+            $fields = explode(',',trim($fields));
+        }
+
+        if (is_array($fields))
+        {
+            $this->fields = $fields;
+        }
+
+        return $this;
+    }
 
 
     /**
@@ -138,7 +161,7 @@ class Query extends QueryLogic
     */
     public function results( $data_only = true )
     {
-        if ($data_only === true)
+        if ($data_only === true && empty($this->fields))
         {
             return parent::run()->toArray();
         }
@@ -171,7 +194,7 @@ class Query extends QueryLogic
     */
     public function first( $data_only = true )
     {
-        if ($data_only === true)
+        if ($data_only === true && empty($this->fields))
         {
             $results = parent::run()->toArray();
             return current($results);
@@ -179,6 +202,43 @@ class Query extends QueryLogic
 
         $results = parent::run()->getDocuments();
         return current($results);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * ->last()
+    *
+    * @param bool $data_only - default:true (if true only return the documents data not the full object)
+    *
+    */
+    public function last( $data_only = true )
+    {
+        if ($data_only === true && empty($this->fields))
+        {
+            $results = parent::run()->toArray();
+            return end($results);
+        }
+
+        $results = parent::run()->getDocuments();
+        return end($results);
+    }
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * ->count()
+    *
+    * Count and return the number of documents in array
+    *
+    */
+    public function count()
+    {
+        $results = parent::run()->getDocuments();
+        return count($results);
     }
 
 

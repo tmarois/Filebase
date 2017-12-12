@@ -348,6 +348,74 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     //--------------------------------------------------------------------
 
+    /**
+    * testSorting()
+    *
+    * TEST CASE:
+    * - Creates 6 company profiles
+    * - Sorts them by DESC/ASC
+    *
+    *
+    */
+    public function testSelectQuery()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_select',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $users = [
+            'JR MM'=>
+            [
+                'about'=>'this is a long about me section',
+                'email'=>'jrmm@email.com',
+                'profile' => [
+                    'website' => 'jr.com'
+                ]
+            ],
+            'Tim'=>
+            [
+                'about'=>'this is a section about tim',
+                'email'=>'timothymarois@email.com',
+                'profile' => [
+                    'website' => 'timothymarois.com'
+                ]
+            ]
+        ];
+        foreach($users as $name=>$info)
+        {
+            $user           = $db->get(uniqid());
+    		$user->name     = $name;
+            $user->about    = $info['about'];
+            $user->email    = $info['email'];
+            $user->profile  = $info['profile'];
+    		$user->save();
+        }
+
+        // return the "name" (selecting only 1 item)
+        $test1 = $db->query()->select('name')->results();
+        $this->assertEquals(['JR MM','Tim'], [$test1[0]['name'],$test1[1]['name']]);
+        // count how many items are in array (should be only 1 each)
+        $this->assertEquals([1,1], [count($test1[0]),count($test1[1])]);
+
+        // return the "name" (selecting only 1 item)
+        $test2 = $db->query()->select('name,email')->first();
+        $this->assertEquals(['JR MM','jrmm@email.com'], [$test2['name'],$test2['email']]);
+
+        // select using arrays instead of strings
+        $test3 = $db->query()->select(['name','email'])->first();
+        $this->assertEquals(['JR MM','jrmm@email.com'], [$test3['name'],$test3['email']]);
+
+        // return the "name" (selecting only 1 item)
+        // currently DOES not work with nested..
+        // $test3 = $db->query()->select('name,profile.website')->first();
+
+        // print_r($test3);
+        // $this->assertEquals(['JR MM','jrmm@email.com'], [$test2['name'],$test2['email']]);
+    }
+
 
     /**
     * testSorting()
@@ -684,9 +752,57 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     		$user->save();
     	}
 
-        $userAccount = $db->query()->orderBy('name', 'DESC')->first();
+        $userAccountFirst = $db->query()->orderBy('name', 'DESC')->first();
+        $userAccountLast  = $db->query()->orderBy('name', 'DESC')->last();
 
-        $this->assertEquals('John 10', $userAccount['name']);
+        // testing "first" method and sorting
+        $this->assertEquals('John 10', $userAccountFirst['name']);
+
+        // testing "last" method and sorting
+        $this->assertEquals('John 1', $userAccountLast['name']);
+
+        $db->flush(true);
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
+    * testQueryCount()
+    *
+    *
+    */
+    public function testQueryCount()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_qcounter',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        for ($x = 1; $x <= 10; $x++)
+    	{
+    		$user = $db->get(uniqid());
+    		$user->name = 'John '.$x;
+            $user->contact['email'] = 'john@john.com';
+    		$user->save();
+    	}
+
+        $userCount1 = $db->query()->count();
+        $userCount2 = $db->query()->where('name','==','Nothing')->count();
+        $userCount3 = $db->query()->where('name','==','John 2')->count();
+
+        // find users that have the number 1 in their name (should be 2)
+        // John 1 and John 10
+        $userCount4 = $db->query()->where('name','REGEX','/1/')->count();
+
+        // should = 10 documents
+        $this->assertEquals(10, $userCount1);
+        $this->assertEquals(0, $userCount2);
+        $this->assertEquals(1, $userCount3);
+        $this->assertEquals(2, $userCount4);
 
         $db->flush(true);
     }

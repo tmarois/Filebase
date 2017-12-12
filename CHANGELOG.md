@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 12/11/2017 - 1.0.12
+* Added #8 - `select()` method on query class. Now allows you to specify which fields you want your documents to return. *Note: using `select` means your documents will not return document objects but only data arrays.* This will allow you to only include the fields you want to use for your current task. (Excluding the rest and reducing memory usage).
+* Added `last()` method on query class to return the last item in the result array (opposite of `first()`)
+* Added `count()` method on query class to return the number of documents found by the query.
+
 ### 12/11/2017 - 1.0.11
 * Fixed query `sort` which allows for "natural order", issues before would assume "1" and "10" are equal in value, but this has been resolved with this update. Uses php `strnatcasecmp()`, This was fixed for `DESC` order in the previous update. This patch fixes the `ASC` sort order.
 
