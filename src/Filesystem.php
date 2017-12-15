@@ -78,14 +78,26 @@ class Filesystem
      * filesystem.
      *
      * @param string $name The name to validate against
+     * @param boolean $safe_filename Allows filename to be converted if fails validation
      *
      * @return bool Returns true if valid. Throws an exception if not.
      */
-    public static function validateName($name)
+    public static function validateName($name, $safe_filename)
     {
         if (!preg_match('/^[0-9A-Za-z\_\-]{1,63}$/', $name))
         {
-            throw new \Exception(sprintf('`%s` is not a valid file name.', $name));
+            if ($safe_filename === true)
+            {
+                // rename the file
+                $name = preg_replace('/[^0-9A-Za-z\_\-]/','', $name);
+
+                // limit the file name size
+                $name = substr($name,0,63);
+            }
+            else
+            {
+                throw new \Exception(sprintf('`%s` is not a valid file name.', $name));
+            }
         }
 
         return $name;

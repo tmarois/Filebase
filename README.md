@@ -83,6 +83,7 @@ $db = new \Filebase\Database([
     'cache'          => true,
     'cache_expires'  => 1800,
     'pretty'         => true,
+    'safe_filename'  => true,
     'validate' => [
         'name'   => [
             'valid.type' => 'string',
@@ -101,6 +102,7 @@ $db = new \Filebase\Database([
 |`cache`			|bool		|false   |Stores [query](https://github.com/tmarois/Filebase#8-queries) results into cache for faster loading.				|
 |`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
 |`pretty`	    	|bool		|true   |Store the data for human readability? Pretty Print	|
+|`safe_filename`	|bool		|true   |Automatically converts the file name to a valid name 	|
 
 
 ## (2) Formatting
@@ -380,7 +382,7 @@ To run the query use `results()` or if you only want to return the first item us
 |`where()`              | `mixed`                               | `array` for simple "equal to" OR `where($field, $operator, $value)` |
 |`andWhere()`           | `mixed`                               | see `where()`, uses the logical `AND` |
 |`orWhere()`            | `mixed`                               | see `where()`, this uses the logical `OR` |
-|`limit()`              | `int`                                 | How many documents to return |
+|`limit()`              | `int` limit, `int` offset             | How many documents to return, and offset |
 |`orderBy()`            | `field` , `sort order`                | Order documents by a specific field and order by `ASC` or `DESC` |
 
 

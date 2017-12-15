@@ -39,6 +39,16 @@ class Config
 
 
     /**
+    * $safe_filename
+    * (if true) Be sure to automatically change the file name if it does not fit validation
+    * (if false) File names that are not valid will thrown an error.
+    *
+    * default true
+    */
+    public $safe_filename = true;
+
+
+    /**
     * $backupLocation
     * The location to store backups
     *
@@ -75,11 +85,13 @@ class Config
     */
     public function __construct($config)
     {
+        // let's define all our config variables
         foreach ($config as $key => $value)
         {
             $this->{$key} = $value;
         }
 
+        // if "backupLocation" is not set, let's set one automatically
         if (!isset($config['backupLocation']))
         {
             $this->backupLocation = $this->dir.'/backups';

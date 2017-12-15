@@ -510,7 +510,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\Exception::class);
 
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'safe_filename' => false
         ]);
 
         $db->flush(true);
@@ -518,6 +519,25 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $file = $db->get('^*bad_@name%$1#');
 
         $db->flush(true);
+    }
+
+
+    public function testBadNameReplacement()
+    {
+        $badName = 'ti^@%mo!!~th*y-m_?a(ro%)is.&';
+        $newName = Filesystem::validateName($badName, true);
+
+        $this->assertEquals('timothy-m_arois', $newName);
+    }
+
+
+    public function testBadNameReplacementLong()
+    {
+        $badName = '1234567890123456789012345678901234567890123456789012345678901234';
+        $newName = Filesystem::validateName($badName, true);
+
+        $this->assertEquals(63, (strlen($newName)) );
+        $this->assertEquals('123456789012345678901234567890123456789012345678901234567890123', $newName);
     }
 
 }

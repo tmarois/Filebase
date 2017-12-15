@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 12/14/2017 - 1.0.13
+* Added #10 a new configuration variable `safe_filename`. By default `true`, suppresses any file name errors and converts the file name to a valid name, if set to `false`, an exception will be thrown upon a invalid name. All users who update will notice no errors will appear upon a invalid name. Set `safe_filename` to `false` if you prefer the exception to be thrown.
+
 ### 12/11/2017 - 1.0.12
 * Added #8 - `select()` method on query class. Now allows you to specify which fields you want your documents to return. *Note: using `select` means your documents will not return document objects but only data arrays.* This will allow you to only include the fields you want to use for your current task. (Excluding the rest and reducing memory usage).
 * Added `last()` method on query class to return the last item in the result array (opposite of `first()`)

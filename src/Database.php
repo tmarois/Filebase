@@ -10,7 +10,7 @@ class Database
     * Stores the version of Filebase
     * use $db->getVersion()
     */
-    const VERSION = '1.0.12';
+    const VERSION = '1.0.13';
 
 
     //--------------------------------------------------------------------
@@ -217,7 +217,7 @@ class Database
     {
         $id             = $document->getId();
         $file_extension = $this->config->format::getFileExtension();
-        $file_location  = $this->config->dir.'/'.Filesystem::validateName($id).'.'.$file_extension;
+        $file_location  = $this->config->dir.'/'.Filesystem::validateName($id, $this->config->safe_filename).'.'.$file_extension;
         $created        = $document->createdAt(false);
 
         if (isset($wdata) && $wdata !== '')
@@ -274,7 +274,7 @@ class Database
     */
     protected function read($name)
     {
-        return $this->config->format::decode( Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($name).'.'.$this->config->format::getFileExtension() ) );
+        return $this->config->format::decode( Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($name, $this->config->safe_filename).'.'.$this->config->format::getFileExtension() ) );
     }
 
 
@@ -289,7 +289,7 @@ class Database
     */
     public function delete(Document $document)
     {
-        return Filesystem::delete($this->config->dir.'/'.Filesystem::validateName($document->getId()).'.'.$this->config->format::getFileExtension());
+        return Filesystem::delete($this->config->dir.'/'.Filesystem::validateName($document->getId(), $this->config->safe_filename).'.'.$this->config->format::getFileExtension());
     }
 
 
