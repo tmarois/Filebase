@@ -20,6 +20,69 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    public function testNotWritable()
+    {
+        $this->expectException(\Exception::class);
+
+        if (!is_dir(__DIR__.'/databases/cantedit'))
+        {
+            mkdir(__DIR__.'/databases/cantedit');
+        }
+
+        chmod(__DIR__.'/databases/cantedit', 0444);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/cantedit'
+        ]);
+
+        chmod(__DIR__.'/databases/cantedit', 0777);
+        rmdir(__DIR__.'/databases/cantedit');
+    }
+
+
+    public function testNotWritableButReadonly()
+    {
+        if (!is_dir(__DIR__.'/databases/cantedit'))
+        {
+            mkdir(__DIR__.'/databases/cantedit');
+        }
+
+        chmod(__DIR__.'/databases/cantedit', 0444);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/cantedit',
+            'read_only' => true
+        ]);
+
+        $this->assertEquals(true, true);
+
+        chmod(__DIR__.'/databases/cantedit', 0777);
+        rmdir(__DIR__.'/databases/cantedit');
+    }
+
+
+
+    public function testDatabaseReadOnlyDelete()
+    {
+        $this->expectException(\Exception::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases'
+        ]);
+
+        $db->flush(true);
+        $db->get('test1')->set(['key'=>'value'])->save();
+
+        $db2 = new \Filebase\Database([
+            'dir' => __DIR__.'/databases',
+            'read_only' => true
+        ]);
+
+        $db2->get('test1')->delete();
+    }
+
+
+
 
     public function testReadonlyBadFlush()
     {
