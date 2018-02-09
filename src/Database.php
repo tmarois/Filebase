@@ -10,7 +10,7 @@ class Database
     * Stores the version of Filebase
     * use $db->getVersion()
     */
-    const VERSION = '1.0.13';
+    const VERSION = '1.0.14';
 
 
     //--------------------------------------------------------------------
@@ -34,6 +34,9 @@ class Database
     public function __construct(array $config)
     {
         $this->config = new Config($config);
+
+        // if we are set to read only, don't care to look at the directory.
+        if ($this->config->read_only === true) return false;
 
         // Check directory and create it if it doesn't exist
         if (!is_dir($this->config->dir))
@@ -215,6 +218,11 @@ class Database
     */
     public function save(Document $document, $wdata = '')
     {
+        if ($this->config->read_only === true)
+        {
+            throw new \Exception("This database is set to be read-only. No modifications can be made.");
+        }
+
         $id             = $document->getId();
         $file_extension = $this->config->format::getFileExtension();
         $file_location  = $this->config->dir.'/'.Filesystem::validateName($id, $this->config->safe_filename).'.'.$file_extension;
@@ -289,6 +297,11 @@ class Database
     */
     public function delete(Document $document)
     {
+        if ($this->config->read_only === true)
+        {
+            throw new \Exception("This database is set to be read-only. No modifications can be made.");
+        }
+
         return Filesystem::delete($this->config->dir.'/'.Filesystem::validateName($document->getId(), $this->config->safe_filename).'.'.$this->config->format::getFileExtension());
     }
 
@@ -321,6 +334,11 @@ class Database
     */
     public function flush($confirm = false)
     {
+        if ($this->config->read_only === true)
+        {
+            throw new \Exception("This database is set to be read-only. No modifications can be made.");
+        }
+
         if ($confirm===true)
         {
             $documents = $this->findAll(false);

@@ -12,11 +12,54 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     public function testVersion()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'read_only' => true
         ]);
 
         $this->assertRegExp('/[0-9]+\.[0-9]+\.[0-9]+/', $db->version());
     }
+
+
+
+    public function testReadonlyBadFlush()
+    {
+        $this->expectException(\Exception::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases',
+            'read_only' => true
+        ]);
+
+        $db->flush(true);
+    }
+
+
+    public function testReadonlyBadTurncate()
+    {
+        $this->expectException(\Exception::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases',
+            'read_only' => true
+        ]);
+
+        $db->truncate();
+    }
+
+
+
+    public function testDatabaseBadSave()
+    {
+        $this->expectException(\Exception::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases',
+            'read_only' => true
+        ]);
+
+        $db->get('test1')->set(['key'=>'value'])->save();
+    }
+
 
 
     public function testMissingFormatClass()

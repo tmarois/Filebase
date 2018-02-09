@@ -34,7 +34,7 @@ Use `composer require tmarois/filebase`
 
 If you want to modify the `composer.json` manually, add `"tmarois/filebase" : "^1.0"` to your `required`
 
-You do not need to use composer, just download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases.
+If you do not want to use composer, download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases.
 
 ## Usage
 
@@ -84,6 +84,7 @@ $db = new \Filebase\Database([
     'cache_expires'  => 1800,
     'pretty'         => true,
     'safe_filename'  => true,
+    'read_only'      => false,
     'validate' => [
         'name'   => [
             'valid.type' => 'string',
@@ -102,7 +103,8 @@ $db = new \Filebase\Database([
 |`cache`			|bool		|false   |Stores [query](https://github.com/tmarois/Filebase#8-queries) results into cache for faster loading.				|
 |`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
 |`pretty`	    	|bool		|true   |Store the data for human readability? Pretty Print	|
-|`safe_filename`	|bool		|true   |Automatically converts the file name to a valid name 	|
+|`safe_filename`	|bool		|true   |Automatically converts the file name to a valid name (added: 1.0.13)   |
+|`read_only`        |bool		|false  |Prevents the database from creating/modifying files or directories (added: 1.0.14)	|
 
 
 ## (2) Formatting

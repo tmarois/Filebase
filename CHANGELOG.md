@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 02/09/2018 - 1.0.14
+* Added #11 a new configuration variable `read_only`. By default `false`, when set to `true` no modifications can be made to the database and if you attempt to make a `save()`, `delete()`, `truncate()` or `flush()` an exception will be thrown as those methods are not allowed to be used within read only mode. Also, the database will not attemp to create a new direction if one does not exist during read-only mode, this can become an issue if you don't have permission to do so, read only tries to solve that. When set to `false` the database functions as normal.
+
 ### 12/14/2017 - 1.0.13
 * Added #10 a new configuration variable `safe_filename`. By default `true`, suppresses any file name errors and converts the file name to a valid name, if set to `false`, an exception will be thrown upon a invalid name. All users who update will notice no errors will appear upon a invalid name. Set `safe_filename` to `false` if you prefer the exception to be thrown.
 

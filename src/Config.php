@@ -49,6 +49,16 @@ class Config
 
 
     /**
+    * $read_only
+    * (if true) We will not attempt to create the database directory or allow the user to create anything
+    * (if false) Functions as normal
+    *
+    * default false
+    */
+    public $read_only = false;
+
+
+    /**
     * $backupLocation
     * The location to store backups
     *
