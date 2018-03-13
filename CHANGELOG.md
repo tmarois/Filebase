@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 03/13/2018 - 1.0.15
+* Quick patch on composer.json file for dev dependency with satooshi/php-coveralls issues on dev-master. (this would have only affected new users from trying to install via composer.)
+
 ### 02/09/2018 - 1.0.14
 * Added #11 a new configuration variable `read_only`. By default `false`, when set to `true` no modifications can be made to the database and if you attempt to make a `save()`, `delete()`, `truncate()` or `flush()` an exception will be thrown as those methods are not allowed to be used in read-only mode.
 * The database will not attempt to create a new directory if one does not exist during read-only mode, this can become an issue if you don't have permission to do so, read-only tries to solve that.
