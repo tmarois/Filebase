@@ -227,8 +227,8 @@ echo $users->count();
 
 // Find All Users and display their email addresses
 
-$users->findAll();
-foreach($users as $user)
+$results = $users->findAll();
+foreach($results as $user)
 {
     echo $user->email;
 
@@ -469,7 +469,7 @@ Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](ht
 * [Adwords Management](https://greyscale.com)
 * [Free Games](http://onlinefun.com)
 * [VIP Auto](http://vipautoli.com)
-* [Timothy Marois](http://timothymarois.com) 
+* [Timothy Marois](http://timothymarois.com)
 * [Ideal Internet](http://idealinternet.com)
 * [Script Automate](https://github.com/timothymarois/ScriptAutomate)
 * [Square Media LLC](http://squaremedia.com)
