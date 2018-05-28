@@ -17,7 +17,7 @@ class Config
     * Format Class
     * Must implement Format\FormatInterface
     */
-    public $format = Format\Json::class;
+    public $format = \Filebase\Format\Json::class;
 
 
     /**
@@ -129,9 +129,11 @@ class Config
             throw new \Exception('Filebase Error: Missing format class in config.');
         }
 
+        // instantiate the format class
         $format_class = new $this->format;
 
-        if (!$format_class instanceof Format\FormatInterface)
+        // check now if that class is part of our interface
+        if (!$format_class instanceof \Filebase\Format\FormatInterface)
         {
             throw new \Exception('Filebase Error: Format Class must be an instance of Filebase\Format\FormatInterface');
         }
