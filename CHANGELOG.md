@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 05/28/2018 - 1.0.16
+* Fixed the scope resolution operator `::` for php 5.6 which throws the `T_PAAMAYIM_NEKUDOTAYIM` exception error.
+
 ### 03/13/2018 - 1.0.15
 * Quick patch on composer.json file for dev dependency with satooshi/php-coveralls issues on dev-master. (this would have only affected new users from trying to install via composer.)
 
