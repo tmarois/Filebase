@@ -302,7 +302,7 @@ class Document
     *
     * @param boolean $cache
     */
-    public function setFromCache(bool $cache = true)
+    public function setFromCache($cache = true)
     {
         $this->__cache = $cache;
 

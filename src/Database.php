@@ -31,7 +31,7 @@ class Database
     * __construct
     *
     */
-    public function __construct(array $config)
+    public function __construct(array $config = [])
     {
         $this->config = new Config($config);
 
@@ -85,7 +85,9 @@ class Database
     */
     public function findAll($include_documents = true, $data_only = false)
     {
-        $file_extension = $this->config->format::getFileExtension();
+        $format = $this->config->format;
+
+        $file_extension = $format::getFileExtension();
         $file_location  = $this->config->dir.'/';
 
         $all_items = Filesystem::getAllFiles($file_location, $file_extension);
@@ -223,8 +225,9 @@ class Database
             throw new \Exception("This database is set to be read-only. No modifications can be made.");
         }
 
+        $format         = $this->config->format;
         $id             = $document->getId();
-        $file_extension = $this->config->format::getFileExtension();
+        $file_extension = $format::getFileExtension();
         $file_location  = $this->config->dir.'/'.Filesystem::validateName($id, $this->config->safe_filename).'.'.$file_extension;
         $created        = $document->createdAt(false);
 
@@ -243,7 +246,7 @@ class Database
 
         $document->setUpdatedAt(time());
 
-        $data = $this->config->format::encode( $document->saveAs(), $this->config->pretty );
+        $data = $format::encode( $document->saveAs(), $this->config->pretty );
 
         if (Filesystem::write($file_location, $data))
         {
@@ -282,7 +285,8 @@ class Database
     */
     protected function read($name)
     {
-        return $this->config->format::decode( Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($name, $this->config->safe_filename).'.'.$this->config->format::getFileExtension() ) );
+        $format = $this->config->format;
+        return $format::decode( Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($name, $this->config->safe_filename).'.'.$format::getFileExtension() ) );
     }
 
 
@@ -302,7 +306,9 @@ class Database
             throw new \Exception("This database is set to be read-only. No modifications can be made.");
         }
 
-        return Filesystem::delete($this->config->dir.'/'.Filesystem::validateName($document->getId(), $this->config->safe_filename).'.'.$this->config->format::getFileExtension());
+        $format = $this->config->format;
+
+        return Filesystem::delete($this->config->dir.'/'.Filesystem::validateName($document->getId(), $this->config->safe_filename).'.'.$format::getFileExtension());
     }
 
 
@@ -341,10 +347,11 @@ class Database
 
         if ($confirm===true)
         {
+            $format = $this->config->format;
             $documents = $this->findAll(false);
             foreach($documents as $document)
             {
-                Filesystem::delete($this->config->dir.'/'.$document.'.'.$this->config->format::getFileExtension());
+                Filesystem::delete($this->config->dir.'/'.$document.'.'.$format::getFileExtension());
             }
 
             if ($this->count() === 0)
