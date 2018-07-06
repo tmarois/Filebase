@@ -154,11 +154,21 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         for ($x = 1; $x <= 10; $x++)
     	{
     		$user = $db->get(uniqid());
+            $user->index = $x;
+            $user->index2 = mt_rand(1,2);
     		$user->pages = 5;
     		$user->save();
     	}
 
         $count  = $db->count();
+
+        $queryIndex = $db->query()
+            ->where('pages','>','4')
+            ->where('index','=','1')
+            ->where('index2','=','2')
+            ->results();
+
+        // print_r($queryIndex);
 
         // FIRST TEST
         $query1 = $db->query()->where('pages','>','4')->results();

@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 07/06/2018 - 1.0.17
+* Fixed #19 the `AND` query logic. (previously the `where()` query would only used the last one in the chain).
+
 ### 05/28/2018 - 1.0.16
 * Fixed the scope resolution operator `::` for php 5.6 which throws the `T_PAAMAYIM_NEKUDOTAYIM` exception error.
 

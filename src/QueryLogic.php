@@ -141,7 +141,7 @@ class QueryLogic
             {
                 list($field, $operator, $value) = $predicate;
 
-                $documents = array_values(array_filter($org_docs, function ($document) use ($field, $operator, $value) {
+                $documents = array_values(array_filter($documents, function ($document) use ($field, $operator, $value) {
                     return $this->match($document, $field, $operator, $value);
                 }));
 
