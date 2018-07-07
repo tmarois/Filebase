@@ -1,6 +1,6 @@
 # Filebase
 
-[![Build Status](https://travis-ci.org/tmarois/Filebase.svg?branch=master)](https://travis-ci.org/tmarois/Filebase) [![Coverage Status](https://coveralls.io/repos/github/tmarois/Filebase/badge.svg?branch=master)](https://coveralls.io/github/tmarois/Filebase?branch=master)
+[![Build Status](https://travis-ci.org/tmarois/Filebase.svg?branch=1.0)](https://travis-ci.org/tmarois/Filebase) [![Coverage Status](https://coveralls.io/repos/github/tmarois/Filebase/badge.svg?branch=1.0)](https://coveralls.io/github/tmarois/Filebase?branch=1.0)
 
 A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/tmarois/Filebase#2-formatting) the way you like).
 
