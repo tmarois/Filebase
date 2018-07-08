@@ -6,6 +6,18 @@
 	"type": "package",
 	"licence": "MIT",
 
+	"authors": [
+        {
+            "name": "Timothy Marois",
+            "email": "timothymarois@gmail.com"
+        }
+    ],
+
+	"require": {
+		"php": ">=7.0",
+		"basephp/support" : "1.*"
+	},
+
 	"require-dev": {
 		"satooshi/php-coveralls": "^2.0",
 		"phpunit/phpunit": "^6.0"

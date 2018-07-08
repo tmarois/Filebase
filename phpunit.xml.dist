@@ -8,9 +8,8 @@
 		 convertWarningsToExceptions="true"
 		 processIsolation="false"
 		 stopOnFailure="false"
-		 syntaxCheck="true"
 		 verbose="true" >
-    <testsuites name="Filebase Test Case">
+    <testsuites>
         <testsuite name="All">
             <directory>./tests</directory>
         </testsuite>

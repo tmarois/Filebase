@@ -1,15 +1,26 @@
 <?php  namespace Filebase;
 
+use Filebase\Format\Json;
+use Filebase\Format\FormatInterface;
+use Exception;
 
 class Config
 {
 
     /**
-    * $dir
-    * Database Directory
-    * Where to store information
+    * $path
+    *
+    * @var string
     */
-    public $dir = __DIR__;
+    protected $path = __DIR__;
+
+
+    /**
+    * $backupPath
+    *
+    * @var string
+    */
+    protected $backupPath = __DIR__.'/backups';
 
 
     /**
@@ -17,35 +28,7 @@ class Config
     * Format Class
     * Must implement Format\FormatInterface
     */
-    public $format = \Filebase\Format\Json::class;
-
-
-    /**
-    * $cache
-    * Caching for queries
-    *
-    * default true
-    */
-    public $cache = true;
-
-
-    /**
-    * $cache_time
-    * When should cache be cleared?
-    *
-    * default (1800 seconds) 30 minutes
-    */
-    public $cache_expires = 1800;
-
-
-    /**
-    * $safe_filename
-    * (if true) Be sure to automatically change the file name if it does not fit validation
-    * (if false) File names that are not valid will thrown an error.
-    *
-    * default true
-    */
-    public $safe_filename = true;
+    public $format = Json::class;
 
 
     /**
@@ -55,16 +38,7 @@ class Config
     *
     * default false
     */
-    public $read_only = false;
-
-
-    /**
-    * $backupLocation
-    * The location to store backups
-    *
-    * default current location
-    */
-    public $backupLocation = '';
+    public $readOnly = false;
 
 
     /**
@@ -75,17 +49,7 @@ class Config
     *
     * default true
     */
-    public $pretty = true;
-
-
-    /**
-    * $validate
-    *
-    */
-    public $validate = [];
-
-
-    //--------------------------------------------------------------------
+    public $prettyFormat = true;
 
 
     /**
@@ -93,25 +57,35 @@ class Config
     *
     * This sets all the config variables (replacing its defaults)
     */
-    public function __construct($config)
+    public function __construct(array $config = [])
     {
-        // let's define all our config variables
         foreach ($config as $key => $value)
         {
-            $this->{$key} = $value;
-        }
-
-        // if "backupLocation" is not set, let's set one automatically
-        if (!isset($config['backupLocation']))
-        {
-            $this->backupLocation = $this->dir.'/backups';
+            if (isset($this->$key))
+            {
+                $this->$key = $value;
+            }
         }
 
         $this->validateFormatClass();
     }
 
 
-    //--------------------------------------------------------------------
+    /**
+    * get property
+    *
+    * @param string $name
+    * @return mixed
+    */
+    public function __get($name)
+    {
+        if (isset($this->$name))
+        {
+            return $this->$key;
+        }
+
+        return null;
+    }
 
 
     /**
@@ -126,20 +100,17 @@ class Config
     {
         if (!class_exists($this->format))
         {
-            throw new \Exception('Filebase Error: Missing format class in config.');
+            throw new Exception('Filebase: Missing format class in config.');
         }
 
         // instantiate the format class
-        $format_class = new $this->format;
+        $formatClass = (new $this->format);
 
         // check now if that class is part of our interface
-        if (!$format_class instanceof \Filebase\Format\FormatInterface)
+        if (!$formatClass instanceof FormatInterface)
         {
-            throw new \Exception('Filebase Error: Format Class must be an instance of Filebase\Format\FormatInterface');
+            throw new Exception('Filebase: Format Class must be an instance of Filebase\Format\FormatInterface');
         }
     }
-
-
-    //--------------------------------------------------------------------
 
 }
