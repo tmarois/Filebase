@@ -54,7 +54,7 @@ class Document
 
         $this->name = $name;
 
-        $this->path = $this->db->config->path.'/'.$this->name
+        $this->path = $this->db->config()->path.'/'.$this->name;
 
         $this->collection = $this->load($this->path);
     }
@@ -92,7 +92,7 @@ class Document
     {
         $contents = Filesystem::get($path) ?? '';
 
-        $format = $this->db->config->format;
+        $format = $this->db->config()->format;
 
         $data = (array) $format::decode( $contents ) ?? [];
 
@@ -107,11 +107,22 @@ class Document
     */
     public function save()
     {
-        $format = $this->db->config->getFormat();
+        $format = $this->db->config()->format;
 
-        $data = $format::encode($this->collection->toArray(), $this->db->config->prettyFormat);
+        $data = $format::encode($this->collection->toArray(), $this->db->config()->prettyFormat);
 
         return Filesystem::put($this->path, $data);
+    }
+
+
+    /**
+    * delete
+    *
+    * @return Base\Support\Filesystem
+    */
+    public function delete()
+    {
+        return Filesystem::delete($this->path);
     }
 
 
@@ -126,10 +137,10 @@ class Document
     {
         if (method_exists(Collection::class, $name))
         {
-            return $collection->$name(...$arguments);
+            return $this->collection->$name(...$arguments);
         }
 
-        throw new Exception("Filebase: method $name does not exist.");
+        throw new Exception('Filebase: method "'.$name.'" does not exist.');
     }
 
 
@@ -140,9 +151,9 @@ class Document
     * @param mixed $default
     * @return Base\Support\Collection get
     */
-    public function __get($name, $default = null)
+    public function __get($name)
     {
-        return $collection->get($name, $default);
+        return $this->collection->get($name);
     }
 
 
@@ -155,7 +166,7 @@ class Document
     */
     public function __set($name, $value)
     {
-        return $collection->set($name, $value);
+        return $this->collection->set($name, $value);
     }
 
 }

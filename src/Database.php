@@ -52,17 +52,17 @@ class Database
     protected function createDirectory()
     {
         // Check directory and create it if it doesn't exist
-        /*if (!is_dir($this->config->dir))
+        if (!is_dir($this->config->path))
         {
-            if (!@mkdir($this->config->dir, 0777, true))
+            if (!@mkdir($this->config->path, 0777, true))
             {
-                throw new Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->dir));
+                throw new Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->path));
             }
         }
-        else if (!is_writable($this->config->dir))
+        else if (!is_writable($this->config->path))
         {
-            throw new Exception(sprintf('`%s` is not writable.', $this->config->dir));
-        }*/
+            throw new Exception(sprintf('`%s` is not writable.', $this->config->path));
+        }
     }
 
 
@@ -76,6 +76,17 @@ class Database
     public function version()
     {
         return self::VERSION;
+    }
+
+
+    /**
+    * config
+    *
+    * @return Filebase\Config
+    */
+    public function config()
+    {
+        return $this->config;
     }
 
 

@@ -28,7 +28,7 @@ class Config
     * Format Class
     * Must implement Format\FormatInterface
     */
-    public $format = Json::class;
+    protected $format = Json::class;
 
 
     /**
@@ -38,7 +38,7 @@ class Config
     *
     * default false
     */
-    public $readOnly = false;
+    protected $readOnly = false;
 
 
     /**
@@ -49,7 +49,7 @@ class Config
     *
     * default true
     */
-    public $prettyFormat = true;
+    protected $prettyFormat = true;
 
 
     /**
@@ -81,7 +81,7 @@ class Config
     {
         if (isset($this->$name))
         {
-            return $this->$key;
+            return $this->$name;
         }
 
         return null;
