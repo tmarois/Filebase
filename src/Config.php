@@ -12,7 +12,7 @@ class Config
     *
     * @var string
     */
-    protected $path = __DIR__;
+    protected $path = __DIR__.'/database';
 
 
     /**
@@ -50,6 +50,16 @@ class Config
     * default true
     */
     protected $prettyFormat = true;
+
+
+    /**
+    * $fileExtension
+    *
+    * default file extension
+    *
+    * @var string
+    */
+    protected $ext = 'db';
 
 
     /**

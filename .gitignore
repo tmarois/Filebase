@@ -49,7 +49,7 @@ Vagrantfile
 #-------------------------
 # Composer
 #-------------------------
-/tests/databases
+/tests/database
 vendor/
 composer.lock
 composer.phar

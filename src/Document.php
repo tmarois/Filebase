@@ -54,7 +54,11 @@ class Document
 
         $this->name = $name;
 
-        $this->path = $this->db->config()->path.'/'.$this->name;
+        // make a safe file name
+        $safeName = preg_replace('/[^A-Za-z0-9_\.-]/', '', $name);
+
+        // the path of this document
+        $this->path = $this->db->config()->path.'/'.$safeName.'.'.$this->db->config()->ext;
 
         $this->collection = $this->load($this->path);
     }
@@ -107,6 +111,11 @@ class Document
     */
     public function save()
     {
+        if ($this->db->config()->readOnly === true)
+        {
+            throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
+        }
+
         $format = $this->db->config()->format;
 
         $data = $format::encode($this->collection->toArray(), $this->db->config()->prettyFormat);
@@ -118,11 +127,18 @@ class Document
     /**
     * delete
     *
-    * @return Base\Support\Filesystem
+    * @return void
     */
     public function delete()
     {
-        return Filesystem::delete($this->path);
+        if ($this->db->config()->readOnly === true)
+        {
+            throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
+        }
+
+        $this->collection = new Collection([]);
+
+        Filesystem::delete($this->path);
     }
 
 
@@ -167,6 +183,41 @@ class Document
     public function __set($name, $value)
     {
         return $this->collection->set($name, $value);
+    }
+
+
+    /**
+     * Get the Document as ARRAY.
+     *
+     * @param  int  $options
+     * @return string
+     */
+    public function toArray()
+    {
+        return $this->collection->toArray();
+    }
+
+
+    /**
+     * Get the Document as JSON.
+     *
+     * @param  int  $options
+     * @return string
+     */
+    public function toJson()
+    {
+        return $this->collection->toJson();
+    }
+
+
+    /**
+    * If the document is being output as a string
+    *
+    * @return string JSON formatted
+    */
+    public function __toString()
+    {
+        return $this->toJson();
     }
 
 }

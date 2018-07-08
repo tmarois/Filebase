@@ -45,21 +45,21 @@ class Database
     /**
     * createDirectory()
     *
-    * Create the database directory if doesnt exists
+    * Create the database directory if doesnt exists,
+    * And check that the directory is writeable
     *
     * @return void
     */
     protected function createDirectory()
     {
-        // Check directory and create it if it doesn't exist
-        if (!is_dir($this->config->path))
+        if (!Filesystem::isDirectory($this->config->path))
         {
-            if (!@mkdir($this->config->path, 0777, true))
+            if (!@Filesystem::makeDirectory($this->config->path, 0777, true))
             {
                 throw new Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->path));
             }
         }
-        else if (!is_writable($this->config->path))
+        else if (!Filesystem::isWritable($this->config->path))
         {
             throw new Exception(sprintf('`%s` is not writable.', $this->config->path));
         }
@@ -112,7 +112,7 @@ class Database
     {
         $path = ($path) ?? $this->config->backupPath;
 
-        return (new Backup($path, $this));
+        return (new Backup($this, $path));
     }
 
 
@@ -128,13 +128,32 @@ class Database
 
 
     /**
+    * count()
+    *
+    * Counts all the database items (files in directory)
+    *
+    * @return int
+    */
+    public function count()
+    {
+        return count(Filesystem::getAll($this->config->path,$this->config->ext));
+    }
+
+
+    /**
     * truncate
     *
+    * Empties entire database directory files
     *
-    * @return void
+    * @return bool
     */
     public function truncate()
     {
+        if ($this->config->readOnly === true)
+        {
+            throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
+        }
+
         return Filesystem::empty($this->config->path);
     }
 

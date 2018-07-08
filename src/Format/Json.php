@@ -5,19 +5,6 @@ class Json implements FormatInterface
 {
 
     /**
-    * getFileExtension
-    *
-    */
-    public static function getFileExtension()
-    {
-        return 'json';
-    }
-
-
-    //--------------------------------------------------------------------
-
-
-    /**
     * encode
     *
     */
@@ -30,9 +17,6 @@ class Json implements FormatInterface
     }
 
 
-    //--------------------------------------------------------------------
-
-
     /**
     * decode
     *
@@ -41,9 +25,5 @@ class Json implements FormatInterface
     {
         return json_decode($data, 1);
     }
-
-
-    //--------------------------------------------------------------------
-
 
 }
