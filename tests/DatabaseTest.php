@@ -40,7 +40,6 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         {
             $user = $db->document(uniqid());
             $user->name = 'John';
-            $user->contact['email'] = 'john@john.com';
             $user->save();
         }
 
