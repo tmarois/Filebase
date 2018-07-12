@@ -1,5 +1,9 @@
 <?php  namespace Filebase;
 
+use Exception;
+use ZipArchive;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class Backup
 {
@@ -13,9 +17,6 @@ class Backup
     protected $backupLocation;
 
 
-    //--------------------------------------------------------------------
-
-
     /**
     * $config
     *
@@ -23,9 +24,6 @@ class Backup
     * \Filebase\Config
     */
     protected $config;
-
-
-    //--------------------------------------------------------------------
 
 
     /**
@@ -36,9 +34,6 @@ class Backup
     protected $database;
 
 
-    //--------------------------------------------------------------------
-
-
     /**
     * __construct
     *
@@ -46,11 +41,13 @@ class Backup
     public function __construct($backupLocation = '', Database $database)
     {
         $this->backupLocation = $backupLocation;
+
         $this->config = $database->getConfig();
+
         $this->database = $database;
 
         // Check directory and create it if it doesn't exist
-        if (!is_dir($this->backupLocation))
+        /*if (!is_dir($this->backupLocation))
         {
             if (!@mkdir($this->backupLocation, 0777, true))
             {
@@ -60,11 +57,8 @@ class Backup
         else if (!is_writable($this->backupLocation))
         {
             throw new \Exception(sprintf('`%s` is not writable.', $this->backupLocation));
-        }
+        }*/
     }
-
-
-    //--------------------------------------------------------------------
 
 
     /**
@@ -75,17 +69,14 @@ class Backup
     {
         $backupFile = $this->backupLocation.'/'.time().'.zip';
 
-        if ($results = $this->zip($this->config->dir, $backupFile))
+        if ($results = $this->zip($this->config->path, $backupFile))
         {
             $basename = basename($backupFile);
             return $basename;
         }
 
-        throw new \Exception('Error backing up database.');
+        throw new Exception('Error backing up database.');
     }
-
-
-    //--------------------------------------------------------------------
 
 
     /**
@@ -110,9 +101,6 @@ class Backup
     }
 
 
-    //--------------------------------------------------------------------
-
-
     /**
     * clean()
     *
@@ -123,9 +111,6 @@ class Backup
     {
         return array_map('unlink', glob(realpath($this->backupLocation)."/*.zip"));
     }
-
-
-    //--------------------------------------------------------------------
 
 
     /**
@@ -139,13 +124,10 @@ class Backup
         $backups = $this->find();
         $restore = current($backups);
 
-        $this->database->truncate();
+        $this->database->empty();
 
-        return $this->extract($restore, $this->config->dir);
+        return $this->extract($restore, $this->config->path);
     }
-
-
-    //--------------------------------------------------------------------
 
 
     /**
@@ -161,7 +143,7 @@ class Backup
         {
             if (file_exists($source))
             {
-                $zip = new \ZipArchive();
+                $zip = new ZipArchive();
                 if ($zip->open($source) === TRUE)
                 {
                     $zip->extractTo($target);
@@ -176,9 +158,6 @@ class Backup
     }
 
 
-    //--------------------------------------------------------------------
-
-
     /**
     * zip()
     *
@@ -191,15 +170,15 @@ class Backup
         {
            if (file_exists($source))
            {
-               $zip = new \ZipArchive();
+               $zip = new ZipArchive();
                if ($zip->open($target, \ZIPARCHIVE::CREATE))
                {
                    $source = realpath($source);
                    if (is_dir($source))
                    {
-                       $iterator = new \RecursiveDirectoryIterator($source);
-                       $iterator->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
-                       $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
+                       $iterator = new RecursiveDirectoryIterator($source);
+                       $iterator->setFlags(RecursiveDirectoryIterator::SKIP_DOTS);
+                       $files = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
                        foreach ($files as $file)
                        {
                            $file = realpath($file);

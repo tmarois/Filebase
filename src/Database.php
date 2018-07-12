@@ -96,9 +96,9 @@ class Database
     * @param string $name
     * @return Filebase\Document
     */
-    public function document($name)
+    public function document($name, $isCollection = true)
     {
-        return (new Document($this, $name));;
+        return (new Document($this, $name, $isCollection));
     }
 
 

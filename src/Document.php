@@ -2,6 +2,7 @@
 
 use Exception;
 use Filebase\Database;
+use Base\Support\Arr;
 use Base\Support\Collection;
 use Base\Support\Filesystem;
 
@@ -33,6 +34,14 @@ class Document
 
 
     /**
+    * $isCollection
+    *
+    * @var bool
+    */
+    protected $isCollection = true;
+
+
+    /**
     * $collection
     *
     * @var Base\Support\Collection
@@ -48,11 +57,13 @@ class Document
     * @param Filebase\Database $database
     * @param string $name
     */
-    public function __construct(Database $database, $name = '')
+    public function __construct(Database $database, $name = '', $isCollection = true)
     {
         $this->db = $database;
 
         $this->name = $name;
+
+        $this->isCollection = $isCollection;
 
         // make a safe file name
         $safeName = preg_replace('/[^A-Za-z0-9_\.-]/', '', $name);
@@ -100,7 +111,9 @@ class Document
 
         $data = (array) $format::decode( $contents ) ?? [];
 
-        return (new Collection($data));
+        if ($this->isCollection === true) return (new Collection($data));
+
+        return $data;
     }
 
 
@@ -118,7 +131,7 @@ class Document
 
         $format = $this->db->config()->format;
 
-        $data = $format::encode($this->collection->toArray(), $this->db->config()->prettyFormat);
+        $data = $format::encode($this->toArray(), $this->db->config()->prettyFormat);
 
         return Filesystem::put($this->path, $data);
     }
@@ -136,7 +149,7 @@ class Document
             throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
         }
 
-        $this->collection = new Collection([]);
+        $this->collection = ($this->isCollection) ? new Collection([]) : [];
 
         Filesystem::delete($this->path);
     }
@@ -151,10 +164,9 @@ class Document
     */
     public function __call($name, $arguments)
     {
-        if (method_exists(Collection::class, $name))
-        {
-            return $this->collection->$name(...$arguments);
-        }
+        if (!$this->isCollection) throw new Exception('Filebase: Method does not exist. Document returned as array not Collection.');
+
+        if (method_exists(Collection::class, $name)) return $this->collection->$name(...$arguments);
 
         throw new Exception('Filebase: method "'.$name.'" does not exist.');
     }
@@ -163,26 +175,30 @@ class Document
     /**
     * get property from the collection
     *
-    * @param string $name
+    * @param string $key
     * @param mixed $default
     * @return Base\Support\Collection get
     */
-    public function __get($name)
+    public function __get($key)
     {
-        return $this->collection->get($name);
+        if (!$this->isCollection) return Arr::get($this->collection, $key);
+
+        return $this->collection->get($key);
     }
 
 
     /**
     * set a new property into the collection
     *
-    * @param string $name
+    * @param string $key
     * @param mixed $default
     * @return Base\Support\Collection set
     */
-    public function __set($name, $value)
+    public function __set($key, $value)
     {
-        return $this->collection->set($name, $value);
+        if (!$this->isCollection) return Arr::set($this->collection, $key, $value);
+
+        return $this->collection->set($key, $value);
     }
 
 
@@ -194,7 +210,7 @@ class Document
      */
     public function toArray()
     {
-        return $this->collection->toArray();
+        return ($this->isCollection) ? $this->collection->toArray() : $this->collection;
     }
 
 
@@ -206,7 +222,7 @@ class Document
      */
     public function toJson()
     {
-        return $this->collection->toJson();
+        return ($this->isCollection) ? $this->collection->toJson() : json_encode($this->collection,1);
     }
 
 

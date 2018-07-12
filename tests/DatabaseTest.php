@@ -1,12 +1,17 @@
-<?php
-
-namespace Filebase;
+<?php namespace Filebase;
 
 use Exception;
 
 class DatabaseTest extends \PHPUnit\Framework\TestCase
 {
 
+    /**
+    * testDatabaseVersion()
+    *
+    * TEST:
+    * Get the Filebase VERSION
+    *
+    */
     public function testDatabaseVersion()
     {
         $db = new Database([
@@ -17,7 +22,15 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     }
 
 
-    public function testDatabaseEmpty()
+    /**
+    * testDatabaseCountEmpty()
+    *
+    * TEST:
+    * (1) Test database COUNT() is working
+    * (2) EMPTY the entire database
+    *
+    */
+    public function testDatabaseCountEmpty()
     {
         $db = new Database([
             'path' => __DIR__.'/database/test-empty'
@@ -40,6 +53,13 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    /**
+    * testNotWritable()
+    *
+    * TEST:
+    * If a directory can not be modified
+    *
+    */
     public function testNotWritable()
     {
         $this->expectException(Exception::class);
@@ -57,6 +77,14 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    /**
+    * testNotWritableButReadonly()
+    *
+    * TEST:
+    * If a directory can not be modified,
+    * and Database is READ-ONLY
+    *
+    */
     public function testNotWritableButReadonly()
     {
         if (!is_dir(__DIR__.'/database/cantedit'))
@@ -65,7 +93,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         }
         chmod(__DIR__.'/database/cantedit', 0444);
 
-        $db = new \Filebase\Database([
+        $db = new Database([
             'path' => __DIR__.'/database/cantedit',
             'readOnly' => true
         ]);
@@ -77,11 +105,18 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    /**
+    * testDatabaseReadOnlyDelete()
+    *
+    * TEST:
+    * Test delete if database is READ-ONLY
+    *
+    */
     public function testDatabaseReadOnlyDelete()
     {
         $this->expectException(Exception::class);
 
-        $db = new \Filebase\Database([
+        $db = new Database([
             'path' => __DIR__.'/database'
         ]);
 
@@ -89,7 +124,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $doc->name = 'Test';
         $doc->save();
 
-        $db2 = new \Filebase\Database([
+        $db2 = new Database([
             'path' => __DIR__.'/database',
             'readOnly' => true
         ]);
@@ -99,11 +134,18 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    /**
+    * testDatabaseReadOnlyEmpty()
+    *
+    * TEST:
+    * Test DB EMPTY if database is READ-ONLY
+    *
+    */
     public function testDatabaseReadOnlyEmpty()
     {
         $this->expectException(Exception::class);
 
-        $db2 = new \Filebase\Database([
+        $db2 = new Database([
             'path' => __DIR__.'/database',
             'readOnly' => true
         ]);
