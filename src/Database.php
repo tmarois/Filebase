@@ -123,7 +123,7 @@ class Database
     */
     public function query()
     {
-        return (new Query($this));
+        // return (new Query($this));
     }
 
 
