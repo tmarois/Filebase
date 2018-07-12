@@ -164,11 +164,9 @@ class Document
     */
     public function __call($name, $arguments)
     {
-        if (!$this->isCollection) throw new Exception('Filebase: Method does not exist. Document returned as array not Collection.');
+        if ($this->isCollection) return $this->collection->$name(...$arguments);
 
-        if (method_exists(Collection::class, $name)) return $this->collection->$name(...$arguments);
-
-        throw new Exception('Filebase: method "'.$name.'" does not exist.');
+        throw new Exception('Filebase: Method does not exist. Document returned as array not Collection.');
     }
 
 

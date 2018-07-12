@@ -23,6 +23,24 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
 
 
     /**
+    * testDatabaseConfig()
+    *
+    * TEST:
+    * Test getting a database item
+    *
+    */
+    public function testDatabaseConfig()
+    {
+        $db = new Database([
+            'path' => __DIR__.'/database'
+        ]);
+
+        $this->assertEquals('db', $db->config()->ext);
+        $this->assertEquals(null, $db->config()->doesnotexist);
+    }
+
+
+    /**
     * testDatabaseCountEmpty()
     *
     * TEST:
