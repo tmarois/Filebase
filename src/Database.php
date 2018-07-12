@@ -108,12 +108,12 @@ class Database
     * @param string $location (optional)
     * @return Filebase\Backup
     */
-    public function backup($path = null)
+    /*public function backup($path = null)
     {
         $path = ($path) ?? $this->config->backupPath;
 
         return (new Backup($this, $path));
-    }
+    }*/
 
 
     /**
@@ -121,10 +121,10 @@ class Database
     *
     *
     */
-    public function query()
+    /*public function query()
     {
         // return (new Query($this));
-    }
+    }*/
 
 
     /**

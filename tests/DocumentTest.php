@@ -111,6 +111,28 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     }
 
 
+    /**
+    * testDocumentGetNoCollecttestDocumentBadMethodionError()
+    *
+    * TEST:
+    * (1) Test bad method on document
+    *
+    */
+    public function testDocumentBadMethod()
+    {
+        $this->expectException(Exception::class);
+
+        $db = new Database([
+            'path' => __DIR__.'/database'
+        ]);
+
+        $doc = $db->document('profile',false);
+
+        // this should NOT work...
+        $badMethod = $doc->methodDoesNotExist();
+    }
+
+
 
     /**
     * testDocumentGetDotNotation()
@@ -165,6 +187,28 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $doc = $db->document('profile');
 
         $this->assertEquals([], $doc->all());
+    }
+
+
+    /**
+    * testDocumentSaveReadOnly()
+    *
+    * TEST:
+    * (1) Test SAVE on document of database READ ONLY
+    *
+    */
+    public function testDocumentSaveReadOnly()
+    {
+        $this->expectException(Exception::class);
+
+        $db = new Database([
+            'path' => __DIR__.'/database',
+            'readOnly' => true
+        ]);
+
+        $doc = $db->document('profile');
+        $doc->author = 'Timothy Marois';
+        $doc->save();
     }
 
 
