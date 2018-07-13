@@ -75,7 +75,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     *
     * TEST:
     * (1) Get all files within the database
-    * (2) Get all database collection items 
+    * (2) Get all database collection items
     *
     */
     public function testDatabaseGetAll()
@@ -93,11 +93,13 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         }
 
         $getAll   = $db->getAll();
+        $getReal  = $db->getAll(true);
         $allFiles = $db->all();
 
         $db->empty();
 
         $this->assertEquals(10, count($allFiles));
+        $this->assertEquals(10, count($getReal));
         $this->assertEquals(10, count($getAll));
 
         $loadOneItem = current($allFiles);

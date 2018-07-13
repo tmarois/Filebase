@@ -111,9 +111,8 @@ class Database
     */
     public function all($isCollection = true)
     {
-        $db = $this;
-        return array_map(function($file) use ($db, $isCollection){
-            return $db->document(str_replace('.'.$this->config->ext,'',$file), $isCollection);
+        return array_map(function($file) use ($isCollection){
+            return $this->document(str_replace('.'.$this->config->ext,'',$file), $isCollection);
         }, $this->getAll());
     }
 
@@ -150,9 +149,9 @@ class Database
     *
     * @return int
     */
-    public function getAll()
+    public function getAll($realPath = false)
     {
-        return Filesystem::getAll($this->config->path,$this->config->ext);
+        return Filesystem::getAll($this->config->path, $this->config->ext, $realPath);
     }
 
 
@@ -173,6 +172,7 @@ class Database
     * truncate
     *
     * Empties entire database directory files
+    * MUST MATCH DATABASE FILES
     *
     * @return bool
     */
@@ -183,7 +183,12 @@ class Database
             throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
         }
 
-        return Filesystem::empty($this->config->path);
+        // delete only files designed by the Filebase.
+        return Filesystem::delete($this->getAll(true));
+
+        // this is faster, but unsafe. It will delete files that are not part of the database.
+        // this could lead to overdeletion, possibly important files.
+        // return Filesystem::empty($this->config->path);
     }
 
 
