@@ -71,6 +71,45 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
 
 
     /**
+    * testDatabaseGetAll()
+    *
+    * TEST:
+    * (1) Get all files within the database
+    * (2) Get all database collection items 
+    *
+    */
+    public function testDatabaseGetAll()
+    {
+        $db = new Database([
+            'path' => __DIR__.'/database/test-empty',
+            'ext' => 'db'
+        ]);
+
+        for ($x = 1; $x <= 10; $x++)
+        {
+            $user = $db->document(uniqid());
+            $user->name = 'John';
+            $user->save();
+        }
+
+        $getAll   = $db->getAll();
+        $allFiles = $db->all();
+
+        $db->empty();
+
+        $this->assertEquals(10, count($allFiles));
+        $this->assertEquals(10, count($getAll));
+
+        $loadOneItem = current($allFiles);
+        $this->assertEquals('John', ($loadOneItem->name));
+        $this->assertEquals('John', ($loadOneItem->get('name')));
+
+        $loadSingleItem = current($getAll);
+        $this->assertRegExp('/[a-zA-Z0-9]+\.db/', $loadSingleItem);
+    }
+
+
+    /**
     * testNotWritable()
     *
     * TEST:

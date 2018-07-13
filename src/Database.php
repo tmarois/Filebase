@@ -103,6 +103,22 @@ class Database
 
 
     /**
+    * all()
+    *
+    * Get all database documents and load them as documents
+    *
+    * @return array (documents)
+    */
+    public function all($isCollection = true)
+    {
+        $db = $this;
+        return array_map(function($file) use ($db, $isCollection){
+            return $db->document(str_replace('.'.$this->config->ext,'',$file), $isCollection);
+        }, $this->getAll());
+    }
+
+
+    /**
     * backup
     *
     * @param string $location (optional)
@@ -128,6 +144,19 @@ class Database
 
 
     /**
+    * getAll()
+    *
+    * Get all the files within the database
+    *
+    * @return int
+    */
+    public function getAll()
+    {
+        return Filesystem::getAll($this->config->path,$this->config->ext);
+    }
+
+
+    /**
     * count()
     *
     * Counts all the database items (files in directory)
@@ -136,7 +165,7 @@ class Database
     */
     public function count()
     {
-        return count(Filesystem::getAll($this->config->path,$this->config->ext));
+        return count($this->getAll());
     }
 
 
