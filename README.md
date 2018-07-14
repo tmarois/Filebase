@@ -1,8 +1,8 @@
 # Filebase
 
-[![Build Status](https://travis-ci.org/tmarois/Filebase.svg?branch=1.0)](https://travis-ci.org/tmarois/Filebase) [![Coverage Status](https://coveralls.io/repos/github/tmarois/Filebase/badge.svg?branch=1.0)](https://coveralls.io/github/tmarois/Filebase?branch=1.0)
+[![Build Status](https://travis-ci.org/filebase/Filebase.svg?branch=1.0)](https://travis-ci.org/filebase/Filebase) [![Coverage Status](https://coveralls.io/repos/github/filebase/Filebase/badge.svg?branch=1.0)](https://coveralls.io/github/filebase/Filebase?branch=1.0)
 
-A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/tmarois/Filebase#2-formatting) the way you like).
+A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/filebase/Filebase#2-formatting) the way you like).
 
 You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in **version control** and pass them to your team without having out-of-sync SQL databases.
 
@@ -15,12 +15,12 @@ With Filebase, you are in complete control. Design your data structure the way y
 Filebase is simple by design, but has enough features for the more advanced.
 
 * Key/Value and Array-based Data Storing
-* [Querying data](https://github.com/tmarois/Filebase#8-queries)
-* [Custom filters](https://github.com/tmarois/Filebase#7-custom-filters)
-* [Caching](https://github.com/tmarois/Filebase#9-caching) (queries)
-* [Database Backups](https://github.com/tmarois/Filebase#10-database-backups)
-* [Formatting](https://github.com/tmarois/Filebase#2-formatting) (encode/decode)
-* [Validation](https://github.com/tmarois/Filebase#6-validation-optional) (on save)
+* [Querying data](https://github.com/filebase/Filebase#8-queries)
+* [Custom filters](https://github.com/filebase/Filebase#7-custom-filters)
+* [Caching](https://github.com/filebase/Filebase#9-caching) (queries)
+* [Database Backups](https://github.com/filebase/Filebase#10-database-backups)
+* [Formatting](https://github.com/filebase/Filebase#2-formatting) (encode/decode)
+* [Validation](https://github.com/filebase/Filebase#6-validation-optional) (on save)
 * CRUD (method APIs)
 * File locking (on save)
 * Intuitive Method Naming
@@ -97,8 +97,8 @@ $db = new \Filebase\Database([
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`backupLocation`   |string		|current directory (`/backups`)         |The directory where the backup zip files will be stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
-|`validate`			|array		|   |Check [Validation Rules](https://github.com/tmarois/Filebase#6-validation-optional) for more details |
-|`cache`			|bool		|false   |Stores [query](https://github.com/tmarois/Filebase#8-queries) results into cache for faster loading.				|
+|`validate`			|array		|   |Check [Validation Rules](https://github.com/filebase/Filebase#6-validation-optional) for more details |
+|`cache`			|bool		|false   |Stores [query](https://github.com/filebase/Filebase#8-queries) results into cache for faster loading.				|
 |`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
 |`pretty`	    	|bool		|true   |Store the data for human readability? Pretty Print	|
 |`safe_filename`	|bool		|true   |Automatically converts the file name to a valid name (added: 1.0.13)   |
@@ -141,7 +141,7 @@ $item = $db->get($userId);
 |`updatedAt()`                    | Document was updated (default Y-m-d H:i:s) |
 |`field()`                        | You can also use `.` dot delimiter to find values from nested arrays |
 |`isCache()`                      | (true/false) if the current document is loaded from cache |
-|`filter()`                       | Refer to the [Custom Filters](https://github.com/tmarois/Filebase#7-custom-filters) |
+|`filter()`                       | Refer to the [Custom Filters](https://github.com/filebase/Filebase#7-custom-filters) |
 
 Example:
 
@@ -203,14 +203,14 @@ Here is a list of methods you can use on the database class.
 |Method|Details|
 |---|---|
 |`version()`                      | Current version of your Filebase library |
-|`get()`                          | Refer to [get()](https://github.com/tmarois/Filebase#3-get-and-methods) |
+|`get()`                          | Refer to [get()](https://github.com/filebase/Filebase#3-get-and-methods) |
 |`findAll()`                      | Returns all documents in database |
 |`count()`                        | Number of documents in database |
 |`flush(true)`                    | Deletes all documents. |
 |`flushCache()`                   | Clears all the cache |
 |`truncate()`                     | Deletes all documents. Alias of `flush(true)` |
-|`query()`                        | Refer to the [Queries](https://github.com/tmarois/Filebase#8-queries) |
-|`backup()`                       | Refer to the [Backups](https://github.com/tmarois/Filebase#10-database-backups) |
+|`query()`                        | Refer to the [Queries](https://github.com/filebase/Filebase#8-queries) |
+|`backup()`                       | Refer to the [Backups](https://github.com/filebase/Filebase#10-database-backups) |
 
 Examples
 
