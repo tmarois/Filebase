@@ -30,9 +30,7 @@ Filebase is simple by design, but has enough features for the more advanced.
 
 Use [Composer](http://getcomposer.org/) to install package.
 
-Use `composer require tmarois/filebase`
-
-If you want to modify the `composer.json` manually, add `"tmarois/filebase" : "^1.0"` to your `required`
+Use `composer require filebase/filebase`
 
 If you do not want to use composer, download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases.
 

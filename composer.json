@@ -1,10 +1,17 @@
 {
 	"description": "A Simple but Powerful Flat File Database Storage.",
 	"keywords": ["filebase", "key-value","file-files", "flat", "file", "database", "document", "flat-file", "serverless"],
-	"name": "tmarois/filebase",
+	"name": "filebase/filebase",
 	"homepage": "https://github.com/tmarois/Filebase",
 	"type": "package",
 	"licence": "MIT",
+
+	"authors": [
+        {
+            "name": "Timothy Marois",
+            "email": "timothymarois@gmail.com"
+        }
+    ],
 
 	"require-dev": {
 		"satooshi/php-coveralls": "^2.0",
