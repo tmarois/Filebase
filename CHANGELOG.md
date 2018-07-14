@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+### 07/14/2018 - 1.0.18
+* Fixed #17 for PHP 5.6
+* Replaced the spaceship operators with a php 5.6 alternative.
+* Removed the php 7 type hinting.
+* Added php >= 5.6 as the new requirement for install.
+
 ### 07/06/2018 - 1.0.17
 * Fixed #19 the `AND` query logic. (previously the `where()` query would only used the last one in the chain).
 

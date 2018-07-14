@@ -10,6 +10,8 @@ Doesn't that sound awesome?
 
 With Filebase, you are in complete control. Design your data structure the way you want. Use arrays and objects like you know how in PHP. Update and share your data with others and teams using version control. Just remember, upgrading your web/apache server is a lot less than your database server.
 
+Works with **PHP 5.6** and **PHP 7+**
+
 ### Features
 
 Filebase is simple by design, but has enough features for the more advanced.
