@@ -205,12 +205,19 @@ class QueryLogic
             $propA = $a->field($orderBy);
             $propB = $b->field($orderBy);
 
-            if ($sortBy == 'DESC')
-            {
-                return strnatcasecmp($propB, $propA) <=> strnatcasecmp($propA, $propB);
+
+            if (strnatcasecmp($propB, $propA) == strnatcasecmp($propA, $propB)) {
+                return 0;
             }
 
-            return strnatcasecmp($propA, $propB) <=> strnatcasecmp($propB, $propA);
+            if ($sortBy == 'DESC')
+            {
+                return (strnatcasecmp($propB, $propA) < strnatcasecmp($propA, $propB)) ? -1 : 1;
+            }
+            else
+            {
+                return (strnatcasecmp($propA, $propB) < strnatcasecmp($propB, $propA)) ? -1 : 1;
+            }
 
         });
 
