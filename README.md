@@ -464,14 +464,13 @@ Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](ht
 
 ## Sites and Users of Filebase
 
-* [Adwords Management](https://greyscale.com)
-* [Free Games](http://onlinefun.com)
+* [Grayscale Inc](https://grayscale.com)
 * [VIP Auto](http://vipautoli.com)
-* [Timothy Marois](http://timothymarois.com)
 * [Ideal Internet](http://idealinternet.com)
-* [Script Automate](https://github.com/timothymarois/ScriptAutomate)
+* [OnlineFun](http://onlinefun.com)
+* [PuzzlePlay](http://puzzleplay.com)
 * [Square Media LLC](http://squaremedia.com)
-* [Ad Serving Platform](http://playbanners.com)
+* [My Map Directions](https://mymapdirections.com)
 
 *If you are using Filebase on your website, send in a pull request and we will put your site up here.*
 

@@ -114,7 +114,7 @@ class Query extends QueryLogic
     * ->orderBy()
     *
     */
-    public function orderBy(string $field, string $sort)
+    public function orderBy($field, $sort)
     {
         $this->orderBy = $field;
         $this->sortBy  = $sort;
