@@ -73,8 +73,8 @@ class QueryLogic
             {
                 $this->documents = $cached_documents;
 
-                //$this->sort();
-                //$this->offsetLimit();
+                $this->sort();
+                $this->offsetLimit();
 
                 return $this;
             }
@@ -101,8 +101,8 @@ class QueryLogic
             }
         }
 
-        //$this->sort();
-        //$this->offsetLimit();
+        $this->sort();
+        $this->offsetLimit();
 
         if (is_array($this->fields) && !empty($this->fields))
         {

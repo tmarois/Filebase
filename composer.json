@@ -19,7 +19,7 @@
 
 	"require-dev": {
 		"satooshi/php-coveralls": "^2.0",
-		"phpunit/phpunit": "^5.0"
+		"phpunit/phpunit": "5.*"
 	},
 
 	"autoload": {
