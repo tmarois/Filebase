@@ -151,7 +151,7 @@ class Database
     */
     public function getAll($realPath = false)
     {
-        return Filesystem::getAll($this->config->path, $this->config->ext, $realPath);
+        return Filesystem::files($this->config->path, $this->config->ext, $realPath);
     }
 
 

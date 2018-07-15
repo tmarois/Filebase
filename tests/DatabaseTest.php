@@ -211,4 +211,23 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $db2->empty();
     }
 
+
+    /**
+    * testDatabaseEmpty()
+    *
+    * TEST:
+    * (1) Delete all files made from these tests and confirm.
+    *
+    */
+    public function testDatabaseEmpty()
+    {
+        $db = new Database([
+            'path' => __DIR__.'/database'
+        ]);
+
+        $db->empty();
+
+        $this->assertEquals(0, $db->count());
+    }
+
 }

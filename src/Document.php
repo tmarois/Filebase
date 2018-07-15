@@ -65,11 +65,7 @@ class Document
 
         $this->isCollection = $isCollection;
 
-        // make a safe file name
-        $safeName = preg_replace('/[^A-Za-z0-9_\.-]/', '', $name);
-
-        // the path of this document
-        $this->path = $this->db->config()->path.'/'.$safeName.'.'.$this->db->config()->ext;
+        $this->path = $this->db->config()->path.'/'.$this->safeName($name).'.'.$this->db->config()->ext;
 
         $this->collection = $this->load($this->path);
     }
@@ -118,6 +114,17 @@ class Document
 
 
     /**
+    * safeName
+    *
+    * @return string $name
+    */
+    protected function safeName($name)
+    {
+        return preg_replace('/[^A-Za-z0-9_\.-]/', '', $name);
+    }
+
+
+    /**
     * save
     *
     * @return Base\Support\Filesystem
@@ -134,6 +141,28 @@ class Document
         $data = $format::encode($this->toArray(), $this->db->config()->prettyFormat);
 
         return Filesystem::put($this->path, $data);
+    }
+
+
+    /**
+    * rename
+    *
+    * @return void
+    */
+    public function rename($name)
+    {
+        if ($this->db->config()->readOnly === true)
+        {
+            throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
+        }
+
+        $this->name = $name;
+
+        $currentPath = $this->path;
+
+        $this->path = Filesystem::dirname($this->path).'/'.$this->safeName($name).'.'.$this->db->config()->ext;
+
+        return Filesystem::rename($currentPath, $this->safeName($name).'.'.$this->db->config()->ext, false);
     }
 
 
