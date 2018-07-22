@@ -3,6 +3,7 @@
 use Exception;
 use Filebase\Database;
 use Filebase\Document;
+use Filebase\Query\Builder;
 use Base\Support\Filesystem;
 
 class Table
@@ -87,29 +88,30 @@ class Table
 
 
     /**
-    * all()
+    * getAll()
     *
     * Get all database documents and load them as documents
     *
-    * @return array (documents)
+    * @param bool $isCollection
+    * @return array
     */
-    public function all($isCollection = true)
+    public function getAll($isCollection = true)
     {
         return array_map(function($file) use ($isCollection){
             return $this->get(str_replace('.'.$this->db()->config()->ext,'',$file), $isCollection);
-        }, $this->getAll());
+        }, $this->list());
     }
 
 
     /**
-    * getAll()
+    * list()
     *
     * Get all the files within the table (directory)
     *
     * @param bool $realPath
     * @return array
     */
-    public function getAll($realPath = false)
+    public function list($realPath = false)
     {
         try
         {
@@ -117,11 +119,6 @@ class Table
         }
         catch(Exception $e)
         {
-            if ($this->db()->allowErrors()===true)
-            {
-                throw new Exception('Filebase: '.$e->getMessage());
-            }
-
             return [];
         }
     }
@@ -130,13 +127,13 @@ class Table
     /**
     * count()
     *
-    * Counts all the database items (files in directory)
+    * Counts all the table items (files in directory)
     *
     * @return int
     */
     public function count()
     {
-        return count($this->getAll());
+        return count($this->list());
     }
 
 
@@ -167,6 +164,35 @@ class Table
             // this could lead to overdeletion, possibly other non-database files.
             return Filesystem::empty($this->path);
         }
+    }
+
+
+
+    /**
+    * select()
+    *
+    * Query Builder
+    *
+    * @param mixed $fields
+    * @return Filebase\Query\Builder
+    */
+    public function select($fields)
+    {
+        return (new Builder($this))->select($fields);
+    }
+
+
+    /**
+    * where()
+    *
+    * Query Builder
+    *
+    * @param mixed $arg
+    * @return Filebase\Query\Builder
+    */
+    public function where(...$arg)
+    {
+        return (new Builder($this))->where(...$arg);
     }
 
 }

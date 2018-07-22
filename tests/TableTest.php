@@ -17,6 +17,8 @@ class TableTest extends \PHPUnit\Framework\TestCase
     */
     public function testDatabaseCountZeroNoErrors()
     {
+        Filesystem::deleteDirectory(__DIR__.'/database');
+        
         $db = new Database([
             'path' => __DIR__.'/database',
             'readOnly' => true,
@@ -188,9 +190,9 @@ class TableTest extends \PHPUnit\Framework\TestCase
             $user->save();
         }
 
-        $getAll   = $dbTable->getAll();
-        $getReal  = $dbTable->getAll(true);
-        $allFiles = $dbTable->all();
+        $getAll   = $dbTable->list();
+        $getReal  = $dbTable->list(true);
+        $allFiles = $dbTable->getAll();
 
         $dbTable->empty();
 

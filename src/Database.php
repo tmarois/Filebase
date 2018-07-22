@@ -40,7 +40,7 @@ class Database
         $this->config = (new Config($config));
 
         // create database directory if does not exist.
-        $this->directory($this->config->path);
+        $this->directory($this->config()->path);
     }
 
 
@@ -69,7 +69,7 @@ class Database
 
 
     /**
-    * backup
+    * table
     *
     * @param string $name
     * @return Filebase\Table
@@ -92,6 +92,41 @@ class Database
 
         return (new Backup($this, $path));
     }*/
+
+
+    /**
+    * getTables()
+    *
+    * Get all the tables in the database (either by class or name)
+    *
+    * @param bool $isTableClass
+    * @return array
+    */
+    public function getTables()
+    {
+        return array_map(function($folder) {
+            return $this->table($folder);
+        }, $this->list());
+    }
+
+
+    /**
+    * list
+    *
+    * @param bool $realPath
+    * @return array
+    */
+    public function list($realPath = false)
+    {
+        try
+        {
+            return array_values(Filesystem::folders($this->config()->path, $realPath));
+        }
+        catch(Exception $e)
+        {
+            return [];
+        }
+    }
 
 
     /**

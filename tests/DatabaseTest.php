@@ -164,4 +164,39 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         Filesystem::deleteDirectory($badDir);
     }
 
+
+    /**
+    * testGetAllTables()
+    *
+    * TEST:
+    * (1) Test get all tables within the db
+    *
+    */
+    public function testGetAllTables()
+    {
+        Filesystem::deleteDirectory(__DIR__.'/database');
+
+        $db = new Database([
+            'path' => __DIR__.'/database'
+        ]);
+
+        $db->table('products');
+        $db->table('reviews');
+        $db->table('ratings');
+
+        Filesystem::put(__DIR__.'/database/test.json','test');
+        Filesystem::put(__DIR__.'/database/test123','test');
+
+        $tables = $db->getTables();
+        $this->assertEquals(3, count($tables));
+
+        $tables = $db->list(false);
+        $this->assertEquals(3, count($tables));
+
+        Filesystem::deleteDirectory(__DIR__.'/database');
+
+        $tables = $db->getTables();
+        $this->assertEquals(0, count($tables));
+    }
+
 }
