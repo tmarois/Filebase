@@ -1,0 +1,174 @@
+<?php  namespace Filebase;
+
+use Exception;
+use Filebase\Database;
+use Filebase\Document;
+use Base\Support\Filesystem;
+
+class Table
+{
+
+    /**
+    * $database
+    *
+    * @var Filebase\Database
+    */
+    protected $db;
+
+
+    /**
+    * The table name
+    * (directory name)
+    *
+    * @var string
+    */
+    protected $name;
+
+
+    /**
+    * The table directory path
+    *
+    * @var string
+    */
+    protected $path;
+
+
+    /**
+    * __construct
+    *
+    * @param Filebase\Database $database
+    * @param string $name
+    */
+    public function __construct(Database $database, $name = '')
+    {
+        $this->db = $database;
+
+        $this->name = $name;
+
+        $this->path = $this->db()->config()->path.'/'.$this->db()->safeName($this->name);
+
+        // create table directory if does not exist.
+        $this->db()->directory($this->path);
+    }
+
+
+    /**
+    * getName
+    *
+    * @return string $name
+    */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+
+    /**
+    * getPath
+    *
+    * @return string $path
+    */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+
+    /**
+    * Gets the document within the table
+    *
+    * @param string $name
+    * @return Filebase\Document
+    */
+    public function get($name, $isCollection = true)
+    {
+        return (new Document($this, $name, $isCollection));
+    }
+
+
+    /**
+    * all()
+    *
+    * Get all database documents and load them as documents
+    *
+    * @return array (documents)
+    */
+    public function all($isCollection = true)
+    {
+        return array_map(function($file) use ($isCollection){
+            return $this->get(str_replace('.'.$this->db()->config()->ext,'',$file), $isCollection);
+        }, $this->getAll());
+    }
+
+
+    /**
+    * getAll()
+    *
+    * Get all the files within the table (directory)
+    *
+    * @param bool $realPath
+    * @return array
+    */
+    public function getAll($realPath = false)
+    {
+        try
+        {
+            return Filesystem::files($this->path, $this->db()->config()->ext, $realPath);
+        }
+        catch(Exception $e)
+        {
+            if ($this->db()->allowErrors()===true)
+            {
+                throw new Exception('Filebase: '.$e->getMessage());
+            }
+
+            return [];
+        }
+    }
+
+
+    /**
+    * count()
+    *
+    * Counts all the database items (files in directory)
+    *
+    * @return int
+    */
+    public function count()
+    {
+        return count($this->getAll());
+    }
+
+
+    /**
+    * db()
+    *
+    *
+    * @return Filebase\Database
+    */
+    public function db()
+    {
+        return $this->db;
+    }
+
+
+    /**
+    * empty
+    *
+    * Empties (deletes all files within table)
+    *
+    * @return void
+    */
+    public function empty()
+    {
+        if ($this->db()->isReadOnly() === false)
+        {
+            // It "may" delete files that are not part of the database.
+            // this could lead to overdeletion, possibly other non-database files.
+            return Filesystem::empty($this->path);
+        }
+
+        return false;
+    }
+
+}

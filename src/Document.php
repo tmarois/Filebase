@@ -10,11 +10,11 @@ class Document
 {
 
     /**
-    * $database
+    * $table
     *
-    * @var Filebase\Database
+    * @var Filebase\Table
     */
-    protected $db;
+    protected $table;
 
 
     /**
@@ -54,20 +54,43 @@ class Document
     *
     * Sets the database property
     *
-    * @param Filebase\Database $database
+    * @param Filebase\Table $table
     * @param string $name
+    * @param bool $isCollection
     */
-    public function __construct(Database $database, $name = '', $isCollection = true)
+    public function __construct(Table $table, $name = '', $isCollection = true)
     {
-        $this->db = $database;
+        $this->table = $table;
 
         $this->name = $name;
 
         $this->isCollection = $isCollection;
 
-        $this->path = $this->db->config()->path.'/'.$this->safeName($name).'.'.$this->db->config()->ext;
+        $this->path = $this->table()->getPath().'/'.$this->db()->safeName($name).'.'.$this->db()->config()->ext;
 
         $this->collection = $this->load($this->path);
+    }
+
+
+    /**
+    * getTable
+    *
+    * @return Filebase\Table
+    */
+    public function table()
+    {
+        return $this->table;
+    }
+
+
+    /**
+    * getDatabase
+    *
+    * @return Filebase\Table
+    */
+    public function db()
+    {
+        return $this->table->db();
     }
 
 
@@ -103,7 +126,7 @@ class Document
     {
         $contents = Filesystem::get($path) ?? '';
 
-        $format = $this->db->config()->format;
+        $format = $this->db()->config()->format;
 
         $data = (array) $format::decode( $contents ) ?? [];
 
@@ -114,33 +137,22 @@ class Document
 
 
     /**
-    * safeName
-    *
-    * @return string $name
-    */
-    protected function safeName($name)
-    {
-        return preg_replace('/[^A-Za-z0-9_\.-]/', '', $name);
-    }
-
-
-    /**
     * save
     *
     * @return Base\Support\Filesystem
     */
     public function save()
     {
-        if ($this->db->config()->readOnly === true)
+        if ($this->db()->isReadOnly() === false)
         {
-            throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
+            $format = $this->db()->config()->format;
+
+            $data = $format::encode($this->toArray(), $this->db()->config()->prettyFormat);
+
+            return Filesystem::put($this->path, $data);
         }
 
-        $format = $this->db->config()->format;
-
-        $data = $format::encode($this->toArray(), $this->db->config()->prettyFormat);
-
-        return Filesystem::put($this->path, $data);
+        return false;
     }
 
 
@@ -151,18 +163,18 @@ class Document
     */
     public function rename($name)
     {
-        if ($this->db->config()->readOnly === true)
+        if ($this->db()->isReadOnly() === false)
         {
-            throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
+            $this->name = $name;
+
+            $currentPath = $this->path;
+
+            $this->path = Filesystem::dirname($this->path).'/'.$this->db()->safeName($name).'.'.$this->db()->config()->ext;
+
+            return Filesystem::rename($currentPath, $this->db()->safeName($name).'.'.$this->db()->config()->ext, false);
         }
 
-        $this->name = $name;
-
-        $currentPath = $this->path;
-
-        $this->path = Filesystem::dirname($this->path).'/'.$this->safeName($name).'.'.$this->db->config()->ext;
-
-        return Filesystem::rename($currentPath, $this->safeName($name).'.'.$this->db->config()->ext, false);
+        return false;
     }
 
 
@@ -173,14 +185,14 @@ class Document
     */
     public function delete()
     {
-        if ($this->db->config()->readOnly === true)
+        if ($this->db()->isReadOnly() === false)
         {
-            throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
+            $this->collection = ($this->isCollection) ? new Collection([]) : [];
+
+            return Filesystem::delete($this->path);
         }
 
-        $this->collection = ($this->isCollection) ? new Collection([]) : [];
-
-        Filesystem::delete($this->path);
+        return false;
     }
 
 

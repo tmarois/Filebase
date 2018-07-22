@@ -1,6 +1,8 @@
 <?php namespace Filebase;
 
 use Exception;
+use Filebase\Database;
+use Base\Support\Filesystem;
 
 class BadClass {
 

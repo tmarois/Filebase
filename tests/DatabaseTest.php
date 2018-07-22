@@ -1,6 +1,8 @@
 <?php namespace Filebase;
 
 use Exception;
+use Filebase\Database;
+use Base\Support\Filesystem;
 
 class DatabaseTest extends \PHPUnit\Framework\TestCase
 {
@@ -15,7 +17,9 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     public function testDatabaseVersion()
     {
         $db = new Database([
-            'path' => __DIR__.'/database'
+            'path' => __DIR__.'/database',
+            'readOnly' => true,
+            'errors' => false
         ]);
 
         $this->assertRegExp('/[0-9]+\.[0-9]+/', $db->version());
@@ -26,88 +30,92 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     * testDatabaseConfig()
     *
     * TEST:
-    * Test getting a database item
+    * (1) Test getting the database config values
+    * (2) Check that we can get correct read-only and allowed errors values
     *
     */
     public function testDatabaseConfig()
     {
         $db = new Database([
-            'path' => __DIR__.'/database'
+            'path' => __DIR__.'/database',
+            'readOnly' => true,
+            'errors' => false
         ]);
 
         $this->assertEquals('db', $db->config()->ext);
         $this->assertEquals(null, $db->config()->doesnotexist);
+        $this->assertEquals(false, $db->config()->errors);
+        $this->assertEquals(true, $db->config()->readOnly);
+        $this->assertEquals(true, $db->isReadOnly());
+        $this->assertEquals(false, $db->allowErrors());
     }
 
 
     /**
-    * testDatabaseCountEmpty()
+    * testDatabaseWithErrors()
     *
     * TEST:
-    * (1) Test database COUNT() is working
-    * (2) EMPTY the entire database
+    * (1) Test Fatal error is thrown because we cant create the db directory
+    *     on read-only mode
     *
     */
-    public function testDatabaseCountEmpty()
+    public function testDatabaseWithErrors()
     {
+        $this->expectException(Exception::class);
+
         $db = new Database([
-            'path' => __DIR__.'/database/test-empty'
+            'path' => __DIR__.'/database',
+            'readOnly' => true,
+            'errors' => true
         ]);
-
-        for ($x = 1; $x <= 10; $x++)
-        {
-            $user = $db->document(uniqid());
-            $user->name = 'John';
-            $user->save();
-        }
-
-        $before = $db->count();
-
-        $db->empty();
-
-        $this->assertEquals(10, $before);
-        $this->assertEquals(0, $db->count());
     }
 
 
     /**
-    * testDatabaseGetAll()
+    * testDatabaseCreateDirectory()
     *
     * TEST:
-    * (1) Get all files within the database
-    * (2) Get all database collection items
+    * (1) Test to see that the database auto-created directory
     *
     */
-    public function testDatabaseGetAll()
+    public function testDatabaseCreateDirectory()
     {
+        $makeDir = __DIR__.'/make-database';
+
+        Filesystem::deleteDirectory($makeDir);
+
         $db = new Database([
-            'path' => __DIR__.'/database/test-empty',
-            'ext' => 'db'
+            'path' => $makeDir
         ]);
 
-        for ($x = 1; $x <= 10; $x++)
-        {
-            $user = $db->document(uniqid());
-            $user->name = 'John';
-            $user->save();
-        }
+        $this->assertEquals(true, Filesystem::isDirectory($makeDir));
 
-        $getAll   = $db->getAll();
-        $getReal  = $db->getAll(true);
-        $allFiles = $db->all();
+        Filesystem::deleteDirectory($makeDir);
+    }
 
-        $db->empty();
 
-        $this->assertEquals(10, count($allFiles));
-        $this->assertEquals(10, count($getReal));
-        $this->assertEquals(10, count($getAll));
+    /**
+    * testDatabaseNotCreatedDirectory()
+    *
+    * TEST:
+    * (1) Test to see that the database do not auto-create directory
+    *
+    */
+    public function testDatabaseNotCreatedDirectory()
+    {
+        $makeDir = __DIR__.'/make-database';
 
-        $loadOneItem = current($allFiles);
-        $this->assertEquals('John', ($loadOneItem->name));
-        $this->assertEquals('John', ($loadOneItem->get('name')));
+        Filesystem::deleteDirectory($makeDir);
 
-        $loadSingleItem = current($getAll);
-        $this->assertRegExp('/[a-zA-Z0-9]+\.db/', $loadSingleItem);
+        $db = new Database([
+            'path' => $makeDir,
+            'readOnly' => true,
+            'errors' => false
+        ]);
+
+        $this->assertEquals(false, Filesystem::isDirectory($makeDir));
+
+        Filesystem::deleteDirectory($makeDir);
     }
 
 
@@ -115,22 +123,19 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     * testNotWritable()
     *
     * TEST:
-    * If a directory can not be modified
+    * (1) If a directory can not be modified - throw exception
     *
     */
     public function testNotWritable()
     {
         $this->expectException(Exception::class);
 
-        if (!is_dir(__DIR__.'/database/cantedit'))
-        {
-            mkdir(__DIR__.'/database/cantedit');
-        }
+        $badDir = __DIR__.'/bad-database';
 
-        chmod(__DIR__.'/database/cantedit', 0444);
+        Filesystem::makeDirectory($badDir, 0444);
 
         $db = new Database([
-            'path' => __DIR__.'/database/cantedit'
+            'path' => $badDir
         ]);
     }
 
@@ -140,94 +145,23 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     *
     * TEST:
     * If a directory can not be modified,
-    * and Database is READ-ONLY
+    * and Database is READ-ONLY, should be allowed to proceed
     *
     */
     public function testNotWritableButReadonly()
     {
-        if (!is_dir(__DIR__.'/database/cantedit'))
-        {
-            mkdir(__DIR__.'/database/cantedit');
-        }
-        chmod(__DIR__.'/database/cantedit', 0444);
+        $badDir = __DIR__.'/bad-database';
+
+        Filesystem::makeDirectory($badDir, 0444);
 
         $db = new Database([
-            'path' => __DIR__.'/database/cantedit',
+            'path' => $badDir,
             'readOnly' => true
         ]);
 
         $this->assertEquals(true, true);
 
-        chmod(__DIR__.'/database/cantedit', 0777);
-        rmdir(__DIR__.'/database/cantedit');
-    }
-
-
-    /**
-    * testDatabaseReadOnlyDelete()
-    *
-    * TEST:
-    * Test delete if database is READ-ONLY
-    *
-    */
-    public function testDatabaseReadOnlyDelete()
-    {
-        $this->expectException(Exception::class);
-
-        $db = new Database([
-            'path' => __DIR__.'/database'
-        ]);
-
-        $doc = $db->document('test1');
-        $doc->name = 'Test';
-        $doc->save();
-
-        $db2 = new Database([
-            'path' => __DIR__.'/database',
-            'readOnly' => true
-        ]);
-
-        $doc = $db2->document('test1');
-        $doc->delete();
-    }
-
-
-    /**
-    * testDatabaseReadOnlyEmpty()
-    *
-    * TEST:
-    * Test DB EMPTY if database is READ-ONLY
-    *
-    */
-    public function testDatabaseReadOnlyEmpty()
-    {
-        $this->expectException(Exception::class);
-
-        $db2 = new Database([
-            'path' => __DIR__.'/database',
-            'readOnly' => true
-        ]);
-
-        $db2->empty();
-    }
-
-
-    /**
-    * testDatabaseEmpty()
-    *
-    * TEST:
-    * (1) Delete all files made from these tests and confirm.
-    *
-    */
-    public function testDatabaseEmpty()
-    {
-        $db = new Database([
-            'path' => __DIR__.'/database'
-        ]);
-
-        $db->empty();
-
-        $this->assertEquals(0, $db->count());
+        Filesystem::deleteDirectory($badDir);
     }
 
 }

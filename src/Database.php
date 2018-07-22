@@ -1,6 +1,8 @@
 <?php  namespace Filebase;
 
 use Exception;
+use Filebase\Config;
+use Filebase\Table;
 use Base\Support\Filesystem;
 
 class Database
@@ -10,11 +12,11 @@ class Database
     * VERSION
     *
     * Stores the version of Filebase
-    * use $db->getVersion()
+    * use $db->version()
     *
     * @return string
     */
-    const VERSION = '2.0';
+    const VERSION = '2.0-beta';
 
 
     /**
@@ -30,39 +32,15 @@ class Database
     /**
     * __construct
     *
+    * @see Filebase\Config
     */
     public function __construct(array $config = [])
     {
-        $this->config = new Config($config);
+        // set up our configuration class
+        $this->config = (new Config($config));
 
-        if ($this->config->readOnly === false)
-        {
-            $this->createDirectory();
-        }
-    }
-
-
-    /**
-    * createDirectory()
-    *
-    * Create the database directory if doesnt exists,
-    * And check that the directory is writeable
-    *
-    * @return void
-    */
-    protected function createDirectory()
-    {
-        if (!Filesystem::isDirectory($this->config->path))
-        {
-            if (!@Filesystem::makeDirectory($this->config->path, 0777, true))
-            {
-                throw new Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->path));
-            }
-        }
-        else if (!Filesystem::isWritable($this->config->path))
-        {
-            throw new Exception(sprintf('`%s` is not writable.', $this->config->path));
-        }
+        // create database directory if does not exist.
+        $this->directory($this->config->path);
     }
 
 
@@ -91,29 +69,14 @@ class Database
 
 
     /**
-    * document()
+    * backup
     *
     * @param string $name
-    * @return Filebase\Document
+    * @return Filebase\Table
     */
-    public function document($name, $isCollection = true)
+    public function table($name)
     {
-        return (new Document($this, $name, $isCollection));
-    }
-
-
-    /**
-    * all()
-    *
-    * Get all database documents and load them as documents
-    *
-    * @return array (documents)
-    */
-    public function all($isCollection = true)
-    {
-        return array_map(function($file) use ($isCollection){
-            return $this->document(str_replace('.'.$this->config->ext,'',$file), $isCollection);
-        }, $this->getAll());
+        return (new Table($this, $name));
     }
 
 
@@ -132,77 +95,83 @@ class Database
 
 
     /**
-    * query
+    * allowErrors
     *
-    *
-    */
-    /*public function query()
-    {
-        // return (new Query($this));
-    }*/
-
-
-    /**
-    * getAll()
-    *
-    * Get all the files within the database
-    *
-    * @return int
-    */
-    public function getAll($realPath = false)
-    {
-        return Filesystem::files($this->config->path, $this->config->ext, $realPath);
-    }
-
-
-    /**
-    * count()
-    *
-    * Counts all the database items (files in directory)
-    *
-    * @return int
-    */
-    public function count()
-    {
-        return count($this->getAll());
-    }
-
-
-    /**
-    * truncate
-    *
-    * Empties entire database directory files
-    * MUST MATCH DATABASE FILES
+    * Check to see if errors are allowed to be thrown
     *
     * @return bool
     */
-    public function truncate()
+    public function allowErrors()
     {
-        if ($this->config->readOnly === true)
+        if ($this->config()->errors === true)
         {
-            throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
+            return true;
         }
 
-        // delete only files designed by the Filebase.
-        return Filesystem::delete($this->getAll(true));
-
-        // this is faster, but unsafe. It will delete files that are not part of the database.
-        // this could lead to overdeletion, possibly important files.
-        // return Filesystem::empty($this->config->path);
+        return false;
     }
 
 
     /**
-    * empty
+    * isReadOnly
     *
-    * Alias for truncate()
+    * Check to see if the database can be modified,
+    * Otherwise, throw an exception (checking if we can throw errors)
     *
     * @see truncate
     * @return void
     */
-    public function empty()
+    public function isReadOnly()
     {
-        return $this->truncate();
+        if ($this->config()->readOnly === true)
+        {
+            if ($this->allowErrors()===false) return true;
+
+            throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
+        }
+
+        return false;
+    }
+
+
+    /**
+    *
+    * This function is for internal use.
+    * Create a directory for the database
+    *
+    * @param string $path
+    * @return void
+    */
+    public function directory($path = '')
+    {
+        if ($this->isReadOnly() === false)
+        {
+            if (!Filesystem::isDirectory($path))
+            {
+                if (!@Filesystem::makeDirectory($path, 0775, true))
+                {
+                    throw new Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $path));
+                }
+            }
+            else if (!Filesystem::isWritable($path))
+            {
+                throw new Exception(sprintf('`%s` is not writable.', $path));
+            }
+        }
+    }
+
+
+    /**
+    *
+    * This function is for internal use.
+    * Changes the name of a string to be formatted properly,
+    * For being used in file names and directories
+    *
+    * @return string $name
+    */
+    public function safeName($name)
+    {
+        return preg_replace('/[^A-Za-z0-9_\.-]/', '', $name);
     }
 
 }

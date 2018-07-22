@@ -1,9 +1,12 @@
 <?php namespace Filebase;
 
 use Exception;
+use Filebase\Database;
+use Base\Support\Filesystem;
 
 class DocumentTest extends \PHPUnit\Framework\TestCase
 {
+
 
     /**
     * testDocumentSave()
@@ -22,19 +25,19 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'path' => __DIR__.'/database'
         ]);
 
-        $doc = $db->document('profile');
+        $doc = $db->table('users')->get('timothymarois');
         // use the collection->set()
-        $doc->set('name','John');
+        $doc->set('name','Timothy Marois');
         // define the property directly
         $doc->topic = 'php';
         // save the file
         $doc->save();
 
-        $this->assertEquals('profile', $doc->getName());
+        $this->assertEquals('timothymarois', $doc->getName());
         $this->assertInternalType('string', $doc->getPath());
 
-        $this->assertEquals('John', $doc->name);
-        $this->assertEquals('John', $doc->get('name'));
+        $this->assertEquals('Timothy Marois', $doc->name);
+        $this->assertEquals('Timothy Marois', $doc->get('name'));
 
         $this->assertEquals('php', $doc->topic);
         $this->assertEquals('php', $doc->get('topic'));
@@ -57,48 +60,13 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'path' => __DIR__.'/database'
         ]);
 
-        $doc = $db->document('profile');
+        $doc = $db->table('users')->get('timothymarois');
 
-        $this->assertEquals('John', $doc->name);
-        $this->assertEquals('John', $doc->get('name'));
+        $this->assertEquals('Timothy Marois', $doc->name);
+        $this->assertEquals('Timothy Marois', $doc->get('name'));
 
         $this->assertEquals('php', $doc->topic);
         $this->assertEquals('php', $doc->get('topic'));
-    }
-
-
-    /**
-    * testDocumentRename()
-    *
-    * TEST:
-    * (1) Test the creation of a document and its data
-    * (2) Test we can RENAME the same doc and the data exists
-    *
-    */
-    public function testDocumentRename()
-    {
-        $db = new Database([
-            'path' => __DIR__.'/database'
-        ]);
-
-        $doc = $db->document('johndoe');
-        // use the collection->set()
-        $doc->set('name','John Doe');
-        // save the file
-        $doc->save();
-
-        $this->assertEquals('johndoe', $doc->getName());
-        $this->assertInternalType('string', $doc->getPath());
-        $this->assertEquals('John Doe', $doc->name);
-
-        $doc->rename('janedoe');
-
-        $this->assertEquals('janedoe', $doc->getName());
-        $this->assertInternalType('string', $doc->getPath());
-        $this->assertEquals('John Doe', $doc->name);
-
-        $ndoc = $db->document('janedoe');
-        $this->assertEquals('John Doe', $ndoc->name);
     }
 
 
@@ -115,11 +83,11 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'path' => __DIR__.'/database'
         ]);
 
-        $doc = $db->document('profile',false);
+        $doc = $db->table('users')->get('timothymarois');
 
         $this->assertInternalType('array', $doc->toArray());
 
-        $this->assertEquals('John', $doc->name);
+        $this->assertEquals('Timothy Marois', $doc->name);
     }
 
 
@@ -138,7 +106,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'path' => __DIR__.'/database'
         ]);
 
-        $doc = $db->document('profile',false);
+        $doc = $db->table('users')->get('timothymarois',false);
 
         // get is a collection method...
         // this should NOT work.
@@ -161,12 +129,42 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'path' => __DIR__.'/database'
         ]);
 
-        $doc = $db->document('profile',false);
+        $doc = $db->table('users')->get('timothymarois',false);
 
         // this should NOT work...
         $badMethod = $doc->methodDoesNotExist();
     }
 
+
+    /**
+    * testDocumentRename()
+    *
+    * TEST:
+    * (1) Test the creation of a document and its data
+    * (2) Test we can RENAME the same doc and the data exists
+    *
+    */
+    public function testDocumentRename()
+    {
+        $db = new Database([
+            'path' => __DIR__.'/database'
+        ]);
+
+        $doc = $db->table('users')->get('timothymarois');
+
+        $this->assertEquals('timothymarois', $doc->getName());
+        $this->assertInternalType('string', $doc->getPath());
+        $this->assertEquals('Timothy Marois', $doc->name);
+
+        $doc->rename('janedoe');
+
+        $this->assertEquals('janedoe', $doc->getName());
+        $this->assertInternalType('string', $doc->getPath());
+        $this->assertEquals('Timothy Marois', $doc->name);
+
+        $ndoc = $db->table('users')->get('janedoe');
+        $this->assertEquals('Timothy Marois', $ndoc->name);
+    }
 
 
     /**
@@ -183,7 +181,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'path' => __DIR__.'/database'
         ]);
 
-        $doc = $db->document('profile');
+        $doc = $db->table('users')->get('timothymarois');
         $doc->us = ['nc'=>'charlotte'];
         $doc->save();
 
@@ -194,7 +192,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
 
         // check without collection
-        $doc = $db->document('profile',false);
+        $doc = $db->table('users')->get('timothymarois',false);
         $place = $doc->us['nc'];
 
         $this->assertEquals('charlotte', $place);
@@ -215,13 +213,24 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'path' => __DIR__.'/database'
         ]);
 
-        $doc = $db->document('profile');
+        $doc = $db->table('users')->get('timothymarois');
+        // use the collection->set()
+        $doc->set('name','Timothy Marois');
+        // define the property directly
+        $doc->topic = 'php';
+        // save the file
+        $doc->save();
 
-        $doc->delete();
+        $ndoc = $db->table('users')->get('timothymarois');
+        $this->assertEquals('Timothy Marois', $doc->name);
 
-        $doc = $db->document('profile');
+        $ndoc->delete();
 
-        $this->assertEquals([], $doc->all());
+        $xdoc = $db->table('users')->get('timothymarois');
+
+        $this->assertEquals([], $xdoc->all());
+
+        Filesystem::deleteDirectory(__DIR__.'/database');
     }
 
 
@@ -238,10 +247,11 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $db = new Database([
             'path' => __DIR__.'/database',
-            'readOnly' => true
+            'readOnly' => true,
+            'errors' => true
         ]);
 
-        $doc = $db->document('profile');
+        $doc = $db->table('users')->get('timothymarois');
         $doc->author = 'Timothy Marois';
         $doc->save();
     }
@@ -260,11 +270,11 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $db = new Database([
             'path' => __DIR__.'/database',
-            'readOnly' => true
+            'readOnly' => true,
+            'errors' => true
         ]);
 
-        $doc = $db->document('profile');
-
+        $doc = $db->table('users')->get('timothymarois');
         $doc->delete();
     }
 
@@ -282,12 +292,14 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'path' => __DIR__.'/database'
         ]);
 
-        $doc = $db->document('testing 123');
+        $doc = $db->table('users')->get('bad name');
         $doc->save();
         $doc->delete();
 
-        $this->assertEquals('testing 123', $doc->getName());
-        $this->assertRegExp('/testing123.db$/', $doc->getPath());
+        $this->assertEquals('bad name', $doc->getName());
+        $this->assertRegExp('/badname.db$/', $doc->getPath());
+
+        Filesystem::deleteDirectory(__DIR__.'/database');
     }
 
 
@@ -306,7 +318,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'path' => __DIR__.'/database'
         ]);
 
-        $doc = $db->document('product1');
+        $doc = $db->table('users')->get('product1');
         $doc->productId = 123;
         $doc->productName = 'Apple Watch';
         $doc->save();
@@ -315,11 +327,12 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('{"productId":123,"productName":"Apple Watch"}', $doc);
         $this->assertEquals('{"productId":123,"productName":"Apple Watch"}', $doc->toJson());
 
-        $doc = $db->document('product1',false);
+        $doc = $db->table('users')->get('product1',false);
 
         $this->assertEquals('{"productId":123,"productName":"Apple Watch"}', $doc->toJson());
-
         $doc->delete();
+
+        Filesystem::deleteDirectory(__DIR__.'/database');
     }
 
 
@@ -338,7 +351,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
             'path' => __DIR__.'/database'
         ]);
 
-        $doc = $db->document('product1');
+        $doc = $db->table('users')->get('product1');
         $doc->productId = 123;
         $doc->productName = 'Apple Watch';
         $doc->save();
@@ -346,30 +359,15 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(['productId'=>123,'productName'=>'Apple Watch'], $doc->toArray());
         $this->assertEquals(['productId'=>123,'productName'=>'Apple Watch'], $doc->all());
 
-        $doc = $db->document('product1',false);
+        $doc = $db->table('users')->get('product1',false);
 
         $this->assertEquals(['productId'=>123,'productName'=>'Apple Watch'], $doc->toArray());
-
         $doc->delete();
+
+        Filesystem::deleteDirectory(__DIR__.'/database');
     }
 
 
-    /**
-    * testDatabaseEmpty()
-    *
-    * TEST:
-    * (1) Delete all files made from these tests and confirm.
-    *
-    */
-    public function testDatabaseEmpty()
-    {
-        $db = new Database([
-            'path' => __DIR__.'/database'
-        ]);
 
-        $db->empty();
-
-        $this->assertEquals(0, $db->count());
-    }
 
 }

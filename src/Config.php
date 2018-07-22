@@ -16,11 +16,11 @@ class Config
 
 
     /**
-    * $backupPath
+    * $backups
     *
     * @var string
     */
-    protected $backupPath = __DIR__.'/backups';
+    protected $backups = 'backups';
 
 
     /**
@@ -32,13 +32,22 @@ class Config
 
 
     /**
-    * $read_only
+    * $readOnly
     * (if true) We will not attempt to create the database directory or allow the user to create anything
     * (if false) Functions as normal
     *
     * default false
     */
     protected $readOnly = false;
+
+
+    /**
+    * $errors
+    * Prevent non-fatal errors from throwing (such as production env)
+    *
+    * default false
+    */
+    protected $errors = false;
 
 
     /**
@@ -110,7 +119,7 @@ class Config
     {
         if (!class_exists($this->format))
         {
-            throw new Exception('Filebase: Missing format class in config.');
+            throw new Exception('Filebase Fatal Error: Missing format class in config.');
         }
 
         // instantiate the format class
@@ -119,7 +128,7 @@ class Config
         // check now if that class is part of our interface
         if (!$formatClass instanceof FormatInterface)
         {
-            throw new Exception('Filebase: Format Class must be an instance of Filebase\Format\FormatInterface');
+            throw new Exception('Filebase Fatal Error: Format Class must be an instance of FormatInterface');
         }
     }
 
