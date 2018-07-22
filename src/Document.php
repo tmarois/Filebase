@@ -151,8 +151,6 @@ class Document
 
             return Filesystem::put($this->path, $data);
         }
-
-        return false;
     }
 
 
@@ -173,8 +171,6 @@ class Document
 
             return Filesystem::rename($currentPath, $this->db()->safeName($name).'.'.$this->db()->config()->ext, false);
         }
-
-        return false;
     }
 
 
@@ -191,8 +187,6 @@ class Document
 
             return Filesystem::delete($this->path);
         }
-
-        return false;
     }
 
 

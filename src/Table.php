@@ -167,8 +167,6 @@ class Table
             // this could lead to overdeletion, possibly other non-database files.
             return Filesystem::empty($this->path);
         }
-
-        return false;
     }
 
 }

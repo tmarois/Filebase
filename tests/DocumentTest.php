@@ -369,5 +369,31 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
 
 
+    /**
+    * testTableName()
+    *
+    * TEST:
+    * (1) Get the table name from document
+    *
+    */
+    public function testTableName()
+    {
+        $makeDir = __DIR__.'/database';
+
+        Filesystem::deleteDirectory($makeDir);
+
+        $db = new Database([
+            'path' => $makeDir
+        ]);
+
+        $doc = $db->table('products')->get('iphone');
+
+        $this->assertEquals('products', $doc->table()->getName());
+
+        Filesystem::deleteDirectory($makeDir);
+    }
+
+
+
 
 }

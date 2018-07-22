@@ -75,6 +75,32 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 
     /**
+    * testGetName()
+    *
+    * TEST:
+    * (1) Get the table name
+    *
+    */
+    public function testGetName()
+    {
+        $makeDir = __DIR__.'/database';
+
+        Filesystem::deleteDirectory($makeDir);
+
+        $db = new Database([
+            'path' => $makeDir
+        ]);
+
+        $table = $db->table('products');
+
+        $this->assertEquals('products', $table->getName());
+
+        Filesystem::deleteDirectory($makeDir);
+    }
+
+
+
+    /**
     * testCreateBadTableName()
     *
     * TEST:
