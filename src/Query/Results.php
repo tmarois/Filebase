@@ -70,11 +70,14 @@ class Results
     */
     public function get()
     {
-        $this->documentResults = $this->table()->getAll();
+        $this->documentResults = [];
 
         if (!empty($this->predicate))
         {
-            $this->documentResults = $this->filter($this->documentResults, $this->predicate);
+            $this->documentResults = $this->filter($this->table()->getAll(), $this->predicate);
+
+            $this->sort();
+            $this->limit();
         }
 
         return $this;
@@ -133,6 +136,58 @@ class Results
 
 
     /**
+    * sort
+    *
+    */
+    protected function sort()
+    {
+        $orderBy = $this->builder->orderBy;
+
+        $sortBy  = $this->builder->sortBy;
+
+        if ($orderBy=='')
+        {
+            return false;
+        }
+
+        usort($this->documentResults, function($a, $b) use ($orderBy, $sortBy) {
+
+            $propA = $a->get($orderBy);
+            $propB = $b->get($orderBy);
+
+            if (strnatcasecmp($propB, $propA) == strnatcasecmp($propA, $propB)) {
+                return 0;
+            }
+
+            if ($sortBy == 'DESC')
+            {
+                return (strnatcasecmp($propB, $propA) < strnatcasecmp($propA, $propB)) ? -1 : 1;
+            }
+            else
+            {
+                return (strnatcasecmp($propA, $propB) < strnatcasecmp($propB, $propA)) ? -1 : 1;
+            }
+
+        });
+
+    }
+
+
+    /**
+    * limit
+    *
+    */
+    protected function limit()
+    {
+        if ($this->builder->limit != 0 || $this->builder->offset != 0)
+        {
+            $this->documentResults = array_slice($this->documentResults, $this->builder->offset, $this->builder->limit);
+        }
+    }
+
+
+
+    /**
     * filter
     *
     * Filter results from query
@@ -172,6 +227,8 @@ class Results
     */
     public function match($document, $field, $operator, $value)
     {
+        $operator = strtoupper($operator);
+
         $d_value = $document->get($field);
         switch (true)
         {
@@ -185,25 +242,31 @@ class Results
                 return true;
             case ($operator === '!==' && $d_value !== $value):
                 return true;
-            case (strtoupper($operator) === 'NOT' && $d_value != $value):
+            case ($operator === 'NOT' && $d_value != $value):
+                return true;
+            case ($operator === 'NOT IN' && $d_value != $value):
                 return true;
             case ($operator === '>'  && $d_value >  $value):
                 return true;
             case ($operator === '>=' && $d_value >= $value):
                 return true;
+            case ($operator === '=>' && $d_value >= $value):
+                return true;
             case ($operator === '<'  && $d_value <  $value):
                 return true;
             case ($operator === '<=' && $d_value <= $value):
                 return true;
-            case (strtoupper($operator) === 'LIKE' && preg_match('/'.$value.'/is',$d_value)):
+            case ($operator === '=<' && $d_value <= $value):
                 return true;
-            case (strtoupper($operator) === 'NOT LIKE' && !preg_match('/'.$value.'/is',$d_value)):
+            case ($operator === 'LIKE' && preg_match('/'.$value.'/is',$d_value)):
                 return true;
-            case (strtoupper($operator) === 'IN' && in_array($d_value, (array) $value)):
+            case ($operator === 'NOT LIKE' && !preg_match('/'.$value.'/is',$d_value)):
                 return true;
-            case (strtoupper($operator) === 'IN' && in_array($value, (array) $d_value)):
+            case ($operator === 'IN' && in_array($d_value, (array) $value)):
                 return true;
-            case (strtoupper($operator) === 'REGEX' && preg_match($value, $d_value)):
+            case ($operator === 'IN' && in_array($value, (array) $d_value)):
+                return true;
+            case ($operator === 'REGEX' && preg_match($value, $d_value)):
                 return true;
             default:
                 return false;

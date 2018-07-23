@@ -18,46 +18,6 @@ class Builder
 
 
     /**
-    * $fields
-    *
-    * @var array
-    */
-    protected $fields  = [];
-
-
-    /**
-    * $limit
-    *
-    * @var int
-    */
-    protected $limit  = 0;
-
-
-    /**
-    * $offset
-    *
-    * @var int
-    */
-    protected $offset  = 0;
-
-
-    /**
-    * $orderBy
-    *
-    * @var string
-    */
-    protected $orderBy = '';
-
-
-    /**
-    * $sortBy
-    *
-    * @var string
-    */
-    protected $sortBy = 'ASC';
-
-
-    /**
     * $predicate
     *
     * @var Filebase\Query\Predicate
@@ -66,11 +26,35 @@ class Builder
 
 
     /**
-    * $predicate
+    * $limit
     *
-    * @var Filebase\Query\Predicate
+    * @var int
     */
-    public $useGroup = [];
+    public $limit  = 0;
+
+
+    /**
+    * $offset
+    *
+    * @var int
+    */
+    public $offset  = 0;
+
+
+    /**
+    * $orderBy
+    *
+    * @var string
+    */
+    public $orderBy = '';
+
+
+    /**
+    * $sortBy
+    *
+    * @var string
+    */
+    public $sortBy = 'ASC';
 
 
     /**
@@ -110,31 +94,6 @@ class Builder
 
 
     /**
-    * select()
-    *
-    * Only return selected fields
-    *
-    * @param mixed $fields
-    *
-    * @return Filebase\Query\Builder
-    */
-    public function select($fields)
-    {
-        if (is_string($fields))
-        {
-            $fields = explode(',',trim($fields));
-        }
-
-        if (is_array($fields))
-        {
-            $this->fields = $fields;
-        }
-
-        return $this;
-    }
-
-
-    /**
     * where()
     *
     * Set up a where query
@@ -145,7 +104,79 @@ class Builder
     */
     public function where(...$arg)
     {
-        $this->predicate()->add('and', $arg);
+        $this->predicate()->add('and', ...$arg);
+
+        return $this;
+    }
+
+
+    /**
+    * in()
+    *
+    * Set up a where query
+    *
+    * @param string $field
+    * @param mixed $values
+    *
+    * @return Filebase\Query\Builder
+    */
+    public function in($field, $values)
+    {
+        $this->predicate()->add('and', $field, 'IN', $values);
+
+        return $this;
+    }
+
+
+    /**
+    * not()
+    *
+    * Set up a where query
+    *
+    * @param string $field
+    * @param mixed $values
+    *
+    * @return Filebase\Query\Builder
+    */
+    public function not($field, $values)
+    {
+        $this->predicate()->add('and', $field, 'NOT', $values);
+
+        return $this;
+    }
+
+
+    /**
+    * like()
+    *
+    * Set up a where query
+    *
+    * @param string $field
+    * @param mixed $values
+    *
+    * @return Filebase\Query\Builder
+    */
+    public function like($field, $values)
+    {
+        $this->predicate()->add('and', $field, 'LIKE', $values);
+
+        return $this;
+    }
+
+
+    /**
+    * notLike()
+    *
+    * Set up a where query
+    *
+    * @param string $field
+    * @param mixed $values
+    *
+    * @return Filebase\Query\Builder
+    */
+    public function notLike($field, $values)
+    {
+        $this->predicate()->add('and', $field, 'NOT LIKE', $values);
 
         return $this;
     }
@@ -206,45 +237,6 @@ class Builder
    public function get()
    {
        return (new Results($this))->get();
-   }
-
-
-   /**
-   * results()
-   *
-   * Get the results from the query
-   *
-   * @return Filebase\Query\Results
-   */
-   public function results()
-   {
-       return $this->get()->results();
-   }
-
-
-   /**
-   * results()
-   *
-   * Get the results from the query
-   *
-   * @return Filebase\Query\Results
-   */
-   public function count()
-   {
-       return $this->get()->count();
-   }
-
-
-   /**
-   * results()
-   *
-   * Get the results from the query
-   *
-   * @return Filebase\Query\Results
-   */
-   public function first()
-   {
-       return $this->get()->first();
    }
 
 }

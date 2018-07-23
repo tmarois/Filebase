@@ -167,32 +167,17 @@ class Table
     }
 
 
-
     /**
-    * select()
+    * Call a method on query builder
     *
-    * Query Builder
-    *
-    * @param mixed $fields
+    * @param string $name
+    * @param array $arguments
     * @return Filebase\Query\Builder
     */
-    public function select($fields)
+    public function __call($name, $arguments)
     {
-        return (new Builder($this))->select($fields);
+        return (new Builder($this))->$name(...$arguments);
     }
 
-
-    /**
-    * where()
-    *
-    * Query Builder
-    *
-    * @param mixed $arg
-    * @return Filebase\Query\Builder
-    */
-    public function where(...$arg)
-    {
-        return (new Builder($this))->where(...$arg);
-    }
 
 }

@@ -7,11 +7,12 @@ class Predicate
 {
 
     /**
-    * $allowed_operators
-    *
+    * $allowedOperators
     * Allowed operators within the query
+    *
+    * @var array
     */
-    protected $allowed_operators = [
+    protected $allowedOperators = [
         '=',
         '==',
         '===',
@@ -21,8 +22,11 @@ class Predicate
         '<',
         '>=',
         '<=',
+        '=>',
+        '=<',
         'IN',
         'NOT',
+        'NOT IN',
         'LIKE',
         'NOT LIKE',
         'REGEX'
@@ -32,7 +36,7 @@ class Predicate
     /**
     * $predicates
     *
-    * Query clauses
+    * @var array
     */
     protected $predicates = [];
 
@@ -41,44 +45,28 @@ class Predicate
     * add
     *
     */
-    public function add($logic, $arg)
+    public function add($logic, ...$arg)
     {
-        if (!is_array($arg))
+        if (isset($arg[0]) && is_array($arg[0]))
         {
-            throw new Exception('Predicate Error: argument passed must be type of array');
-        }
-
-        if (count($arg) == 1)
-        {
-            if (isset($arg[0]) && is_array($arg[0]))
+            foreach($arg as $index => $fields)
             {
-                foreach($arg[0] as $key => $value)
+                foreach($fields as $field => $value)
                 {
-                    if ($value == '') continue;
-
-                    $arg = $this->format($key, $value);
+                    $this->predicates[$logic][] = $this->format($field, $value);
                 }
             }
         }
-
-        if (count($arg) != 3)
+        else
         {
-            throw new Exception('Predicate Error: Must have 3 arguments passed - '.count($arg).' given');
+            if (count($arg) === 3)
+            {
+                if (isset($arg[1]) && in_array($arg[1], $this->allowedOperators))
+                {
+                    $this->predicates[$logic][] = $arg;
+                }
+            }
         }
-
-        if (!in_array($arg[1], $this->allowed_operators))
-        {
-            throw new Exception('Predicate Error: Unknown Operator '.$arg[1]);
-        }
-
-        $arg[0] = trim($arg[0]);
-
-        if ($arg[0] == '')
-        {
-            throw new Exception('Field name can not be empty');
-        }
-
-        $this->predicates[$logic][] = $arg;
     }
 
 
