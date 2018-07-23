@@ -168,6 +168,53 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
 
     /**
+    * testDocumentRenameReadonlyWithError()
+    *
+    * TEST:
+    * (1) Test renaming item on readonly with errors
+    *
+    */
+    public function testDocumentRenameReadonlyWithError()
+    {
+        $this->expectException(Exception::class);
+
+        $db = new Database([
+            'path' => __DIR__.'/database',
+            'readOnly' => true,
+            'errors' => true
+         ]);
+
+        $doc = $db->table('users')->get('timothymarois');
+
+        $doc->rename('janedoe');
+    }
+
+
+    /**
+    * testDocumentRenameReadonlyNoError()
+    *
+    * TEST:
+    * (1) Test renaming item on readonly with errors
+    *
+    */
+    public function testDocumentRenameReadonlyNoError()
+    {
+
+        $db = new Database([
+            'path' => __DIR__.'/database',
+            'readOnly' => true,
+            'errors' => false
+         ]);
+
+        $doc = $db->table('users')->get('timothymarois');
+
+        $doc->rename('janedoe');
+
+        $this->assertEquals('timothymarois', $doc->getName());
+    }
+
+
+    /**
     * testDocumentGetDotNotation()
     *
     * TEST:
@@ -258,13 +305,13 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
 
     /**
-    * testDocumentDeleteReadOnly()
+    * testDocumentDeleteReadOnlyWithErrors()
     *
     * TEST:
     * (1) Test ERROR on DELETE document with READ ONLY MODE
     *
     */
-    public function testDocumentDeleteReadOnly()
+    public function testDocumentDeleteReadOnlyWithErrors()
     {
         $this->expectException(Exception::class);
 
@@ -276,6 +323,29 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $doc = $db->table('users')->get('timothymarois');
         $doc->delete();
+    }
+
+
+    /**
+    * testDocumentDeleteReadOnlyNoErrors()
+    *
+    * TEST:
+    * (1) Test NO ERROR on DELETE document with READ ONLY MODE
+    *
+    */
+    public function testDocumentDeleteReadOnlyNoErrors()
+    {
+        $db = new Database([
+            'path' => __DIR__.'/database',
+            'readOnly' => true,
+            'errors' => false
+        ]);
+
+        $doc = $db->table('users')->get('timothymarois');
+        $doc->about = 'Something Cool';
+        $doc->delete();
+
+        $this->assertEquals('Something Cool', $doc->about);
     }
 
 

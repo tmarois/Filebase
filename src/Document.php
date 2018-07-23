@@ -212,7 +212,7 @@ class Document
     * @param mixed $default
     * @return Base\Support\Collection get
     */
-    public function &__get($key)
+    public function __get($key)
     {
         if (!$this->isCollection) return Arr::get($this->collection, $key);
 

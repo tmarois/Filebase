@@ -18,7 +18,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
     public function testDatabaseCountZeroNoErrors()
     {
         Filesystem::deleteDirectory(__DIR__.'/database');
-        
+
         $db = new Database([
             'path' => __DIR__.'/database',
             'readOnly' => true,
@@ -159,6 +159,52 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(10, $before);
         $this->assertEquals(0, $dbTable->count());
+
+        Filesystem::deleteDirectory(__DIR__.'/database');
+    }
+
+
+    /**
+    * testCreateCountAndEmpty()
+    *
+    * TEST:
+    * (1) Test creation of many documents
+    * (2) Test table COUNT() is working
+    * (3) EMPTY the entire table
+    *
+    */
+    public function testEmptyReadyOnlyNoErrors()
+    {
+        Filesystem::deleteDirectory(__DIR__.'/database');
+
+        $db = new Database([
+            'path' => __DIR__.'/database'
+        ]);
+
+        $dbTable = $db->table('products');
+
+        for ($x = 1; $x <= 10; $x++)
+        {
+            $user = $dbTable->get(uniqid());
+            $user->name = 'John';
+            $user->save();
+        }
+
+        $before = $dbTable->count();
+
+
+        $db = new Database([
+            'path' => __DIR__.'/database',
+            'readOnly' => true,
+            'errors' => false
+        ]);
+
+        $dbTable = $db->table('products');
+
+        $dbTable->empty();
+
+        $this->assertEquals(10, $before);
+        $this->assertEquals(10, $dbTable->count());
 
         Filesystem::deleteDirectory(__DIR__.'/database');
     }

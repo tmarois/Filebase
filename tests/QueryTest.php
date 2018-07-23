@@ -31,7 +31,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     		$user = $tDb->get(uniqid());
     		$user->name = 'John';
             $user->number = $x;
-            $user->contact['email'] = 'john@john.com';
+            // $user->contact['email'] = 'john@john.com';
     		$user->save();
     	}
 
