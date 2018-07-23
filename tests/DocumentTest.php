@@ -395,5 +395,68 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
 
 
+    /**
+    * testRemoveItem()
+    *
+    * TEST:
+    * (1) Removing item from document using "unset"
+    * (2) Extract document again and check removed item does not exist
+    * (3) Using the collection to remove the item
+    * (4) Checking isset on undefined property
+    * (5) Checking isset on defined property
+    *
+    */
+    public function testRemoveItem()
+    {
+        $makeDir = __DIR__.'/database';
+
+        Filesystem::deleteDirectory($makeDir);
+
+        $db = new Database([
+            'path' => $makeDir
+        ]);
+
+
+        // TEST (1)
+
+        $doc = $db->table('users')->get('testproduct');
+        $doc->productId = 123;
+        $doc->productName = 'Apple Watch';
+        $doc->save();
+
+        unset($doc->productName);
+        $this->assertEquals(null, $doc->productName);
+
+        // TEST (2)
+
+        $doc->save();
+        $doc = $db->table('users')->get('testproduct');
+        $this->assertEquals(null, $doc->productName);
+
+        // TEST (3)
+
+        $doc->remove('productId');
+        $doc->save();
+        $doc = $db->table('users')->get('testproduct');
+        $this->assertEquals(null, $doc->productId);
+
+
+        // TEST (4)
+
+        $this->assertEquals(false, isset($doc->productId));
+
+        // TEST (5)
+
+        $doc->newkey = '123';
+        $doc->save();
+        $doc = $db->table('users')->get('testproduct');
+        $this->assertEquals('123', $doc->newkey);
+        $this->assertEquals(true, isset($doc->newkey));
+
+        Filesystem::deleteDirectory($makeDir);
+    }
+
+
+
 
 }

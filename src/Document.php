@@ -212,7 +212,7 @@ class Document
     * @param mixed $default
     * @return Base\Support\Collection get
     */
-    public function __get($key)
+    public function &__get($key)
     {
         if (!$this->isCollection) return Arr::get($this->collection, $key);
 
@@ -232,6 +232,30 @@ class Document
         if (!$this->isCollection) return Arr::set($this->collection, $key, $value);
 
         return $this->collection->set($key, $value);
+    }
+
+
+    /**
+    * __isset
+    *
+    */
+    public function __isset($key)
+    {
+        if (!$this->isCollection) return Arr::has($this->collection, $key);
+
+        return $this->collection->has($key);
+    }
+
+
+    /**
+    * __unset
+    *
+    */
+    public function __unset($key)
+    {
+        if (!$this->isCollection) return Arr::remove($this->collection, $key);
+
+        return $this->collection->remove($key);
     }
 
 
