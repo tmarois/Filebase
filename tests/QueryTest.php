@@ -367,7 +367,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     *
     *
     */
-    public function testSelectQuery()
+    /*public function testSelectQuery()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases/users_select',
@@ -424,7 +424,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         // print_r($test3);
         // $this->assertEquals(['JR MM','jrmm@email.com'], [$test2['name'],$test2['email']]);
-    }
+    }*/
 
 
     /**
