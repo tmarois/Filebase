@@ -149,6 +149,27 @@ class Database
 
 
     /**
+    * has
+    *
+    * Check if a record already exists
+    *
+    * @param mixed $id
+    *
+    * @return bool true/false
+    */
+    public function has($id)
+    {
+        $format = $this->config->format;
+        $record = Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($id, $this->config->safe_filename).'.'.$format::getFileExtension() );
+
+        return $record ? true : false;
+    }
+
+
+    //--------------------------------------------------------------------
+
+
+    /**
     * backup
     *
     * @param string $location (optional)

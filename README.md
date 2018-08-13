@@ -60,6 +60,14 @@ $item->tags  = ['php','developer','html5'];
 // need to save? thats easy!
 $item->save();
 
+
+// check if a record exists and do something if it does or does not
+if ($database->has('kingslayer'))
+{
+    // do some action
+}
+
+
 // Need to find all the users that have a tag for "php" ?
 $users = $db->query()->where('tags','IN','php')->results();
 
@@ -129,6 +137,7 @@ $userId = '92832711';
 
 // get the user information by id
 $item = $db->get($userId);
+
 ```
 
 `get()` returns `\Filebase\Document` object and has its own methods which you can call.
@@ -205,7 +214,8 @@ Here is a list of methods you can use on the database class.
 |Method|Details|
 |---|---|
 |`version()`                      | Current version of your Filebase library |
-|`get()`                          | Refer to [get()](https://github.com/filebase/Filebase#3-get-and-methods) |
+|`get($id)`                       | Refer to [get()](https://github.com/filebase/Filebase#3-get-and-methods) |
+|`has($id)`                       | Check if a record exist returning true/false |
 |`findAll()`                      | Returns all documents in database |
 |`count()`                        | Number of documents in database |
 |`flush(true)`                    | Deletes all documents. |

@@ -38,6 +38,42 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     //--------------------------------------------------------------------
 
 
+
+
+        /**
+        * testDoesNotExist()
+        *
+        * TEST CASE:
+        * - Save document with data
+        * - Get the document
+        * - Check that the data is there and the document exist
+        *
+        */
+        public function testDoesNotExist()
+        {
+            $db = new \Filebase\Database([
+                'dir'   => __DIR__.'/databases',
+                'cache' => false
+            ]);
+
+            $db->flush(true);
+
+            // get saved data (put into array)
+            $doc = $db->get('doesexist')->save(['key'=>'value']);
+
+            $this->assertEquals(true, $db->has('doesexist'));
+
+            $this->assertEquals(false, $db->has('doesnotexist'));
+
+            $db->flush(true);
+        }
+
+
+        //--------------------------------------------------------------------
+
+
+
+
     /**
     * testSetIdGetId()
     *

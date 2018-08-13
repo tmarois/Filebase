@@ -369,7 +369,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     */
     public function testSelectQuery()
     {
-        /*$db = new \Filebase\Database([
+        $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases/users_select',
             'cache' => false
         ]);
@@ -416,7 +416,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         // select using arrays instead of strings
         $test3 = $db->query()->select(['name','email'])->first();
-        $this->assertEquals(['JR MM','jrmm@email.com'], [$test3['name'],$test3['email']]);*/
+        $this->assertEquals(['JR MM','jrmm@email.com'], [$test3['name'],$test3['email']]);
 
         // return the "name" (selecting only 1 item)
         // currently DOES not work with nested..

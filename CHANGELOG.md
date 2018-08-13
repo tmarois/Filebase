@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 08/13/2018 - 1.0.19
+* Added #21 for checking database record exists, added `has()` method on database.
+
 ### 07/14/2018 - 1.0.18
 * Fixed #17 for PHP 5.6
 * Replaced the spaceship operators with a php 5.6 alternative.
