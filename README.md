@@ -474,6 +474,16 @@ I originally built Filebase because I needed more flexibility, control over the 
 
 Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](https://github.com/fire015/flintstone).
 
+
+## How Versions Work
+
+Versions are as follows: Major.Minor.Patch
+
+* Major: Rewrites with completely new code-base.
+* Minor: New Features/Changes that breaks compatibility.
+* Patch: New Features/Fixes that does not break compatibility.
+
+
 ## Sites and Users of Filebase
 
 * [Grayscale Inc](https://grayscale.com)
@@ -483,13 +493,12 @@ Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](ht
 * [PuzzlePlay](http://puzzleplay.com)
 * [Square Media LLC](http://squaremedia.com)
 * [My Map Directions](https://mymapdirections.com)
+* [Discount Savings](https://discount-savings.com)
+* [Vivint - Smart Homes](http://smarthomesecurityplans.com/)
 
 *If you are using Filebase on your website, send in a pull request and we will put your site up here.*
+
 
 ## Contributions
 
 Accepting contributions and feedback. Send in any issues and pull requests.
-
-## TODO
-
-- Cache driver (to use on other services like memcached, redis etc)
