@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 08/16/2018 - 1.0.20
+* Fixed #23 – Caching is cleared when deleting/saving documents to prevent cache from being out of sync with document data.
+
 ### 08/13/2018 - 1.0.19
 * Added #21 for checking database record exists, added `has()` method on database.
 

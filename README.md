@@ -108,7 +108,7 @@ $db = new \Filebase\Database([
 |`backupLocation`   |string		|current directory (`/backups`)         |The directory where the backup zip files will be stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
 |`validate`			|array		|   |Check [Validation Rules](https://github.com/filebase/Filebase#6-validation-optional) for more details |
-|`cache`			|bool		|false   |Stores [query](https://github.com/filebase/Filebase#8-queries) results into cache for faster loading.				|
+|`cache`			|bool		|true   |Stores [query](https://github.com/filebase/Filebase#8-queries) results into cache for faster loading.				|
 |`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
 |`pretty`	    	|bool		|true   |Store the data for human readability? Pretty Print	|
 |`safe_filename`	|bool		|true   |Automatically converts the file name to a valid name (added: 1.0.13)   |

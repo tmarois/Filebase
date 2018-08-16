@@ -1,5 +1,6 @@
 <?php  namespace Filebase;
 
+use Base\Support\Filesystem;
 
 class QueryTest extends \PHPUnit\Framework\TestCase
 {
@@ -934,8 +935,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     public function testWhereQueryFromCache()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases/users_1',
-            'cache' => true
+            'dir' => __DIR__.'/databases/users_1'
         ]);
 
         $db->flush(true);
@@ -961,8 +961,90 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(10, count($results));
         $this->assertEquals(true, ($result_from_cache[0]->isCache()));
 
+        Filesystem::empty(__DIR__.'/databases');
+    }
+
+
+    public function testQueryFromCacheAfterDelete()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/deleted',
+            'cache' => true
+        ]);
+
         $db->flush(true);
-        $db->flushCache();
+
+        for ($x = 1; $x <= 10; $x++)
+    	{
+    		$user = $db->get(uniqid());
+    		$user->name  = 'John';
+            $user->email = 'john@example.com';
+    		$user->save();
+    	}
+
+        $results = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments();
+        $result_from_cache = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments();
+
+        $this->assertEquals(10, count($results));
+        $this->assertEquals(true, ($result_from_cache[0]->isCache()));
+
+        $id = $result_from_cache[0]->getId();
+        $id2 = $result_from_cache[1]->getId();
+
+        // delete the file
+        $result_from_cache[0]->delete();
+
+        $results = $db->query()
+    	 	->where('name','=','John')
+            ->andWhere('email','==','john@example.com')
+    		->resultDocuments();
+
+        $this->assertEquals($id2, $results[0]->getId());
+
+        Filesystem::empty(__DIR__.'/databases');
+    }
+
+
+
+    public function testQueryFromCacheAfterSave()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/saved',
+            'cache' => true
+        ]);
+
+        $db->flush(true);
+
+        for ($x = 1; $x <= 10; $x++)
+    	{
+    		$user = $db->get(uniqid());
+    		$user->name  = 'John';
+            $user->email = 'john@example.com';
+    		$user->save();
+    	}
+
+        $results = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments();
+        $result_from_cache = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments();
+
+        $this->assertEquals(10, count($results));
+        $this->assertEquals(true, ($result_from_cache[0]->isCache()));
+
+        $id = $result_from_cache[0]->getId();
+        $id2 = $result_from_cache[1]->getId();
+
+        // Change the name
+        $result_from_cache[0]->name = 'Tim';
+        $result_from_cache[0]->save();
+
+        $results = $db->query()
+    	 	->where('name','=','John')
+            ->andWhere('email','==','john@example.com')
+    		->resultDocuments();
+
+        $this->assertEquals($id2, $results[0]->getId());
+        $this->assertEquals('John', $results[0]->name);
+
+        Filesystem::empty(__DIR__.'/databases');
     }
 
 }
