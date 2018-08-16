@@ -1,7 +1,5 @@
 <?php  namespace Filebase;
 
-use Base\Support\Filesystem;
-
 class QueryTest extends \PHPUnit\Framework\TestCase
 {
 
@@ -961,7 +959,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(10, count($results));
         $this->assertEquals(true, ($result_from_cache[0]->isCache()));
 
-        Filesystem::empty(__DIR__.'/databases');
+        $db->flush(true);
     }
 
 
@@ -1001,7 +999,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($id2, $results[0]->getId());
 
-        Filesystem::empty(__DIR__.'/databases');
+        $db->flush(true);
     }
 
 
@@ -1044,7 +1042,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($id2, $results[0]->getId());
         $this->assertEquals('John', $results[0]->name);
 
-        Filesystem::empty(__DIR__.'/databases');
+        $db->flush(true);
     }
 
 }
