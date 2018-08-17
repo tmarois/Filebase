@@ -236,7 +236,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
 
         // should only have 1 doc
         $this->assertEquals(1, count($documents));
-        $this->assertEquals(['key'=>'value'], $documents[0]);
+        $this->assertEquals(['key'=>'value'], current($documents));
 
         $db->flush(true);
     }

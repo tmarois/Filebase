@@ -347,9 +347,11 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         // test that the offset takes off the first array (should return "apple", not "google")
         $test3 = $db->query()->where('rank','=',150)->limit(1,1)->results();
 
+        $test3Current = current($test3);
+
         $this->assertEquals(2, (count($test1)));
         $this->assertEquals(3, (count($test2)));
-        $this->assertEquals('Apple', $test3[0]['name']);
+        $this->assertEquals('Apple', $test3Current['name']);
 
         $db->flush(true);
     }
@@ -457,23 +459,38 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         // test that they are ordered by name ASC (check first, second, and last)
         $test1 = $db->query()->where('status','=','enabled')->orderBy('name', 'ASC')->results();
-        $this->assertEquals(['first'=>'Amazon','second'=>'Amex','last'=>'Microsoft'], ['first'=>$test1[0]['name'],'second'=>$test1[1]['name'],'last'=>$test1[5]['name']]);
+        $test1A = current($test1);
+        $test1B = next($test1);
+        $test1C = end($test1);
+        $this->assertEquals(['first'=>'Amazon','second'=>'Amex','last'=>'Microsoft'], ['first'=>$test1A['name'],'second'=>$test1B['name'],'last'=>$test1C['name']]);
 
         // test that they are ordered by name ASC (check first, second, and last)
         $test2 = $db->query()->where('status','=','enabled')->limit(3)->orderBy('name', 'ASC')->results();
-        $this->assertEquals(['Amazon','Amex','Apple'], [$test2[0]['name'],$test2[1]['name'],$test2[2]['name']]);
+        $testA = current($test2);
+        $testB = next($test2);
+        $testC = end($test2);
+        $this->assertEquals(['Amazon','Amex','Apple'], [$testA['name'],$testB['name'],$testC['name']]);
 
         // test that they are ordered by name DESC (check first, second, and last)
         $test3 = $db->query()->where('status','=','enabled')->limit(3)->orderBy('name', 'DESC')->results();
-        $this->assertEquals(['Microsoft','Hooli','Google'], [$test3[0]['name'],$test3[1]['name'],$test3[2]['name']]);
+        $testA = current($test3);
+        $testB = next($test3);
+        $testC = end($test3);
+        $this->assertEquals(['Microsoft','Hooli','Google'], [$testA['name'],$testB['name'],$testC['name']]);
 
         // test that they are ordered by rank nested [reviews] DESC
         $test4 = $db->query()->where('status','=','enabled')->limit(3)->orderBy('rank.reviews', 'DESC')->results();
-        $this->assertEquals(['Apple','Google','Amazon'], [$test4[0]['name'],$test4[1]['name'],$test4[2]['name']]);
+        $testA = current($test4);
+        $testB = next($test4);
+        $testC = end($test4);
+        $this->assertEquals(['Apple','Google','Amazon'], [$testA['name'],$testB['name'],$testC['name']]);
 
         // test that they are ordered by rank nested [reviews] ASC
         $test5 = $db->query()->where('status','=','enabled')->limit(3)->orderBy('rank.reviews', 'ASC')->results();
-        $this->assertEquals(['Amex','Hooli','Microsoft'], [$test5[0]['name'],$test5[1]['name'],$test5[2]['name']]);
+        $testA = current($test5);
+        $testB = next($test5);
+        $testC = end($test5);
+        $this->assertEquals(['Amex','Hooli','Microsoft'], [$testA['name'],$testB['name'],$testC['name']]);
 
         $db->flush(true);
 
@@ -488,11 +505,17 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         // order the results ASC (but inject numbers into strings)
         $test6 = $db->query()->limit(3)->orderBy('name', 'ASC')->results();
-        $this->assertEquals(['Google 1','Google 2','Google 3'], [$test6[0]['name'],$test6[1]['name'],$test6[2]['name']]);
+        $testA = current($test6);
+        $testB = next($test6);
+        $testC = end($test6);
+        $this->assertEquals(['Google 1','Google 2','Google 3'], [$testA['name'],$testB['name'],$testC['name']]);
 
         // order the results DESC (but inject numbers into strings)
         $test6 = $db->query()->limit(3)->orderBy('name', 'DESC')->results();
-        $this->assertEquals(['Google 10','Google 9','Google 7'], [$test6[0]['name'],$test6[1]['name'],$test6[2]['name']]);
+        $testA = current($test6);
+        $testB = next($test6);
+        $testC = end($test6);
+        $this->assertEquals(['Google 10','Google 9','Google 7'], [$testA['name'],$testB['name'],$testC['name']]);
 
         $db->flush(true);
 
@@ -562,8 +585,8 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('Microsoft', $test3['name']);
 
         // check if the method createdAt() exists or not based on the argument boolean
-        $this->assertEquals(true, method_exists($test5[0], 'createdAt'));
-        $this->assertEquals(false, method_exists($test6[0], 'createdAt'));
+        $this->assertEquals(true, method_exists(current($test5), 'createdAt'));
+        $this->assertEquals(false, method_exists(current($test6), 'createdAt'));
 
         // check if the results = 2
         $this->assertEquals(2, count($test4));
@@ -956,8 +979,10 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             ->andWhere('email','==','john@example.com')
     		->resultDocuments();
 
+        $first = current($result_from_cache);
+
         $this->assertEquals(10, count($results));
-        $this->assertEquals(true, ($result_from_cache[0]->isCache()));
+        $this->assertEquals(true, ($first->isCache()));
 
         $db->flush(true);
     }
@@ -983,21 +1008,24 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $results = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments();
         $result_from_cache = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments();
 
-        $this->assertEquals(10, count($results));
-        $this->assertEquals(true, ($result_from_cache[0]->isCache()));
+        $current = current($result_from_cache);
 
-        $id = $result_from_cache[0]->getId();
-        $id2 = $result_from_cache[1]->getId();
+        $this->assertEquals(10, count($results));
+        $this->assertEquals(10, count($result_from_cache));
+        $this->assertEquals(true, $current->isCache());
+
+        $id = $current->getId();
+        $id2 = next($result_from_cache)->getId();
 
         // delete the file
-        $result_from_cache[0]->delete();
+        $current->delete();
 
         $results = $db->query()
     	 	->where('name','=','John')
             ->andWhere('email','==','john@example.com')
     		->resultDocuments();
 
-        $this->assertEquals($id2, $results[0]->getId());
+        $this->assertEquals($id2, current($results)->getId());
 
         $db->flush(true);
     }
@@ -1024,25 +1052,70 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $results = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments();
         $result_from_cache = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments();
 
-        $this->assertEquals(10, count($results));
-        $this->assertEquals(true, ($result_from_cache[0]->isCache()));
+        $current = current($result_from_cache);
 
-        $id = $result_from_cache[0]->getId();
-        $id2 = $result_from_cache[1]->getId();
+        $this->assertEquals(10, count($results));
+        $this->assertEquals(10, count($result_from_cache));
+        $this->assertEquals(true, $current->isCache());
+
+        $id = $current->getId();
+        $id2 = next($result_from_cache)->getId();
 
         // Change the name
-        $result_from_cache[0]->name = 'Tim';
-        $result_from_cache[0]->save();
+        $current->name = 'Tim';
+        $current->save();
 
         $results = $db->query()
     	 	->where('name','=','John')
             ->andWhere('email','==','john@example.com')
     		->resultDocuments();
 
-        $this->assertEquals($id2, $results[0]->getId());
-        $this->assertEquals('John', $results[0]->name);
+        $this->assertEquals($id2, current($results)->getId());
+        $this->assertEquals('John', current($results)->name);
 
         $db->flush(true);
+    }
+
+
+    public function testQueryResultKeys()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/results',
+            'cache' => true
+        ]);
+
+        $db->flush(true);
+
+        for ($x = 1; $x <= 10; $x++)
+    	{
+    		$user = $db->get(uniqid());
+    		$user->name  = 'John';
+            $user->email = 'john@example.com';
+    		$user->save();
+    	}
+
+        $resultsA = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->results();
+        $resultsB = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->results();
+
+        $this->assertEquals($resultsB, $resultsA);
+
+        $db->flushCache();
+        $resultsC = current($db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->results());
+        $db->flushCache();
+        $resultsD = current($db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->results());
+
+        $this->assertEquals($resultsC, $resultsD);
+
+        $db->flushCache();
+        $resultsE = current($db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments());
+        $db->flushCache();
+        $resultsF = $db->query()->where('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments();
+
+        $this->assertEquals($resultsB[$resultsE->getId()], $resultsE->getData());
+        $this->assertEquals($resultsF[$resultsE->getId()]->getData(), $resultsE->getData());
+
+        $db->flush(true);
+        $db->flushCache();
     }
 
 }

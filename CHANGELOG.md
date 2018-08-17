@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 08/16/2018 - 1.0.21
+* Changed: #24 – Array keys on query `results()` and `resultDocuments()` change indexes from chronological integers to document Id. Adding the ID within the array key allows a reference the original document.
+
+**NOTE** It is possible this *could* potentially break code. This will change query array indexes from `$myResults[0]` to `$myResults['my_document_id']`.
+
 ### 08/16/2018 - 1.0.20
 * Fixed #23 – Caching is cleared when deleting/saving documents to prevent cache from being out of sync with document data.
 

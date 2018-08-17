@@ -16,7 +16,7 @@ class Database
     * Stores the version of Filebase
     * use $db->getVersion()
     */
-    const VERSION = '1.0.20';
+    const VERSION = '1.0.21';
 
 
     //--------------------------------------------------------------------
@@ -100,13 +100,15 @@ class Database
 
             foreach($all_items as $a)
         	{
+                $document = $this->get($a);
+
                 if ($data_only === true)
                 {
-                    $items[] = $this->get($a)->getData();
+                    $items[$document->getId()] = $document->getData();
                 }
                 else
                 {
-                    $items[] = $this->get($a);
+                    $items[$document->getId()] = $document;
                 }
         	}
 
