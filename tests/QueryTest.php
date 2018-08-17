@@ -1025,9 +1025,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             ->andWhere('email','==','john@example.com')
     		->resultDocuments();
 
-        $r = current($results);
-
-        $this->assertEquals($id2, $r->getId());
+        $this->assertEquals($id2, current($results)->getId());
 
         $db->flush(true);
     }
@@ -1072,10 +1070,8 @@ class QueryTest extends \PHPUnit\Framework\TestCase
             ->andWhere('email','==','john@example.com')
     		->resultDocuments();
 
-        $r = current($results);
-
-        $this->assertEquals($id2, $r->getId());
-        $this->assertEquals('John', $r->name);
+        $this->assertEquals($id2, current($results)->getId());
+        $this->assertEquals('John', current($results)->name);
 
         $db->flush(true);
     }
