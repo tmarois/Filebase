@@ -71,7 +71,7 @@ class QueryLogic
 
             if ($cached_documents = $this->cache->get())
             {
-                $this->documents = ($cached_documents);
+                $this->documents = $cached_documents;
 
                 $this->sort();
                 $this->offsetLimit();
@@ -141,7 +141,7 @@ class QueryLogic
             {
                 list($field, $operator, $value) = $predicate;
 
-                $documents = (array_filter($documents, function ($document) use ($field, $operator, $value) {
+                $documents = array_values(array_filter($documents, function ($document) use ($field, $operator, $value) {
                     return $this->match($document, $field, $operator, $value);
                 }));
 
@@ -155,7 +155,7 @@ class QueryLogic
             {
                 list($field, $operator, $value) = $predicate;
 
-                $documents = (array_filter($org_docs, function ($document) use ($field, $operator, $value) {
+                $documents = array_values(array_filter($org_docs, function ($document) use ($field, $operator, $value) {
                     return $this->match($document, $field, $operator, $value);
                 }));
 

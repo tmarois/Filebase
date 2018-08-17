@@ -215,7 +215,7 @@ Here is a list of methods you can use on the database class.
 |---|---|
 |`version()`                      | Current version of your Filebase library |
 |`get($id)`                       | Refer to [get()](https://github.com/filebase/Filebase#3-get-and-methods) |
-|`has($id)`                       | Check if a record exist returning true/false (added: 1.0.19) |
+|`has($id)`                       | Check if a record exist returning true/false |
 |`findAll()`                      | Returns all documents in database |
 |`count()`                        | Number of documents in database |
 |`flush(true)`                    | Deletes all documents. |
@@ -405,8 +405,8 @@ The below **methods execute the query** and return results *(do not try to use t
 |`count()`              | Counts and returns the number of documents in results. |
 |`first()`              | Returns only the first document in results. |
 |`last()`               | Returns only the last document in results. |
-|`results()`            | This will return all the documents found and their data as an array. |
-|`resultDocuments()`    | This will return all the documents found and their data as document objects. |
+|`results()`            | This will return all the documents found and their data as an array. Passing the argument of `false` will be the same as `resultDocuments()` (returning the full document objects) |
+|`resultDocuments()`    | This will return all the documents found and their data as document objects, or you can do `results(false)` which is the alias. |
 
 ### Comparison Operators:
 

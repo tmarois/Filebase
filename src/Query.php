@@ -260,7 +260,7 @@ class Query extends QueryLogic
         {
             foreach($this->documents as $document)
             {
-                $docs[$document->getId()] = (array) $document->getData();
+                $docs[] = (array) $document->getData();
             }
         }
 
