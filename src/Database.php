@@ -8,6 +8,9 @@ use Filebase\Document;
 use Filebase\Backup;
 use Filebase\Format\DecodingException;
 use Filebase\Format\EncodingException;
+use Filebase\Filesystem\SavingException;
+use Filebase\Filesystem\ReadingException;
+use Filebase\Filesystem\FilesystemException;
 
 class Database
 {
@@ -33,9 +36,12 @@ class Database
 
 
     /**
-    * __construct
-    *
-    */
+     * Database constructor.
+     *
+     * @param array $config
+     *
+     * @throws FilesystemException
+     */
     public function __construct(array $config = [])
     {
         $this->config = new Config($config);
@@ -48,12 +54,12 @@ class Database
         {
             if (!@mkdir($this->config->dir, 0777, true))
             {
-                throw new Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->dir));
+                throw new FilesystemException(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->dir));
             }
         }
         else if (!is_writable($this->config->dir))
         {
-            throw new Exception(sprintf('`%s` is not writable.', $this->config->dir));
+            throw new FilesystemException(sprintf('`%s` is not writable.', $this->config->dir));
         }
     }
 
@@ -242,13 +248,14 @@ class Database
     * @param $document \Filebase\Document object
     * @param mixed $data should be an array, new data to replace all existing data within
     *
+     * @throws Exception|SavingException
     * @return (bool) true or false if file was saved
     */
     public function save(Document $document, $wdata = '')
     {
         if ($this->config->read_only === true)
         {
-            throw new Exception("This database is set to be read-only. No modifications can be made.");
+            throw new SavingException("This database is set to be read-only. No modifications can be made.");
         }
 
         $format         = $this->config->format;
@@ -275,7 +282,8 @@ class Database
         try {
             $data = $format::encode( $document->saveAs(), $this->config->pretty );
         } catch (EncodingException $e) {
-            // TODO: handle exception: log?, throw write exception?...
+            // TODO: add logging
+            throw new SavingException("Can not encode document.", 0, $e);
         }
 
         if (Filesystem::write($file_location, $data))
@@ -311,7 +319,7 @@ class Database
     /**
      * @param $name
      * @return bool
-     * @throws Exception
+     * @throws Exception|ReadingException
      */
     protected function read($name)
     {
@@ -323,15 +331,17 @@ class Database
             . '.' . $format::getFileExtension()
         );
 
-        if ($file) {
-            try {
-                return $format::decode($file);
-            } catch (DecodingException $e) {
-                // TODO: handle exception: log?, throw read exception?...
-            }
+        if (!$file) {
+            /**
+             * FIXME: shouldn't we raise an exception in this case? + implement add/create method?
+             * or use $this->has (maybe not here but inside $this->get method) to verify that document exists
+             * if not than use add/create method?
+             * or remove this exception and allow creating new document with this method?
+             */
+//            throw new ReadingException("Document '{$name}' does not exists.");
         }
 
-        return false;
+        return $format::decode($file);
     }
 
 

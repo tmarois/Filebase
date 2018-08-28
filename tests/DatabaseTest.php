@@ -1,6 +1,8 @@
 <?php  namespace Filebase;
 
 
+use Filebase\Filesystem\SavingException;
+
 class badformat {
 
 }
@@ -241,4 +243,19 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $db->flush(true);
     }
 
+    public function testDatabaseSavingNotEncodableDocument()
+    {
+        $this->expectException(SavingException::class);
+
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases'
+        ]);
+
+        $doc = $db->get("testDatabaseSavingNotEncodableDocument");
+
+        // insert invalid utf-8 characters
+        $doc->testProp = "\xB1\x31";
+
+        $doc->save();
+    }
 }
