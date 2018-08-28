@@ -1,6 +1,6 @@
 # Filebase
 
-[![Build Status](https://travis-ci.org/filebase/Filebase.svg?branch=1.0)](https://travis-ci.org/filebase/Filebase) [![Coverage Status](https://coveralls.io/repos/github/filebase/Filebase/badge.svg?branch=1.0)](https://coveralls.io/github/filebase/Filebase?branch=1.0)
+[![Build Status](https://travis-ci.org/filebase/Filebase.svg?branch=1.0)](https://travis-ci.org/filebase/Filebase) [![Coverage Status](https://coveralls.io/repos/github/filebase/Filebase/badge.svg?branch=1.0)](https://coveralls.io/github/filebase/Filebase?branch=1.0) [![Slack](http://timothymarois.com/a/slack-01.svg)](https://join.slack.com/t/basephp/shared_invite/enQtNDI0MzQyMDE0MDAwLWU3Nzg0Yjk4MjM0OWVmZDZjMjEyYWE2YjA1ODFhNjI2MzI3MjAyOTIyOTRkMmVlNWNhZWYzMTIwZDJlOWQ2ZTA)
 
 A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/filebase/Filebase#2-formatting) the way you like).
 
