@@ -1,6 +1,6 @@
 # Filebase
 
-[![Build Status](https://travis-ci.org/filebase/Filebase.svg?branch=1.0)](https://travis-ci.org/filebase/Filebase) [![Coverage Status](https://coveralls.io/repos/github/filebase/Filebase/badge.svg?branch=1.0)](https://coveralls.io/github/filebase/Filebase?branch=1.0) [![Slack](http://timothymarois.com/a/slack-01.svg)](https://join.slack.com/t/basephp/shared_invite/enQtNDI0MzQyMDE0MDAwLWU3Nzg0Yjk4MjM0OWVmZDZjMjEyYWE2YjA1ODFhNjI2MzI3MjAyOTIyOTRkMmVlNWNhZWYzMTIwZDJlOWQ2ZTA)
+[![Build Status](https://travis-ci.org/filebase/Filebase.svg?branch=1.0)](https://travis-ci.org/filebase/Filebase) [![Coverage Status](https://coveralls.io/repos/github/filebase/Filebase/badge.svg?branch=1.0)](https://coveralls.io/github/filebase/Filebase?branch=1.0) [![Slack](http://timothymarois.com/a/slack-02.svg)](https://join.slack.com/t/basephp/shared_invite/enQtNDI0MzQyMDE0MDAwLWU3Nzg0Yjk4MjM0OWVmZDZjMjEyYWE2YjA1ODFhNjI2MzI3MjAyOTIyOTRkMmVlNWNhZWYzMTIwZDJlOWQ2ZTA)
 
 A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/filebase/Filebase#2-formatting) the way you like).
 
@@ -32,7 +32,7 @@ Filebase is simple by design, but has enough features for the more advanced.
 
 Use [Composer](http://getcomposer.org/) to install package.
 
-Use `composer require filebase/filebase`
+Run `composer require filebase/filebase`
 
 If you do not want to use composer, download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases.
 
@@ -470,7 +470,7 @@ $database->backup()->rollback();
 
 ## Why Filebase?
 
-I originally built Filebase because I needed more flexibility, control over the database files, how they are stored, query filtration and a design with very intuitive API methods.
+Filebase was built for the flexibility to help manage simple data storage without the hassle of a heavy database engine. The concept of Filebase is to provide very intuitive API methods, and make it easy for the developer to maintain and manage (even on a large scale).
 
 Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](https://github.com/fire015/flintstone).
 
@@ -482,6 +482,8 @@ Versions are as follows: Major.Minor.Patch
 * Major: Rewrites with completely new code-base.
 * Minor: New Features/Changes that breaks compatibility.
 * Patch: New Features/Fixes that does not break compatibility.
+
+Filebase will work hard to be backwards-compatible when possible.
 
 
 ## Sites and Users of Filebase
@@ -496,9 +498,14 @@ Versions are as follows: Major.Minor.Patch
 * [Discount Savings](https://discount-savings.com)
 * [Vivint - Smart Homes](http://smarthomesecurityplans.com/)
 
-*If you are using Filebase on your website, send in a pull request and we will put your site up here.*
+*If you are using Filebase on your website, send in a pull request and we will add your project here.*
 
 
 ## Contributions
 
-Accepting contributions and feedback. Send in any issues and pull requests.
+Anyone can contribute to Filebase. Please do so by posting issues when you've found something that is unexpected or sending a pull request for improvements.
+
+
+## License
+
+BasePHP is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
