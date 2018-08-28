@@ -131,6 +131,8 @@ The Default Format Class: `JSON`
 
 After you've loaded up your database config, then you can use the `get()` method to retrieve a single document of data.
 
+If document does not exist, it will create a empty object for you to store data into. You can then call the `save()` method and it will create the document (or update an existing one).
+
 ```php
 // my user id
 $userId = '92832711';
@@ -468,6 +470,7 @@ $database->backup()->rollback();
 
 ```
 
+
 ## Why Filebase?
 
 Filebase was built for the flexibility to help manage simple data storage without the hassle of a heavy database engine. The concept of Filebase is to provide very intuitive API methods, and make it easy for the developer to maintain and manage (even on a large scale).
@@ -483,7 +486,7 @@ Versions are as follows: Major.Minor.Patch
 * Minor: New Features/Changes that breaks compatibility.
 * Patch: New Features/Fixes that does not break compatibility.
 
-Filebase will work hard to be backwards-compatible when possible.
+Filebase will work-hard to be **backwards-compatible** when possible.
 
 
 ## Sites and Users of Filebase
@@ -498,7 +501,7 @@ Filebase will work hard to be backwards-compatible when possible.
 * [Discount Savings](https://discount-savings.com)
 * [Vivint - Smart Homes](http://smarthomesecurityplans.com/)
 
-*If you are using Filebase on your website, send in a pull request and we will add your project here.*
+*If you are using Filebase – send in a pull request and we will add your project here.*
 
 
 ## Contributions
@@ -508,4 +511,4 @@ Anyone can contribute to Filebase. Please do so by posting issues when you've fo
 
 ## License
 
-BasePHP is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Filebase is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
