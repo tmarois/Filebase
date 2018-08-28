@@ -6,6 +6,8 @@ use Filebase\Cache;
 use Filebase\Filesystem;
 use Filebase\Document;
 use Filebase\Backup;
+use Filebase\Format\DecodingException;
+use Filebase\Format\EncodingException;
 
 class Database
 {
@@ -270,7 +272,11 @@ class Database
 
         $document->setUpdatedAt(time());
 
-        $data = $format::encode( $document->saveAs(), $this->config->pretty );
+        try {
+            $data = $format::encode( $document->saveAs(), $this->config->pretty );
+        } catch (EncodingException $e) {
+            // TODO: handle exception: log?, throw write exception?...
+        }
 
         if (Filesystem::write($file_location, $data))
         {
@@ -302,17 +308,30 @@ class Database
     //--------------------------------------------------------------------
 
 
-
     /**
-    * read
-    *
-    * @param string $name
-    * @return decoded file data
-    */
+     * @param $name
+     * @return bool
+     * @throws Exception
+     */
     protected function read($name)
     {
         $format = $this->config->format;
-        return $format::decode( Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($name, $this->config->safe_filename).'.'.$format::getFileExtension() ) );
+
+        $file = Filesystem::read(
+            $this->config->dir . '/'
+            . Filesystem::validateName($name, $this->config->safe_filename) 
+            . '.' . $format::getFileExtension()
+        );
+
+        if ($file) {
+            try {
+                return $format::decode($file);
+            } catch (DecodingException $e) {
+                // TODO: handle exception: log?, throw read exception?...
+            }
+        }
+
+        return false;
     }
 
 

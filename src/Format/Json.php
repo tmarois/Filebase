@@ -3,11 +3,9 @@
 
 class Json implements FormatInterface
 {
-
     /**
-    * getFileExtension
-    *
-    */
+     * @return string
+     */
     public static function getFileExtension()
     {
         return 'json';
@@ -18,15 +16,29 @@ class Json implements FormatInterface
 
 
     /**
-    * encode
-    *
-    */
+     * @param array $data
+     * @param bool $pretty
+     * @return string
+     * @throws FormatException
+     */
     public static function encode($data = [], $pretty = true)
     {
-        $p = 1;
-        if ($pretty==true) $p = JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES;
+        $options = 0;
+        if ($pretty == true) {
+            $options = JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE;
+        }
 
-        return json_encode($data, $p);
+        $encoded = json_encode($data, $options);
+        if ($encoded === false) {
+            throw new EncodingException(
+                "json_encode: '" . json_last_error_msg() . "'",
+                0,
+                null,
+                $data
+            );
+        }
+
+        return $encoded;
     }
 
 
@@ -34,12 +46,24 @@ class Json implements FormatInterface
 
 
     /**
-    * decode
-    *
-    */
+     * @param $data
+     * @return mixed
+     * @throws FormatException
+     */
     public static function decode($data)
     {
-        return json_decode($data, 1);
+        $decoded = json_decode($data, true);
+
+        if ($data !== false && $decoded === null) {
+            throw new DecodingException(
+                "json_decode: '" . json_last_error_msg() . "'",
+                0,
+                null,
+                $data
+            );
+        }
+
+        return $decoded;
     }
 
 
