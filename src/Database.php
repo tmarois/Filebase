@@ -1,12 +1,6 @@
 <?php  namespace Filebase;
 
 use Exception;
-use Filebase\Config;
-use Filebase\Cache;
-use Filebase\Filesystem;
-use Filebase\Document;
-use Filebase\Backup;
-use Filebase\Format\DecodingException;
 use Filebase\Format\EncodingException;
 use Filebase\Filesystem\SavingException;
 use Filebase\Filesystem\ReadingException;
@@ -243,14 +237,11 @@ class Database
 
 
     /**
-    * save
-    *
-    * @param $document \Filebase\Document object
-    * @param mixed $data should be an array, new data to replace all existing data within
-    *
-     * @throws Exception|SavingException
-    * @return (bool) true or false if file was saved
-    */
+     * @param Document $document
+     * @param string $wdata
+     * @return bool|Document
+     * @throws SavingException
+     */
     public function save(Document $document, $wdata = '')
     {
         if ($this->config->read_only === true)
@@ -317,9 +308,13 @@ class Database
 
 
     /**
+     * Read and return Document from filesystem by name.
+     * If doesn't exists return new empty Document.
+     *
      * @param $name
-     * @return bool
+     *
      * @throws Exception|ReadingException
+     * @return array|null
      */
     protected function read($name)
     {
@@ -331,17 +326,11 @@ class Database
             . '.' . $format::getFileExtension()
         );
 
-        if (!$file) {
-            /**
-             * FIXME: shouldn't we raise an exception in this case? + implement add/create method?
-             * or use $this->has (maybe not here but inside $this->get method) to verify that document exists
-             * if not than use add/create method?
-             * or remove this exception and allow creating new document with this method?
-             */
-//            throw new ReadingException("Document '{$name}' does not exists.");
+        if ($file !== false) {
+            return $format::decode($file);
         }
 
-        return $format::decode($file);
+        return null;
     }
 
 
