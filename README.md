@@ -45,7 +45,8 @@ $database = new \Filebase\Database([
 ]);
 
 // in this example, you would search an exact user name
-// It would technically be stored as user_name.json in the directories
+// it would technically be stored as user_name.json in the directories
+// if user_name.json doesn't exists get will return new empty Document
 $item = $database->get('kingslayer');
 
 // display property values
