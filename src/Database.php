@@ -1,11 +1,10 @@
 <?php  namespace Filebase;
 
 use Exception;
-use Filebase\Config;
-use Filebase\Cache;
-use Filebase\Filesystem;
-use Filebase\Document;
-use Filebase\Backup;
+use Filebase\Format\EncodingException;
+use Filebase\Filesystem\SavingException;
+use Filebase\Filesystem\ReadingException;
+use Filebase\Filesystem\FilesystemException;
 
 class Database
 {
@@ -31,9 +30,12 @@ class Database
 
 
     /**
-    * __construct
-    *
-    */
+     * Database constructor.
+     *
+     * @param array $config
+     *
+     * @throws FilesystemException
+     */
     public function __construct(array $config = [])
     {
         $this->config = new Config($config);
@@ -46,12 +48,12 @@ class Database
         {
             if (!@mkdir($this->config->dir, 0777, true))
             {
-                throw new Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->dir));
+                throw new FilesystemException(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->dir));
             }
         }
         else if (!is_writable($this->config->dir))
         {
-            throw new Exception(sprintf('`%s` is not writable.', $this->config->dir));
+            throw new FilesystemException(sprintf('`%s` is not writable.', $this->config->dir));
         }
     }
 
@@ -235,18 +237,16 @@ class Database
 
 
     /**
-    * save
-    *
-    * @param $document \Filebase\Document object
-    * @param mixed $data should be an array, new data to replace all existing data within
-    *
-    * @return (bool) true or false if file was saved
-    */
+     * @param Document $document
+     * @param string $wdata
+     * @return bool|Document
+     * @throws SavingException
+     */
     public function save(Document $document, $wdata = '')
     {
         if ($this->config->read_only === true)
         {
-            throw new Exception("This database is set to be read-only. No modifications can be made.");
+            throw new SavingException("This database is set to be read-only. No modifications can be made.");
         }
 
         $format         = $this->config->format;
@@ -270,7 +270,12 @@ class Database
 
         $document->setUpdatedAt(time());
 
-        $data = $format::encode( $document->saveAs(), $this->config->pretty );
+        try {
+            $data = $format::encode( $document->saveAs(), $this->config->pretty );
+        } catch (EncodingException $e) {
+            // TODO: add logging
+            throw new SavingException("Can not encode document.", 0, $e);
+        }
 
         if (Filesystem::write($file_location, $data))
         {
@@ -302,17 +307,30 @@ class Database
     //--------------------------------------------------------------------
 
 
-
     /**
-    * read
-    *
-    * @param string $name
-    * @return decoded file data
-    */
+     * Read and return Document from filesystem by name.
+     * If doesn't exists return new empty Document.
+     *
+     * @param $name
+     *
+     * @throws Exception|ReadingException
+     * @return array|null
+     */
     protected function read($name)
     {
         $format = $this->config->format;
-        return $format::decode( Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($name, $this->config->safe_filename).'.'.$format::getFileExtension() ) );
+
+        $file = Filesystem::read(
+            $this->config->dir . '/'
+            . Filesystem::validateName($name, $this->config->safe_filename) 
+            . '.' . $format::getFileExtension()
+        );
+
+        if ($file !== false) {
+            return $format::decode($file);
+        }
+
+        return null;
     }
 
 
