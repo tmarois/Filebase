@@ -127,6 +127,10 @@ The Default Format Class: `JSON`
 \Filebase\Format\Json::class
 ```
 
+Additional Format Classes: `Yaml`
+```php
+\Filebase\Format\Yaml::class
+```
 
 ## (3) GET (and methods)
 

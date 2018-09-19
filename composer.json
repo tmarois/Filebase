@@ -18,9 +18,14 @@
 	},
 
 	"require-dev": {
-		"satooshi/php-coveralls": "^2.0",
-		"phpunit/phpunit": "5.*"
+		"php-coveralls/php-coveralls": "^2.0",
+		"phpunit/phpunit": "5.*",
+		"symfony/yaml": "^4.1"
 	},
+
+	"suggest": {
+        "symfony/yaml": "Allows Yaml format"
+    },
 
 	"autoload": {
 		"psr-4": {
