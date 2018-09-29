@@ -66,6 +66,10 @@ class Filesystem
      */
     public static function delete($path)
     {
+        if (!file_exists($path)) {
+            return true;
+        }
+
         return unlink($path);
     }
 
