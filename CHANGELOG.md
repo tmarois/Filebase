@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 12/26/2018 - 1.0.21
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/30) for YAML format.
+
 ### 08/16/2018 - 1.0.20
 * Fixed #23 – Caching is cleared when deleting/saving documents to prevent cache from being out of sync with document data.
 

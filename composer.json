@@ -20,7 +20,7 @@
 	"require-dev": {
 		"php-coveralls/php-coveralls": "^2.0",
 		"phpunit/phpunit": "5.*",
-		"symfony/yaml": "^4.1"
+		"symfony/yaml": "^3.4"
 	},
 
 	"suggest": {
