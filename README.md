@@ -32,7 +32,7 @@ Filebase is simple by design, but has enough features for the more advanced.
 
 Use [Composer](http://getcomposer.org/) to install package.
 
-Run `composer require filebase/filebase`
+Run `composer require filebase/filebase:^1.0`
 
 If you do not want to use composer, download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases.
 
