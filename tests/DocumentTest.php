@@ -518,6 +518,22 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $db->flush(true);
     }
 
+    public function testFieldId()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases'
+        ]);
+
+        $db->flush(true);
+
+        $db->get('weather')->set(['cityname'=>'condition1'])->save();
+
+        $actual = $db->get('weather')->field('__id');
+        $this->assertEquals('weather', $actual);
+
+        $db->flush(true);
+    }
+
 
     public function testNestedFieldMethod()
     {

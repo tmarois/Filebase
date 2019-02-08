@@ -434,6 +434,10 @@ class Document
             return $context;
         }
 
+        if ($field == '__id') {
+            return $this->__id;
+        }
+
         foreach($parts as $part)
         {
             if (trim($part) == '')
