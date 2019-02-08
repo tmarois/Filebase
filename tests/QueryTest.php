@@ -1045,4 +1045,54 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $db->flush(true);
     }
 
+    public function testSortByTimes()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/_testsort'
+        ]);
+
+        $db->flush(true);
+
+        // Create some docs with time in between to get different timestamps
+        $doc = $db->get('record1')->set(['name'=>'a'])->save();
+        sleep(1);
+        $doc = $db->get('record2')->set(['name'=>'b'])->save();
+        sleep(1);
+        $doc = $db->get('record3')->set(['name'=>'c'])->save();
+
+        $documents = $db->query()->orderBy('__created_at', 'DESC')->results();
+        $expected = [
+            ['name' => 'c'],
+            ['name' => 'b'],
+            ['name' => 'a'],
+        ];
+        $this->assertEquals($expected, $documents);
+
+        $documents = $db->query()->orderBy('__created_at', 'ASC')->results();
+        $expected = [
+            ['name' => 'a'],
+            ['name' => 'b'],
+            ['name' => 'c'],
+        ];
+        $this->assertEquals($expected, $documents);
+
+        $documents = $db->query()->orderBy('__updated_at', 'DESC')->results();
+        $expected = [
+            ['name' => 'c'],
+            ['name' => 'b'],
+            ['name' => 'a'],
+        ];
+        $this->assertEquals($expected, $documents);
+
+        $documents = $db->query()->orderBy('__updated_at', 'ASC')->results();
+        $expected = [
+            ['name' => 'a'],
+            ['name' => 'b'],
+            ['name' => 'c'],
+        ];
+        $this->assertEquals($expected, $documents);
+
+        $db->flush(true);
+    }
+
 }
