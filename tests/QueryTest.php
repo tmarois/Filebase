@@ -1044,5 +1044,39 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $db->flush(true);
     }
+    public function testDeleteWhereMatchItemsWithCustomFilter()
+    {   
+        $db = new \Filebase\Database([
+            'dir' => 'path/to/users/users/test',
+        ]);
+        $db->flush(true);
+
+        $a=0;
+        while($a < 15)
+        {
+            $user=$db->get($a."username");
+            $user->name  = $a.'John';
+            $user->email = 'john@example.com';
+            $user->tags  = ['php','developer','html5'];
+
+    		$user->save();
+            $a++;
+        }
+        $actual=$db->query()->results();
+        $this->assertCount(15,$actual);
+        $r=$db->query()->where('name','LIKE','john')->resultDocuments();
+        $this->assertInstanceOf(Document::class, $r[0]);
+
+        $db->query()->where('name','LIKE','john')->delete(function($item){
+
+            return $item->name=='0John';
+
+        });
+        $actual=$db->query()->where('name','LIKE','john')->resultDocuments();
+        $this->assertCount(14,$actual);
+        $db->flush(true);
+
+    }
+
 
 }
