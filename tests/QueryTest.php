@@ -498,6 +498,38 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     }
 
+    public function testMultiOrderby()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__ . '/databases/users_orderbymult',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $companies = ['Google'=>['CA', 150], 'Apple'=>['CA', 180], 'Microsoft'=>['WA', 120], 'Amex'=>['DC', 20], 'Hooli'=>['CA', 50], 'Amazon'=>['PA', 140]];
+
+        foreach ($companies as $company => $data) {
+            $doc = $db->get(uniqid());
+    		$doc->name = $company;
+            $doc->location = $data[0];
+            $doc->rank['reviews'] = $data[1];
+            $doc->status = 'enabled';
+    		$doc->save();
+        }
+
+        $test0 = $db->query()->orderBy('location', 'ASC')->results();
+
+        $test1 = $db->query()->orderBy('location', 'ASC')->orderBy('name', 'ASC')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test1);
+        $expected = ['Apple', 'Google', 'Hooli', 'Amex', 'Amazon', 'Microsoft'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
+
 
     //--------------------------------------------------------------------
 

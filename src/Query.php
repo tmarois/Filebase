@@ -7,8 +7,8 @@ class Query extends QueryLogic
     protected $fields  = [];
     protected $limit   = 0;
     protected $offset  = 0;
-    protected $sortBy  = 'ASC';
-    protected $orderBy = '';
+    protected $sortBy  = ['ASC'];
+    protected $orderBy = [''];
 
 
     /**
@@ -116,8 +116,13 @@ class Query extends QueryLogic
     */
     public function orderBy($field, $sort)
     {
-        $this->orderBy = $field;
-        $this->sortBy  = $sort;
+        if (count($this->orderBy) == 1 && $this->orderBy[0] == '') {
+            $this->orderBy[0] = $field;
+            $this->sortBy[0]  = $sort;
+        } else {
+            $this->orderBy[] = $field;
+            $this->sortBy[]  = $sort;
+        }
 
         return $this;
     }
