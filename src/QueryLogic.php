@@ -1,5 +1,6 @@
 <?php  namespace Filebase;
 
+use Filebase\SortLogic;
 
 class QueryLogic
 {
@@ -190,45 +191,15 @@ class QueryLogic
     * sort
     *
     */
-    protected function sort($orderBy = null, $sortBy = null, $i = 0)
+    protected function sort()
     {
-        $orderBy = ($orderBy == null) ? $this->orderBy[$i] : $orderBy;
-        $sortBy  = ($sortBy == null) ? $this->sortBy[$i] : $sortBy;
-
-        if ($orderBy=='')
+        if ($this->orderBy[0] == '')
         {
             return false;
         }
 
-        $user_sort_function = function($a, $b) use ($orderBy, $sortBy, $i) {
-
-            $propA = $a->field($orderBy);
-            $propB = $b->field($orderBy);
-
-
-            if (strnatcasecmp($propB, $propA) == strnatcasecmp($propA, $propB)) {
-                if (!isset($this->orderBy[$i + 1])) {
-                    return 0;
-                }
-                // If they match and there are multiple orderBys, go deeper (recurse)
-                printf("going deeper %s %s\n", $i, $this->orderBy[$i + 1]);
-                $i = $i + 1;
-                return $user_sort_function($this->orderBy[$i], $this->sortBy[$i]);
-            }
-
-            if ($sortBy == 'DESC')
-            {
-                return (strnatcasecmp($propB, $propA) < strnatcasecmp($propA, $propB)) ? -1 : 1;
-            }
-            else
-            {
-                return (strnatcasecmp($propA, $propB) < strnatcasecmp($propB, $propA)) ? -1 : 1;
-            }
-
-        };
-
-        usort($this->documents, $user_sort_function);
-
+        $sortlogic = new SortLogic($this->orderBy, $this->sortBy, 0);
+        usort($this->documents, [$sortlogic, 'sort']);
     }
 
 

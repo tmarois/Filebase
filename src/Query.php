@@ -114,14 +114,15 @@ class Query extends QueryLogic
     * ->orderBy()
     *
     */
-    public function orderBy($field, $sort)
+    public function orderBy($field, $sort = 'ASC')
     {
         if (count($this->orderBy) == 1 && $this->orderBy[0] == '') {
+            // Just set the initial index
             $this->orderBy[0] = $field;
-            $this->sortBy[0]  = $sort;
+            $this->sortBy[0]  = strtoupper($sort);
         } else {
             $this->orderBy[] = $field;
-            $this->sortBy[]  = $sort;
+            $this->sortBy[]  = strtoupper($sort);
         }
 
         return $this;
