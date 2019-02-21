@@ -15,7 +15,7 @@ class Database
     * Stores the version of Filebase
     * use $db->getVersion()
     */
-    const VERSION = '1.0.20';
+    const VERSION = '1.0.22';
 
 
     //--------------------------------------------------------------------
@@ -322,7 +322,7 @@ class Database
 
         $file = Filesystem::read(
             $this->config->dir . '/'
-            . Filesystem::validateName($name, $this->config->safe_filename) 
+            . Filesystem::validateName($name, $this->config->safe_filename)
             . '.' . $format::getFileExtension()
         );
 

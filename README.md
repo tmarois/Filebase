@@ -68,7 +68,6 @@ if ($database->has('kingslayer'))
     // do some action
 }
 
-
 // Need to find all the users that have a tag for "php" ?
 $users = $db->query()->where('tags','IN','php')->results();
 
@@ -379,13 +378,16 @@ echo $user['name'];
 // What about regex search? Finds emails within a field
 $users = $db->query()->where('email','REGEX','/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i')->results();
 
-
 // Find all users that have gmail addresses and only returning their name and age fields (excluding the rest)
 $users = $db->query()->select('name,age')->where('email','LIKE','@gmail.com')->results();
 
 // Instead of returning users, how about just count how many users are found.
 $totalUsers = $db->query()->where('email','LIKE','@gmail.com')->count();
 
+// Delete using custom filters (this will act like a bulk delete)
+$db->query()->where('name','LIKE','john')->delete(function($item){
+    return ($item->name == 'John' && $item->email == 'some@mail.com');
+});
 
 ```
 
@@ -403,6 +405,7 @@ To run the query use `results()` or if you only want to return the first item us
 |`orWhere()`            | `mixed`                               | see `where()`, this uses the logical `OR` |
 |`limit()`              | `int` limit, `int` offset             | How many documents to return, and offset |
 |`orderBy()`            | `field` , `sort order`                | Order documents by a specific field and order by `ASC` or `DESC` |
+|`delete()`             | `Closure`                             | Ability to Bulk-delete all items that match |
 
 
 The below **methods execute the query** and return results *(do not try to use them together)*
