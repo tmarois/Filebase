@@ -1045,9 +1045,9 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $db->flush(true);
     }
     public function testDeleteWhereMatchItemsWithCustomFilter()
-    {   
+    {
         $db = new \Filebase\Database([
-            'dir' => 'path/to/users/users/test',
+            'dir' => __DIR__.'/databases/deletefilter',
         ]);
         $db->flush(true);
 
