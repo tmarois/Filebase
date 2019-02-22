@@ -157,21 +157,18 @@ class Backup
      */
     protected function extract($source = '', $target = '')
     {
-        if (extension_loaded('zip'))
+        if (!extension_loaded('zip') && !file_exists($source))
         {
-            if (file_exists($source))
-            {
-                $zip = new \ZipArchive();
-                if ($zip->open($source) === TRUE)
-                {
-                    $zip->extractTo($target);
-                    $zip->close();
-
-                    return true;
-                }
-            }
+            return false;
         }
+        $zip = new \ZipArchive();
+        if ($zip->open($source) === TRUE)
+        {
+            $zip->extractTo($target);
+            $zip->close();
 
+            return true;
+        }
         return false;
     }
 
@@ -187,50 +184,45 @@ class Backup
     */
     protected function zip($source = '', $target = '')
     {
-        if (extension_loaded('zip'))
+        if (!extension_loaded('zip') || !file_exists($source))
         {
-           if (file_exists($source))
-           {
-               $zip = new \ZipArchive();
-               if ($zip->open($target, \ZIPARCHIVE::CREATE))
-               {
-                   $source = realpath($source);
-                   if (is_dir($source))
-                   {
-                       $iterator = new \RecursiveDirectoryIterator($source);
-                       $iterator->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
-                       $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
-                       foreach ($files as $file)
-                       {
-                           $file = realpath($file);
+            return false;
+        }
 
-                           if (preg_match('|'.realpath($this->backupLocation).'|',$file))
-                           {
-                               continue;
-                           }
+        $zip = new \ZipArchive();
+        if (!$zip->open($target, \ZIPARCHIVE::CREATE))
+        {
+            $zip->addFromString(basename($source), file_get_contents($source));
+        }
+        $source = realpath($source);
+        if (is_dir($source))
+        {
+            $iterator = new \RecursiveDirectoryIterator($source);
+            $iterator->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
+            $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
+            foreach ($files as $file)
+            {
+                $file = realpath($file);
 
-                           if (is_dir($file))
-                           {
-                               $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
-                           }
-                           else if (is_file($file))
-                           {
-                               $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
-                           }
-                       }
+                if (preg_match('|'.realpath($this->backupLocation).'|',$file))
+                {
+                    continue;
+                }
 
-                   }
-                   else if (is_file($source))
-                   {
-                       $zip->addFromString(basename($source), file_get_contents($source));
-                   }
-               }
+                if (is_dir($file))
+                {
+                    $zip->addEmptyDir(str_replace($source . '/', '', $file . '/'));
+                }
+                else if (is_file($file))
+                {
+                    $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
+                }
+            }
+        
+        }
 
-               return $zip->close();
-           }
-       }
-
-       return false;
+        return $zip->close();
+       
     }
 
 
