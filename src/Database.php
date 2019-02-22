@@ -488,4 +488,17 @@ class Database
         return $this->config;
     }
 
+    public function __call($method,$args)
+    {
+        if(method_exists($this,$method))
+        {
+            return $this->$method(...$args);
+        }
+        if(method_exists(Query::class,$method))
+        {
+            return (new Query($this))->$method(...$args);
+        }
+        throw new \BadMethodCallException("method {$method} not found on 'Database::class' and 'Query::class'");
+    }
+
 }
