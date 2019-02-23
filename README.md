@@ -388,6 +388,11 @@ $db->where('name','LIKE','john')->delete(function($item){
     return ($item->name == 'John' && $item->email == 'some@mail.com');
 });
 
+
+// ability to sort the results by created at or updated at times
+$documents = $db->orderBy('__created_at', 'DESC')->results();
+$documents = $db->orderBy('__updated_at', 'DESC')->results();
+
 ```
 
 To run the query use `results()` or if you only want to return the first item use `first()`
