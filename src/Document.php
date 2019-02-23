@@ -434,6 +434,16 @@ class Document
             return $context;
         }
 
+        if ($field == '__created_at')
+        {
+            return $this->__created_at;
+        }
+
+        if ($field == '__updated_at')
+        {
+            return $this->__updated_at;
+        }
+
         foreach($parts as $part)
         {
             if (trim($part) == '')
