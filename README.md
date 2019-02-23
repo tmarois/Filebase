@@ -69,10 +69,10 @@ if ($database->has('kingslayer'))
 }
 
 // Need to find all the users that have a tag for "php" ?
-$users = $db->query()->where('tags','IN','php')->results();
+$users = $db->where('tags','IN','php')->results();
 
 // Need to search for all the users who use @yahoo.com email addresses?
-$users = $db->query()->where('email','LIKE','@yahoo.com')->results();
+$users = $db->where('email','LIKE','@yahoo.com')->results();
 
 ```
 
@@ -333,59 +333,58 @@ Queries allow you to search **multiple documents** and return only the ones that
 
 If caching is enabled, queries will use `findAll()` and then cache results for the next run.
 
+> Note: You no longer need to call `query()`, you can now call query methods directly on the database class.
+
 ```php
 // Simple (equal to) Query
 // return all the users that are blocked.
-$users = $db->query()->where(['status' => 'blocked'])->results();
+$users = $db->where(['status' => 'blocked'])->results();
 
 // Stackable WHERE clauses
 // return all the users who are blocked,
 // AND have "php" within the tag array
-$users = $db->query()
-    ->where('status','=','blocked')
-    ->andWhere('tag','IN','php')
-    ->results();
+$users = $db->where('status','=','blocked')
+            ->andWhere('tag','IN','php')
+            ->results();
 
 // You can also use `.` dot delimiter to use on nested keys
-$users = $db->query()->where('status.language.english','=','blocked')->results();
+$users = $db->where('status.language.english','=','blocked')->results();
 
 // Limit Example: Same query as above, except we only want to limit the results to 10
-$users = $db->query()->where('status.language.english','=','blocked')->limit(10)->results();
+$users = $db->where('status.language.english','=','blocked')->limit(10)->results();
 
 
 
 // Query LIKE Example: how about find all users that have a gmail account?
-$usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->results();
+$usersWithGmail = $db->where('email','LIKE','@gmail.com')->results();
 
 // OrderBy Example: From the above query, what if you want to order the results by nested array
-$usersWithGmail = $db->query()
-                    ->where('email','LIKE','@gmail.com')
-                    ->orderBy('profile.name', 'ASC')
-                    ->results();
+$usersWithGmail = $db->where('email','LIKE','@gmail.com')
+                     ->orderBy('profile.name', 'ASC')
+                     ->results();
 
 // or just order the results by email address
-$usersWithGmail = $db->query()
-                    ->where('email','LIKE','@gmail.com')
-                    ->orderBy('email', 'ASC')
-                    ->results();
+$usersWithGmail = $db->where('email','LIKE','@gmail.com')
+                     ->orderBy('email', 'ASC')
+                     ->results();
 
 
 // this will return the first user in the list based on ascending order of user name.
-$user = $db->query()->orderBy('name', 'ASC')->first();
+$user = $db->orderBy('name', 'ASC')->first();
 // print out the user name
 echo $user['name'];
 
 // What about regex search? Finds emails within a field
-$users = $db->query()->where('email','REGEX','/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i')->results();
+$users = $db->where('email','REGEX','/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i')->results();
 
 // Find all users that have gmail addresses and only returning their name and age fields (excluding the rest)
-$users = $db->query()->select('name,age')->where('email','LIKE','@gmail.com')->results();
+$users = $db->select('name,age')->where('email','LIKE','@gmail.com')->results();
 
 // Instead of returning users, how about just count how many users are found.
-$totalUsers = $db->query()->where('email','LIKE','@gmail.com')->count();
+$totalUsers = $db->where('email','LIKE','@gmail.com')->count();
 
 // Delete using custom filters (this will act like a bulk delete)
-$db->query()->where('name','LIKE','john')->delete(function($item){
+$db->where('name','LIKE','john')->delete(function($item){
     return ($item->name == 'John' && $item->email == 'some@mail.com');
 });
 
