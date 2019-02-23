@@ -370,6 +370,12 @@ $usersWithGmail = $db->query()
                     ->orderBy('email', 'ASC')
                     ->results();
 
+// OrderBy can be applied multiple times to perform a multi-sort
+$usersWithGmail = $db->query()
+                    ->where('email','LIKE','@gmail.com')
+                    ->orderBy('last_name', 'ASC')
+                    ->orderBy('email', 'ASC')
+                    ->results();
 
 // this will return the first user in the list based on ascending order of user name.
 $user = $db->query()->orderBy('name', 'ASC')->first();
