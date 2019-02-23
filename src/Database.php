@@ -96,26 +96,25 @@ class Database
         $file_location  = $this->config->dir.'/';
 
         $all_items = Filesystem::getAllFiles($file_location, $file_extension);
-        if ($include_documents==true)
+        if (!$include_documents)
         {
-            $items = [];
+            return $all_items;
+        }
+        $items = [];
 
-            foreach($all_items as $a)
-        	{
-                if ($data_only === true)
-                {
-                    $items[] = $this->get($a)->getData();
-                }
-                else
-                {
-                    $items[] = $this->get($a);
-                }
-        	}
-
-            return $items;
+        foreach($all_items as $a)
+        {
+            if ($data_only === true)
+            {
+                $items[] = $this->get($a)->getData();
+            }
+            else
+            {
+                $items[] = $this->get($a);
+            }
         }
 
-        return $all_items;
+        return $items;
     }
 
 
@@ -283,10 +282,8 @@ class Database
 
             return $document;
         }
-        else
-        {
-            return false;
-        }
+       
+        return false;
     }
 
 
@@ -393,28 +390,24 @@ class Database
             throw new Exception("This database is set to be read-only. No modifications can be made.");
         }
 
-        if ($confirm===true)
-        {
-            $format = $this->config->format;
-            $documents = $this->findAll(false);
-            foreach($documents as $document)
-            {
-                Filesystem::delete($this->config->dir.'/'.$document.'.'.$format::getFileExtension());
-            }
-
-            if ($this->count() === 0)
-            {
-                return true;
-            }
-            else
-            {
-                throw new Exception("Could not delete all database files in ".$this->config->dir);
-            }
-        }
-        else
+        if ($confirm!==true)
         {
             throw new Exception("Database Flush failed. You must send in TRUE to confirm action.");
         }
+
+        $format = $this->config->format;
+        $documents = $this->findAll(false);
+        foreach($documents as $document)
+        {
+            Filesystem::delete($this->config->dir.'/'.$document.'.'.$format::getFileExtension());
+        }
+
+        if ($this->count() === 0)
+        {
+            return true;
+        }
+        
+        throw new Exception("Could not delete all database files in ".$this->config->dir);
     }
 
 
@@ -486,6 +479,19 @@ class Database
     public function getConfig()
     {
         return $this->config;
+    }
+
+    public function __call($method,$args)
+    {
+        if(method_exists($this,$method))
+        {
+            return $this->$method(...$args);
+        }
+        if(method_exists(Query::class,$method))
+        {
+            return (new Query($this))->$method(...$args);
+        }
+        throw new \BadMethodCallException("method {$method} not found on 'Database::class' and 'Query::class'");
     }
 
 }
