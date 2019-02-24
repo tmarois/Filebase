@@ -498,6 +498,98 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     }
 
+    public function prepareMultiOrderTestData()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__ . '/databases/users_orderbymult',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $companies = ['Google'=>['CA', 150], 'Apple'=>['CA', 180], 'Microsoft'=>['WA', 120], 'Amex'=>['DC', 20], 'Hooli'=>['CA', 150], 'Amazon'=>['PA', 140]];
+
+        foreach ($companies as $company => $data) {
+            $doc = $db->get(uniqid());
+    		$doc->name = $company;
+            $doc->location = $data[0];
+            $doc->rank['reviews'] = $data[1];
+            $doc->status = 'enabled';
+    		$doc->save();
+        }
+
+        return $db;
+    }
+
+    public function testMultiOrderbyOneOnly()
+    {
+        $db = $this->prepareMultiOrderTestData();
+
+        $test1 = $db->query()->orderBy('name', 'asc')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test1);
+        $expected = ['Amazon', 'Amex', 'Apple', 'Google', 'Hooli', 'Microsoft'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
+
+    public function testMultiOrderbyTwoAscAsc()
+    {
+        $db = $this->prepareMultiOrderTestData();
+
+        $test1 = $db->query()->orderBy('location', 'ASC')->orderBy('name', 'ASC')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test1);
+        $expected = ['Apple', 'Google', 'Hooli', 'Amex', 'Amazon', 'Microsoft'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
+
+    public function testMultiOrderbyTwoDescAsc()
+    {
+        $db = $this->prepareMultiOrderTestData();
+
+        $test2 = $db->query()->orderBy('location', 'desc')->orderBy('name', 'ASC')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test2);
+        $expected = ['Microsoft', 'Amazon', 'Amex', 'Apple', 'Google', 'Hooli'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
+
+    public function testMultiOrderbyTwoAscDesc()
+    {
+        $db = $this->prepareMultiOrderTestData();
+
+        $test3 = $db->query()->orderBy('location', 'ASC')->orderBy('name', 'DESC')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test3);
+        $expected = ['Hooli', 'Google', 'Apple', 'Amex', 'Amazon', 'Microsoft'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
+
+    public function testMultiOrderbyThree()
+    {
+        $db = $this->prepareMultiOrderTestData();
+
+        $test4 = $db->query()->orderBy('location', 'ASC')->orderBy('rank.reviews', 'ASC')->orderBy('name')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test4);
+        $expected = ['Google', 'Hooli', 'Apple', 'Amex', 'Amazon', 'Microsoft'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
 
     //--------------------------------------------------------------------
 

@@ -1,5 +1,6 @@
 <?php  namespace Filebase;
 
+use Filebase\SortLogic;
 
 class QueryLogic
 {
@@ -192,35 +193,13 @@ class QueryLogic
     */
     protected function sort()
     {
-        $orderBy = $this->orderBy;
-        $sortBy  = $this->sortBy;
-
-        if ($orderBy=='')
+        if ($this->orderBy[0] == '')
         {
             return false;
         }
 
-        usort($this->documents, function($a, $b) use ($orderBy, $sortBy) {
-
-            $propA = $a->field($orderBy);
-            $propB = $b->field($orderBy);
-
-
-            if (strnatcasecmp($propB, $propA) == strnatcasecmp($propA, $propB)) {
-                return 0;
-            }
-
-            if ($sortBy == 'DESC')
-            {
-                return (strnatcasecmp($propB, $propA) < strnatcasecmp($propA, $propB)) ? -1 : 1;
-            }
-            else
-            {
-                return (strnatcasecmp($propA, $propB) < strnatcasecmp($propB, $propA)) ? -1 : 1;
-            }
-
-        });
-
+        $sortlogic = new SortLogic($this->orderBy, $this->sortBy, 0);
+        usort($this->documents, [$sortlogic, 'sort']);
     }
 
 

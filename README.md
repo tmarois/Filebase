@@ -27,7 +27,6 @@ Filebase is simple by design, but has enough features for the more advanced.
 * File locking (on save)
 * Intuitive Method Naming
 
-
 ## Installation
 
 Use [Composer](http://getcomposer.org/) to install package.
@@ -368,6 +367,12 @@ $usersWithGmail = $db->where('email','LIKE','@gmail.com')
                      ->orderBy('email', 'ASC')
                      ->results();
 
+// OrderBy can be applied multiple times to perform a multi-sort
+$usersWithGmail = $db->query()
+                    ->where('email','LIKE','@gmail.com')
+                    ->orderBy('last_name', 'ASC')
+                    ->orderBy('email', 'ASC')
+                    ->results();
 
 // this will return the first user in the list based on ascending order of user name.
 $user = $db->orderBy('name', 'ASC')->first();
