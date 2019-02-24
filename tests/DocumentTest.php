@@ -518,7 +518,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $db->flush(true);
     }
 
-    public function testFieldTimestamps()
+    public function testFieldId()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases'
@@ -534,6 +534,11 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $actual = $db->get('vegetables')->field('__updated_at');
         $this->assertEquals($expected, $actual);
+
+        $db->get('weather')->set(['cityname'=>'condition1'])->save();
+
+        $actual = $db->get('weather')->field('__id');
+        $this->assertEquals('weather', $actual);
 
         $db->flush(true);
     }

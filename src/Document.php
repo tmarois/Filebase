@@ -429,19 +429,20 @@ class Document
         $parts   = explode('.', $field);
         $context = $this->data;
 
-        if ($field=='data')
-        {
+        if ($field=='data') {
             return $context;
         }
 
-        if ($field == '__created_at')
-        {
+        if ($field == '__created_at') {
             return $this->__created_at;
         }
 
-        if ($field == '__updated_at')
-        {
+        if ($field == '__updated_at') {
             return $this->__updated_at;
+        }
+
+        if ($field == '__id') {
+            return $this->__id;
         }
 
         foreach($parts as $part)

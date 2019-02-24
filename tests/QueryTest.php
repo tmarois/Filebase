@@ -1221,4 +1221,35 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $db->flush(true);
     }
 
+    /**
+     * testWhereInUsingDocId
+     *
+     * TEST CASE:
+     * - Testing the where "IN" operator when applied to the document ids to fetch
+     */
+    public function testWhereInUsingDocId()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $user1 = $db->get('obj1')->save(['name' => 'Bob']);
+        $user2 = $db->get('obj2')->save(['name' => 'Jenny']);
+        $user3 = $db->get('obj3')->save(['name' => 'Cyrus']);
+
+        // Make sure it works with just one
+        $test1 = $db->query()->where('__id', '=', 'obj1')->first();
+        $expected = ['name' => 'Bob'];
+        $this->assertEquals($expected, $test1);
+
+        // Make sure it works with a list
+        $test2 = $db->query()->where('__id', 'IN', ['obj2', 'obj3'])->results();
+        $expected = [['name' => 'Jenny'], ['name' => 'Cyrus']];
+        $this->assertEquals($expected, $test2);
+
+        $db->flush(true);
+    }
 }
