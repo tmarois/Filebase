@@ -393,7 +393,11 @@ $users = $db->select('name,age')->where('email','LIKE','@gmail.com')->results();
 // Instead of returning users, how about just count how many users are found.
 $totalUsers = $db->where('email','LIKE','@gmail.com')->count();
 
-// Delete using custom filters (this will act like a bulk delete)
+
+// You can delete all documents that match the query (BULK DELETE)
+$db->where('name','LIKE','john')->delete();
+
+// Delete all items that match query and match custom filter
 $db->where('name','LIKE','john')->delete(function($item){
     return ($item->name == 'John' && $item->email == 'some@mail.com');
 });

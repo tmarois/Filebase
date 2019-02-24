@@ -4,6 +4,7 @@ Change Log
 ### 02/24/2019 - 1.0.23
 * Merged [Pull Request](https://github.com/filebase/Filebase/pull/49) Added support for order by multiple columns
 * Merged [Pull Request](https://github.com/filebase/Filebase/pull/46) Added ability to query document ids (internal id)
+* Added ability to use query `delete()` on all items that match the query (making the custom filter optional)
 
 ### 02/23/2019 - 1.0.22
 * Merged [Pull Request](https://github.com/filebase/Filebase/pull/47) for deleting items with a custom filter. (this adds the `delete()` method on queries.)
