@@ -375,9 +375,14 @@ $usersWithGmail = $db->query()
                     ->results();
 
 // this will return the first user in the list based on ascending order of user name.
-$user = $db->orderBy('name', 'ASC')->first();
+$user = $db->orderBy('name','ASC')->first();
 // print out the user name
 echo $user['name'];
+
+// You can also order multiple columns as such (stacking)
+$orderMultiples = $db->orderBy('field1','ASC')
+                     ->orderBy('field2','DESC')
+                     ->results();
 
 // What about regex search? Finds emails within a field
 $users = $db->where('email','REGEX','/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i')->results();
@@ -394,9 +399,14 @@ $db->where('name','LIKE','john')->delete(function($item){
 });
 
 
+// GLOBAL VARIABLES
+
 // ability to sort the results by created at or updated at times
 $documents = $db->orderBy('__created_at', 'DESC')->results();
 $documents = $db->orderBy('__updated_at', 'DESC')->results();
+
+// search for items that match the (internal) id
+$documents = $db->where('__id', 'IN', ['id1', 'id2'])->results();
 
 ```
 

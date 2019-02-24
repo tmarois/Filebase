@@ -15,7 +15,7 @@ class Database
     * Stores the version of Filebase
     * use $db->getVersion()
     */
-    const VERSION = '1.0.22';
+    const VERSION = '1.0.23';
 
 
     //--------------------------------------------------------------------
@@ -282,7 +282,7 @@ class Database
 
             return $document;
         }
-       
+
         return false;
     }
 
@@ -406,7 +406,7 @@ class Database
         {
             return true;
         }
-        
+
         throw new Exception("Could not delete all database files in ".$this->config->dir);
     }
 
