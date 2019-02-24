@@ -27,7 +27,6 @@ Filebase is simple by design, but has enough features for the more advanced.
 * File locking (on save)
 * Intuitive Method Naming
 
-
 ## Installation
 
 Use [Composer](http://getcomposer.org/) to install package.
