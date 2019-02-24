@@ -308,4 +308,34 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\BadMethodCallException::class);
         $results = $db->none('name','=','John')->andWhere('email','==','john@example.com')->resultDocuments();
     }
+    /**
+     * based on issue #41
+     * results() returns document instead of array #41
+     */
+    public function test_must_return_array_on_select_an_culomn_from_cache()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/saved',
+            'cache' => true
+        ]);
+
+        $db->flush(true);
+
+        for ($x = 1; $x <= 10; $x++)
+    	{
+    		$user = $db->get(uniqid());
+    		$user->name  = 'John';
+            $user->email = 'john@example.com';
+    		$user->save();
+    	}
+
+        $db->where('name','=','John')->andWhere('email','==','john@example.com')->select('email')->results();
+        $result_from_cache = $db->where('name','=','John')->andWhere('email','==','john@example.com')->select('email')->results();
+
+        $this->assertCount(10,$result_from_cache);
+        $this->assertEquals(['email'=>'john@example.com'],$result_from_cache[0]);
+        $this->assertInternalType('array', $result_from_cache[0]);
+        $this->assertInternalType('string', $result_from_cache[0]['email']);
+        $db->flush(true);
+    }
 }
