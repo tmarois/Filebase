@@ -1,6 +1,9 @@
 Change Log
 ==========
 
+### 02/24/2019 - 1.0.24
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/50) Fixed [bug](https://github.com/filebase/Filebase/issues/41) returning unexpected results.
+
 ### 02/24/2019 - 1.0.23
 * Merged [Pull Request](https://github.com/filebase/Filebase/pull/49) Added support for order by multiple columns
 * Merged [Pull Request](https://github.com/filebase/Filebase/pull/46) Added ability to query document ids (internal id)
