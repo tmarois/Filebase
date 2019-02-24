@@ -10,16 +10,11 @@ class Query extends QueryLogic
     protected $sortBy  = ['ASC'];
     protected $orderBy = [''];
 
-
     /**
     * $documents
     *
     */
     protected $documents = [];
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * ->select()
@@ -42,7 +37,6 @@ class Query extends QueryLogic
         return $this;
     }
 
-
     /**
     * ->where()
     *
@@ -53,10 +47,6 @@ class Query extends QueryLogic
 
         return $this;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * ->andWhere()
@@ -69,10 +59,6 @@ class Query extends QueryLogic
         return $this;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * ->orWhere()
     *
@@ -83,10 +69,6 @@ class Query extends QueryLogic
 
         return $this;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * ->limit()
@@ -106,10 +88,6 @@ class Query extends QueryLogic
         return $this;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * ->orderBy()
     *
@@ -128,10 +106,6 @@ class Query extends QueryLogic
         return $this;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * addPredicate
     *
@@ -140,10 +114,6 @@ class Query extends QueryLogic
     {
         $this->predicate->add($logic, $arg);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * ->getDocuments()
@@ -154,10 +124,6 @@ class Query extends QueryLogic
     {
         return $this->documents;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * ->results()
@@ -175,10 +141,6 @@ class Query extends QueryLogic
         return $this->resultDocuments();
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * ->resultDocuments()
     *
@@ -187,10 +149,6 @@ class Query extends QueryLogic
     {
         return parent::run()->getDocuments();
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * ->first()
@@ -210,10 +168,6 @@ class Query extends QueryLogic
         return current($results);
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * ->last()
     *
@@ -232,9 +186,6 @@ class Query extends QueryLogic
         return end($results);
     }
 
-    //--------------------------------------------------------------------
-
-
     /**
     * ->count()
     *
@@ -246,11 +197,6 @@ class Query extends QueryLogic
         $results = parent::run()->getDocuments();
         return count($results);
     }
-
-
-    //--------------------------------------------------------------------
-
-
 
     /**
     * toArray
@@ -273,21 +219,29 @@ class Query extends QueryLogic
         return $docs;
     }
 
-
-    //--------------------------------------------------------------------
-    
-    public function delete($input)
+    /**
+    * delete
+    *
+    * The ability to delete items using queries
+    *
+    * Delete by condition or delete all within clause
+    *
+    * @return void
+    */
+    public function delete($input = null)
     {
-        $items=$this->resultDocuments();
-        $condition=$input;
+        $items = $this->resultDocuments();
+        $condition = $input;
         foreach($items as $item)
         {
-            if(is_object($input))
-            {
-                $condition=$input($item);
+            if (is_object($input)) {
+                $condition = $input($item);
+
+                if ($condition) {
+                    $item->delete();
+                }
             }
-            if($condition)
-            {
+            else {
                 $item->delete();
             }
         }

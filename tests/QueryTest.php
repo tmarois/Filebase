@@ -1136,11 +1136,14 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $db->flush(true);
     }
+
+
     public function testDeleteWhereMatchItemsWithCustomFilter()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases/deletefilter',
         ]);
+
         $db->flush(true);
 
         $a=0;
@@ -1154,20 +1157,26 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     		$user->save();
             $a++;
         }
-        $actual=$db->query()->results();
+
+        $actual = $db->results();
         $this->assertCount(15,$actual);
-        $r=$db->query()->where('name','LIKE','john')->resultDocuments();
+
+        $r = $db->where('name','LIKE','john')->resultDocuments();
         $this->assertInstanceOf(Document::class, $r[0]);
 
-        $db->query()->where('name','LIKE','john')->delete(function($item){
-
+        $db->where('name','LIKE','john')->delete(function($item){
             return $item->name=='0John';
-
         });
-        $actual=$db->query()->where('name','LIKE','john')->resultDocuments();
-        $this->assertCount(14,$actual);
-        $db->flush(true);
 
+        $actual = $db->where('name','LIKE','john')->resultDocuments();
+        $this->assertCount(14,$actual);
+
+        $db->where('name','LIKE','john')->delete();
+
+        $checkAgain = $db->where('name','LIKE','john')->resultDocuments();
+        $this->assertCount(0,$checkAgain);
+
+        $db->flush(true);
     }
 
 
