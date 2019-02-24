@@ -275,5 +275,21 @@ class Query extends QueryLogic
 
 
     //--------------------------------------------------------------------
-
+    
+    public function delete($input)
+    {
+        $items=$this->resultDocuments();
+        $condition=$input;
+        foreach($items as $item)
+        {
+            if(is_object($input))
+            {
+                $condition=$input($item);
+            }
+            if($condition)
+            {
+                $item->delete();
+            }
+        }
+    }
 }

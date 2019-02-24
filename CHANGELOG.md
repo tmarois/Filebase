@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+### 02/23/2019 - 1.0.22
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/47) for deleting items with a custom filter. (this adds the `delete()` method on queries.)
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/48) for calling to the Query methods directly on the database class.
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/45) for sorting by update/created at times (ability to fetch `__created_at` and `__updated_at`)
+
 ### 12/26/2018 - 1.0.21
 * Merged [Pull Request](https://github.com/filebase/Filebase/pull/30) for YAML format.
 
