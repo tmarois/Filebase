@@ -42,6 +42,29 @@ class QueryLogic
         }
     }
 
+    private function loadDocuments()
+    {
+        $predicates = $this->predicate->get();
+
+        if ($this->cache===false)
+        {
+            $this->documents = $this->database->findAll(true,false);
+            return $this;
+        }
+
+        $this->cache->setKey(json_encode($predicates));
+
+        if ($cached_documents = $this->cache->get())
+        {
+            $this->documents = $cached_documents;
+
+            $this->sort();
+            $this->offsetLimit();
+             return $this;
+        }
+        $this->documents = $this->database->findAll(true,false);
+        return $this;
+    }
     /**
     * run
     *
@@ -57,22 +80,7 @@ class QueryLogic
             $predicates = 'findAll';
         }
 
-        if ($this->cache !== false)
-        {
-            $this->cache->setKey(json_encode($predicates));
-
-            if ($cached_documents = $this->cache->get())
-            {
-                $this->documents = $cached_documents;
-
-                $this->sort();
-                $this->offsetLimit();
-
-                return $this;
-            }
-        }
-
-        $this->documents = $this->database->findAll(true,false);
+        $this->loadDocuments();
 
         if ($predicates !== 'findAll')
         {
