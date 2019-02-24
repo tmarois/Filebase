@@ -11,10 +11,6 @@ class Json implements FormatInterface
         return 'json';
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
      * @param array $data
      * @param bool $pretty
@@ -41,10 +37,6 @@ class Json implements FormatInterface
         return $encoded;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
      * @param $data
      * @return mixed
@@ -65,9 +57,4 @@ class Json implements FormatInterface
 
         return $decoded;
     }
-
-
-    //--------------------------------------------------------------------
-
-
 }

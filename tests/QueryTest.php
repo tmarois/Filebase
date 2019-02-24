@@ -498,6 +498,98 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     }
 
+    public function prepareMultiOrderTestData()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__ . '/databases/users_orderbymult',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $companies = ['Google'=>['CA', 150], 'Apple'=>['CA', 180], 'Microsoft'=>['WA', 120], 'Amex'=>['DC', 20], 'Hooli'=>['CA', 150], 'Amazon'=>['PA', 140]];
+
+        foreach ($companies as $company => $data) {
+            $doc = $db->get(uniqid());
+    		$doc->name = $company;
+            $doc->location = $data[0];
+            $doc->rank['reviews'] = $data[1];
+            $doc->status = 'enabled';
+    		$doc->save();
+        }
+
+        return $db;
+    }
+
+    public function testMultiOrderbyOneOnly()
+    {
+        $db = $this->prepareMultiOrderTestData();
+
+        $test1 = $db->query()->orderBy('name', 'asc')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test1);
+        $expected = ['Amazon', 'Amex', 'Apple', 'Google', 'Hooli', 'Microsoft'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
+
+    public function testMultiOrderbyTwoAscAsc()
+    {
+        $db = $this->prepareMultiOrderTestData();
+
+        $test1 = $db->query()->orderBy('location', 'ASC')->orderBy('name', 'ASC')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test1);
+        $expected = ['Apple', 'Google', 'Hooli', 'Amex', 'Amazon', 'Microsoft'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
+
+    public function testMultiOrderbyTwoDescAsc()
+    {
+        $db = $this->prepareMultiOrderTestData();
+
+        $test2 = $db->query()->orderBy('location', 'desc')->orderBy('name', 'ASC')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test2);
+        $expected = ['Microsoft', 'Amazon', 'Amex', 'Apple', 'Google', 'Hooli'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
+
+    public function testMultiOrderbyTwoAscDesc()
+    {
+        $db = $this->prepareMultiOrderTestData();
+
+        $test3 = $db->query()->orderBy('location', 'ASC')->orderBy('name', 'DESC')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test3);
+        $expected = ['Hooli', 'Google', 'Apple', 'Amex', 'Amazon', 'Microsoft'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
+
+    public function testMultiOrderbyThree()
+    {
+        $db = $this->prepareMultiOrderTestData();
+
+        $test4 = $db->query()->orderBy('location', 'ASC')->orderBy('rank.reviews', 'ASC')->orderBy('name')->results();
+        $actual = array_map(function($doc) {
+            return $doc['name'];
+        }, $test4);
+        $expected = ['Google', 'Hooli', 'Apple', 'Amex', 'Amazon', 'Microsoft'];
+        $this->assertEquals($expected, $actual);
+
+        $db->flush(true);
+    }
 
     //--------------------------------------------------------------------
 
@@ -1044,11 +1136,14 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $db->flush(true);
     }
+
+
     public function testDeleteWhereMatchItemsWithCustomFilter()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases/deletefilter',
         ]);
+
         $db->flush(true);
 
         $a=0;
@@ -1062,21 +1157,108 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     		$user->save();
             $a++;
         }
-        $actual=$db->query()->results();
+
+        $actual = $db->results();
         $this->assertCount(15,$actual);
-        $r=$db->query()->where('name','LIKE','john')->resultDocuments();
+
+        $r = $db->where('name','LIKE','john')->resultDocuments();
         $this->assertInstanceOf(Document::class, $r[0]);
 
-        $db->query()->where('name','LIKE','john')->delete(function($item){
-
+        $db->where('name','LIKE','john')->delete(function($item){
             return $item->name=='0John';
-
         });
-        $actual=$db->query()->where('name','LIKE','john')->resultDocuments();
-        $this->assertCount(14,$actual);
-        $db->flush(true);
 
+        $actual = $db->where('name','LIKE','john')->resultDocuments();
+        $this->assertCount(14,$actual);
+
+        $db->where('name','LIKE','john')->delete();
+
+        $checkAgain = $db->where('name','LIKE','john')->resultDocuments();
+        $this->assertCount(0,$checkAgain);
+
+        $db->flush(true);
     }
 
 
+    public function testSortByTimes()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/_testsort'
+        ]);
+
+        $db->flush(true);
+
+        // Create some docs with time in between to get different timestamps
+        $doc = $db->get('record1')->set(['name'=>'a'])->save();
+        sleep(1);
+        $doc = $db->get('record2')->set(['name'=>'b'])->save();
+        sleep(1);
+        $doc = $db->get('record3')->set(['name'=>'c'])->save();
+
+        $documents = $db->query()->orderBy('__created_at', 'DESC')->results();
+        $expected = [
+            ['name' => 'c'],
+            ['name' => 'b'],
+            ['name' => 'a'],
+        ];
+        $this->assertEquals($expected, $documents);
+
+        $documents = $db->query()->orderBy('__created_at', 'ASC')->results();
+        $expected = [
+            ['name' => 'a'],
+            ['name' => 'b'],
+            ['name' => 'c'],
+        ];
+        $this->assertEquals($expected, $documents);
+
+        $documents = $db->query()->orderBy('__updated_at', 'DESC')->results();
+        $expected = [
+            ['name' => 'c'],
+            ['name' => 'b'],
+            ['name' => 'a'],
+        ];
+        $this->assertEquals($expected, $documents);
+
+        $documents = $db->query()->orderBy('__updated_at', 'ASC')->results();
+        $expected = [
+            ['name' => 'a'],
+            ['name' => 'b'],
+            ['name' => 'c'],
+        ];
+        $this->assertEquals($expected, $documents);
+
+        $db->flush(true);
+    }
+
+    /**
+     * testWhereInUsingDocId
+     *
+     * TEST CASE:
+     * - Testing the where "IN" operator when applied to the document ids to fetch
+     */
+    public function testWhereInUsingDocId()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $user1 = $db->get('obj1')->save(['name' => 'Bob']);
+        $user2 = $db->get('obj2')->save(['name' => 'Jenny']);
+        $user3 = $db->get('obj3')->save(['name' => 'Cyrus']);
+
+        // Make sure it works with just one
+        $test1 = $db->query()->where('__id', '=', 'obj1')->first();
+        $expected = ['name' => 'Bob'];
+        $this->assertEquals($expected, $test1);
+
+        // Make sure it works with a list
+        $test2 = $db->query()->where('__id', 'IN', ['obj2', 'obj3'])->results();
+        $expected = [['name' => 'Jenny'], ['name' => 'Cyrus']];
+        $this->assertEquals($expected, $test2);
+
+        $db->flush(true);
+    }
 }

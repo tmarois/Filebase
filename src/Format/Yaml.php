@@ -12,10 +12,6 @@ class Yaml implements FormatInterface
         return 'yaml';
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
      * @param array $data
      * @param bool $pretty
@@ -28,10 +24,6 @@ class Yaml implements FormatInterface
         return $encoded;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
      * @param $data
      * @return mixed
@@ -42,9 +34,4 @@ class Yaml implements FormatInterface
         $decoded = YamlParser::parse($data);
         return $decoded;
     }
-
-
-    //--------------------------------------------------------------------
-
-
 }

@@ -11,14 +11,12 @@ class Config
     */
     public $dir = __DIR__;
 
-
     /**
     * $format
     * Format Class
     * Must implement Format\FormatInterface
     */
     public $format = \Filebase\Format\Json::class;
-
 
     /**
     * $cache
@@ -28,7 +26,6 @@ class Config
     */
     public $cache = true;
 
-
     /**
     * $cache_time
     * When should cache be cleared?
@@ -36,7 +33,6 @@ class Config
     * default (1800 seconds) 30 minutes
     */
     public $cache_expires = 1800;
-
 
     /**
     * $safe_filename
@@ -47,7 +43,6 @@ class Config
     */
     public $safe_filename = true;
 
-
     /**
     * $read_only
     * (if true) We will not attempt to create the database directory or allow the user to create anything
@@ -57,7 +52,6 @@ class Config
     */
     public $read_only = false;
 
-
     /**
     * $backupLocation
     * The location to store backups
@@ -65,7 +59,6 @@ class Config
     * default current location
     */
     public $backupLocation = '';
-
 
     /**
     * $pretty
@@ -77,16 +70,11 @@ class Config
     */
     public $pretty = true;
 
-
     /**
     * $validate
     *
     */
     public $validate = [];
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * __construct
@@ -109,10 +97,6 @@ class Config
 
         $this->validateFormatClass();
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * format
@@ -138,8 +122,4 @@ class Config
             throw new \Exception('Filebase Error: Format Class must be an instance of Filebase\Format\FormatInterface');
         }
     }
-
-
-    //--------------------------------------------------------------------
-
 }
