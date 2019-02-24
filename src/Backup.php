@@ -12,10 +12,6 @@ class Backup
     */
     protected $backupLocation;
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * $config
     *
@@ -24,20 +20,12 @@ class Backup
     */
     protected $config;
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * $database
     *
     * \Filebase\Database
     */
     protected $database;
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * __construct
@@ -63,10 +51,6 @@ class Backup
         }
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * save()
     *
@@ -83,10 +67,6 @@ class Backup
 
         throw new \Exception('Error backing up database.');
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * find()
@@ -109,10 +89,6 @@ class Backup
         return $backups;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * clean()
     *
@@ -123,10 +99,6 @@ class Backup
     {
         return array_map('unlink', glob(realpath($this->backupLocation)."/*.zip"));
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * rollback()
@@ -143,10 +115,6 @@ class Backup
 
         return $this->extract($restore, $this->config->dir);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
      * extract()
@@ -171,10 +139,6 @@ class Backup
         }
         return false;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * zip()
@@ -218,13 +182,11 @@ class Backup
                     $zip->addFromString(str_replace($source . '/', '', $file), file_get_contents($file));
                 }
             }
-        
+
         }
 
         return $zip->close();
-       
+
     }
-
-
 
 }

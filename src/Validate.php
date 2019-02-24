@@ -19,10 +19,6 @@ class Validate
         return true;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * getValidateRules
     *
@@ -33,10 +29,6 @@ class Validate
     {
         return $object->getDatabase()->getConfig()->validate;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * validateLoop
@@ -61,10 +53,6 @@ class Validate
             self::validateRules($document,$key,$rules[$key],$object);
         }
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * validateRules
@@ -103,10 +91,6 @@ class Validate
 
         return $object;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * checkType
@@ -152,9 +136,4 @@ class Validate
 
         return false;
     }
-
-
-    //--------------------------------------------------------------------
-
-
 }

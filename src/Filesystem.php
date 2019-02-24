@@ -23,11 +23,6 @@ class Filesystem
         return $contents;
     }
 
-
-
-    //--------------------------------------------------------------------
-
-
     /**
      * Writes data to the filesystem.
      *
@@ -53,10 +48,6 @@ class Filesystem
         return $result !== false;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
      * delete
      *
@@ -72,10 +63,6 @@ class Filesystem
 
         return unlink($path);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
      * Validates the name of the file to ensure it can be stored in the
@@ -107,10 +94,6 @@ class Filesystem
         return $name;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
      * Get an array containing the path of all files in this repository
      *
@@ -127,8 +110,5 @@ class Filesystem
 
         return $files;
     }
-
-
-    //--------------------------------------------------------------------
 
 }

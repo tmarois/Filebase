@@ -17,9 +17,6 @@ class Database
     */
     const VERSION = '1.0.23';
 
-
-    //--------------------------------------------------------------------
-
     /**
     * $config
     *
@@ -27,7 +24,6 @@ class Database
     * \Filebase\Config
     */
     protected $config;
-
 
     /**
      * Database constructor.
@@ -57,10 +53,6 @@ class Database
         }
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * version
     *
@@ -72,10 +64,6 @@ class Database
     {
         return self::VERSION;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * findAll()
@@ -117,10 +105,6 @@ class Database
         return $items;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * get
     *
@@ -148,10 +132,6 @@ class Database
         return $document;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * has
     *
@@ -169,10 +149,6 @@ class Database
         return $record ? true : false;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * backup
     *
@@ -189,10 +165,6 @@ class Database
 
         return new Backup($this->config->backupLocation, $this);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * set
@@ -216,10 +188,6 @@ class Database
         return $document;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * count
     *
@@ -230,10 +198,6 @@ class Database
     {
         return count($this->findAll(false));
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
      * @param Document $document
@@ -286,10 +250,6 @@ class Database
         return false;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * query
     *
@@ -299,10 +259,6 @@ class Database
     {
         return new Query($this);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
      * Read and return Document from filesystem by name.
@@ -330,10 +286,6 @@ class Database
         return null;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * delete
     *
@@ -356,9 +308,6 @@ class Database
         return $d;
     }
 
-
-    //--------------------------------------------------------------------
-
     /**
     * truncate
     *
@@ -370,10 +319,6 @@ class Database
     {
         return $this->flush(true);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * flush
@@ -410,10 +355,6 @@ class Database
         throw new Exception("Could not delete all database files in ".$this->config->dir);
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * flushCache
     *
@@ -428,10 +369,6 @@ class Database
         }
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * toArray
     *
@@ -442,10 +379,6 @@ class Database
     {
         return $this->objectToArray( $document->getData() );
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * objectToArray
@@ -467,10 +400,6 @@ class Database
         return $arr;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * getConfig
     *
@@ -481,16 +410,22 @@ class Database
         return $this->config;
     }
 
+    /**
+    * __call
+    *
+    * Magic method to give us access to query methods on db class
+    *
+    */
     public function __call($method,$args)
     {
-        if(method_exists($this,$method))
-        {
+        if(method_exists($this,$method)) {
             return $this->$method(...$args);
         }
-        if(method_exists(Query::class,$method))
-        {
+
+        if(method_exists(Query::class,$method)) {
             return (new Query($this))->$method(...$args);
         }
+
         throw new \BadMethodCallException("method {$method} not found on 'Database::class' and 'Query::class'");
     }
 

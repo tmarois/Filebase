@@ -12,7 +12,6 @@ class QueryLogic
     */
     protected $database;
 
-
     /**
     * $predicate
     *
@@ -28,10 +27,6 @@ class QueryLogic
     */
     protected $cache = false;
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * __construct
     *
@@ -46,10 +41,6 @@ class QueryLogic
             $this->cache = new Cache($this->database);
         }
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * run
@@ -122,10 +113,6 @@ class QueryLogic
         return $this;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * filter
     *
@@ -167,10 +154,6 @@ class QueryLogic
         return $results;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * offsetLimit
     *
@@ -182,10 +165,6 @@ class QueryLogic
             $this->documents = array_slice($this->documents, $this->offset, $this->limit);
         }
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * sort
@@ -201,10 +180,6 @@ class QueryLogic
         $sortlogic = new SortLogic($this->orderBy, $this->sortBy, 0);
         usort($this->documents, [$sortlogic, 'sort']);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * match
@@ -251,9 +226,5 @@ class QueryLogic
         }
 
     }
-
-
-    //--------------------------------------------------------------------
-
 
 }
