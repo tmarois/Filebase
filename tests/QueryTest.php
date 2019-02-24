@@ -525,11 +525,11 @@ class QueryTest extends \PHPUnit\Framework\TestCase
     {
         $db = $this->prepareMultiOrderTestData();
 
-        $test1 = $db->query()->orderBy('location', 'asc')->results();
+        $test1 = $db->query()->orderBy('name', 'asc')->results();
         $actual = array_map(function($doc) {
             return $doc['name'];
         }, $test1);
-        $expected = ['Google', 'Apple', 'Hooli', 'Amex', 'Amazon', 'Microsoft'];
+        $expected = ['Amazon', 'Amex', 'Apple', 'Google', 'Hooli', 'Microsoft'];
         $this->assertEquals($expected, $actual);
 
         $db->flush(true);
