@@ -428,6 +428,9 @@ class Database
 
         throw new \BadMethodCallException("method {$method} not found on 'Database::class' and 'Query::class'");
     }
+    /**
+     * getColumns
+     */
     public function getColumns()
     {
         $items=[];
