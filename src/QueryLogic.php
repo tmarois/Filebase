@@ -42,6 +42,10 @@ class QueryLogic
         }
     }
 
+    /**
+    * loadDocuments
+    *
+    */
     private function loadDocuments()
     {
         $predicates = $this->predicate->get();
@@ -63,11 +67,12 @@ class QueryLogic
 
             $this->sort();
             $this->offsetLimit();
-             return $this;
+            return $this;
         }
         $this->documents = $this->database->findAll(true,false);
         return $this;
     }
+
     /**
     * run
     *

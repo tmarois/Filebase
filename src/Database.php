@@ -15,7 +15,7 @@ class Database
     * Stores the version of Filebase
     * use $db->getVersion()
     */
-    const VERSION = '1.0.23';
+    const VERSION = '1.0.24';
 
     /**
     * $config
