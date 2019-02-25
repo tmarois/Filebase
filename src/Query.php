@@ -246,4 +246,44 @@ class Query extends QueryLogic
             }
         }
     }
+    public function __call($method,$args)
+    {
+        if(method_exists($this,$method))
+        {
+            return $method(...$args);
+        }
+
+        if($name=$this->methodMatchs($method))
+        {
+            $names=$this->database->getColumns();
+            if(in_array($name,$names))
+            {
+                if(count($args) == 1)
+                {
+                    return $this->where($name,'==',$args[0]);
+                }
+                if(count($args) == 2)
+                {
+                    return $this->where($name,$args[0],$args[1]);
+                }
+                throw new \InvalidArgumentException("input count must be 1 or 2 " . count($args) . "given");
+            }
+        }
+        throw new \BadMethodCallException('method not found on '.__CLASS__);
+        
+    }
+    /**
+     * methodMatchs
+     * find where* with regex
+     */
+    public function methodMatchs($method)
+    {
+        $patern='/^where(.*?)\s*$/is';
+        preg_match($patern,$method,$result);
+        if(isset($result[1]))
+        {
+            return strtolower($result[1]);
+        }
+        return false;
+    }
 }
