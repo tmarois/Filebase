@@ -251,11 +251,6 @@ class Query extends QueryLogic
      */
     public function __call($method,$args)
     {
-        if(method_exists($this,$method))
-        {
-            return $this->$method(...$args);
-        }
-
         if($name=$this->sanatizeWhere($method))
         {
             $names=$this->database->getColumns();
