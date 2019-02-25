@@ -430,7 +430,12 @@ class Database
     }
     public function getColumns()
     {
-        return array_keys($this->first());
+        $items=[];
+        foreach(array_keys($this->first()) as $item)
+        {
+            $items[]=strtolower($item);
+        }
+        return $items;
     }
 
 }
