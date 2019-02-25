@@ -246,11 +246,14 @@ class Query extends QueryLogic
             }
         }
     }
+    /**
+     * call magic method
+     */
     public function __call($method,$args)
     {
         if(method_exists($this,$method))
         {
-            return $method(...$args);
+            return $this->$method(...$args);
         }
 
         if($name=$this->methodMatchs($method))
