@@ -256,7 +256,7 @@ class Query extends QueryLogic
             return $this->$method(...$args);
         }
 
-        if($name=$this->methodMatchs($method))
+        if($name=$this->sanatizeWhere($method))
         {
             $names=$this->database->getColumns();
             if(in_array($name,$names))
@@ -276,17 +276,13 @@ class Query extends QueryLogic
         
     }
     /**
-     * methodMatchs
+     * sanatizeWhere
      * find where* with regex
      */
-    public function methodMatchs($method)
+    function sanatizeWhere($method, $parameters=0)
     {
-        $patern='/^where(.*?)\s*$/is';
-        preg_match($patern,$method,$result);
-        if(isset($result[1]))
-        {
-            return strtolower($result[1]);
-        }
-        return false;
+        $method = substr($method, 5);
+        $result=preg_replace('/(.)(?=[A-Z])/u', '$1'.'_', $method);
+        return strtolower($result);
     }
 }
