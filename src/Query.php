@@ -191,7 +191,7 @@ class Query extends QueryLogic
             {
                 return end($results);
             }
-            return end($results);
+            return [];
         }
 
         $results = parent::run()->getDocuments();
@@ -199,7 +199,7 @@ class Query extends QueryLogic
             {
                 return end($results);
             }
-        return end($results);
+        return [];
     }
 
     /**
