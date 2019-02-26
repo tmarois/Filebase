@@ -235,15 +235,12 @@ class Query extends QueryLogic
         foreach($items as $item)
         {
             if (is_object($input)) {
-                $condition = $input($item);
-
-                if ($condition) {
+                if ($input($item)===true) {
                     $item->delete();
                 }
+            continue;
             }
-            else {
-                $item->delete();
-            }
+            $item->delete();
         }
     }
     /**
