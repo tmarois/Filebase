@@ -161,19 +161,11 @@ class Query extends QueryLogic
         if ($data_only === true && empty($this->fields))
         {
             $results = parent::run()->toArray();
-            if(count($results) > 0)
-            {
-                return current($results);
-            }
-            return [];
+            return current($results);
         }
 
         $results = parent::run()->getDocuments();
-        if(count($results) > 0)
-        {
-            return current($results);
-        }
-        return [];
+        return current($results);
     }
 
     /**
@@ -187,19 +179,11 @@ class Query extends QueryLogic
         if ($data_only === true && empty($this->fields))
         {
             $results = parent::run()->toArray();
-            if(count($results) > 0)
-            {
-                return end($results);
-            }
-            return [];
+            return end($results);
         }
 
         $results = parent::run()->getDocuments();
-        if(count($results) > 0)
-            {
-                return end($results);
-            }
-        return [];
+        return end($results);
     }
 
     /**
