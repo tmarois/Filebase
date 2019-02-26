@@ -251,6 +251,9 @@ class Query extends QueryLogic
      */
     public function __call($method,$args)
     {
+        
+        // it will just hanle Dynamic where 
+        // other exist methods will handle with system on call 
         if($name=$this->sanatizeWhere($method))
         {
             $names=$this->database->getColumns();
