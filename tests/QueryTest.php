@@ -1267,8 +1267,8 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $result=$query->sanatizeWhere('whereName');
         $this->assertEquals('name',$result);
 
-        $result=$query->sanatizeWhere('whereUserProfileOwner');
-        $this->assertEquals('user_profile_owner',$result);
+        $result=$query->sanatizeWhere('whereUser');
+        $this->assertEquals('user',$result);
 
     }
     public function test_must_call_method_on_regex_matched_culumn()
@@ -1299,14 +1299,10 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expected = ['name' => 'Bob','user_profile_is_some_query'=>'data','email'=>'email@addres.com'];
         $this->assertEquals($expected, $test1);
 
-        // check long query
-        $test1 = $db->whereUserProfileIsSomeQuery('==','data')->first();
-        $expected = ['name' => 'Bob','user_profile_is_some_query'=>'data','email'=>'email@addres.com'];
-        $this->assertEquals($expected, $test1);
-
+         
         $db->flush(true);
     }
-    public function test_must_return_exeption_on_none_exist_method()
+    public function test_must_return_exception_on_none_exist_method()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases/users_1',
@@ -1319,7 +1315,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\BadMethodCallException::class);
         $db->query()->wherenone('name')->first();
     }
-    public function test_must_return_exeption_on_empty_whereName_call_method()
+    public function test_must_return_exception_on_empty_whereName_call_method()
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases/users_1',
@@ -1331,5 +1327,18 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $user1 = $db->get('obj1')->save(['name' => 'Bob','email'=>'email@addres.com']);
         $this->expectException(\InvalidArgumentException::class);
         $db->query()->whereName()->first();
+    }
+    public function test_must_return_exception_on_where_contain_underscore()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $user1 = $db->get('obj1')->save(['name' => 'Bob','email'=>'email@addres.com']);
+        $this->expectException(\BadMethodCallException::class);
+        $db->query()->where_Name('Bob')->first();
     }
 }

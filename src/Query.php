@@ -251,6 +251,7 @@ class Query extends QueryLogic
         
         // it will just hanle Dynamic where 
         // other exist methods will handle with system on call 
+
         if($name=$this->sanatizeWhere($method))
         {
             $names=$this->database->getColumns();
@@ -276,8 +277,10 @@ class Query extends QueryLogic
      */
     function sanatizeWhere($method, $parameters=0)
     {
-        $method = substr($method, 5);
-        $result=preg_replace('/(.)(?=[A-Z])/u', '$1'.'_', $method);
-        return strtolower($result);
+        if(strpos('_',$method))
+        {
+            return false;
+        }
+        return strtolower(substr($method, 5));
     }
 }
