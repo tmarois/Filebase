@@ -1,25 +1,33 @@
-<?php  namespace Filebase\Format;
+<?php namespace Filebase\Format;
 
+use Filebase\Format\FormatInterface;
 
+/**
+ * The JSON format class
+ * Used as the default database format
+ * 
+ */
 class Json implements FormatInterface
 {
 
-    /**
-    * encode
+   /**
+    * Encoding the data into JSON
     *
+    * @param array data
+    * @return string json_encode
     */
-    public static function encode($data = [], $pretty = true)
+    public static function encode($data = [], $prettyPrint = false)
     {
-        $p = 1;
-        if ($pretty==true) $p = JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES;
+        $p = ($prettyPrint===true) ? (JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES) : (1);
 
         return json_encode($data, $p);
     }
 
-
     /**
-    * decode
+    * Decoding the data into JSON
     *
+    * @param array data
+    * @return string json_decode
     */
     public static function decode($data)
     {

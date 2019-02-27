@@ -1,135 +1,70 @@
-<?php  namespace Filebase;
+<?php namespace Filebase;
 
-use Filebase\Format\Json;
-use Filebase\Format\FormatInterface;
 use Exception;
+use Filebase\Format\Json;
 
+/**
+ * The config class
+ * 
+ * Used for setting up our main database
+ * configuration
+ * 
+ */
 class Config
 {
-
     /**
-    * $path
+    * The path of the database directory 
+    * The default is set to your current location
+    * plus /database/~
     *
     * @var string
     */
     protected $path = __DIR__.'/database';
 
-
     /**
-    * $backups
+    * The current format class
+    * The default is set to JSON
     *
-    * @var string
-    */
-    protected $backups = 'backups';
-
-
-    /**
-    * $format
-    * Format Class
-    * Must implement Format\FormatInterface
+    * @var Filebase\Format\FormatInterface
     */
     protected $format = Json::class;
 
-
     /**
-    * $readOnly
-    * (if true) We will not attempt to create the database directory or allow the user to create anything
-    * (if false) Functions as normal
+    * This will set the database to read-only mode
+    * No changes can be made to the database
     *
     * default false
+    *
+    * @var boolean
     */
-    protected $readOnly = false;
-
+    protected $readonly = false;
 
     /**
-    * $errors
-    * Prevent non-fatal errors from throwing (such as production env)
+    * The config starting point, load in the necessary config array 
     *
-    * default false
-    */
-    protected $errors = false;
-
-
-    /**
-    * $pretty
-    *
-    * if true, saves the data as human readable
-    * Otherwise, its difficult to understand.
-    *
-    * default true
-    */
-    protected $prettyFormat = true;
-
-
-    /**
-    * $fileExtension
-    *
-    * default file extension
-    *
-    * @var string
-    */
-    protected $ext = 'db';
-
-
-    /**
-    * __construct
-    *
-    * This sets all the config variables (replacing its defaults)
+    * @param array $config
     */
     public function __construct(array $config = [])
     {
-        foreach ($config as $key => $value)
-        {
-            if (isset($this->$key))
-            {
+        foreach ($config as $key => $value) {
+            if (isset($this->$key)) {
                 $this->$key = $value;
             }
         }
-
-        $this->validateFormatClass();
     }
 
-
     /**
-    * get property
+    * get property (it's MAGIC!)
     *
     * @param string $name
     * @return mixed
     */
     public function __get($name)
     {
-        if (isset($this->$name))
-        {
+        if (isset($this->$name)) {
             return $this->$name;
         }
 
         return null;
     }
-
-
-    /**
-    * format
-    *
-    * kind of a quick fix since we are using static methods,
-    * currently need to instantiate teh class to check instanceof why??
-    *
-    * Checks the format of the database being accessed
-    */
-    protected function validateFormatClass()
-    {
-        if (!class_exists($this->format))
-        {
-            throw new Exception('Filebase Fatal Error: Missing format class in config.');
-        }
-
-        // instantiate the format class
-        $formatClass = (new $this->format);
-
-        // check now if that class is part of our interface
-        if (!$formatClass instanceof FormatInterface)
-        {
-            throw new Exception('Filebase Fatal Error: Format Class must be an instance of FormatInterface');
-        }
-    }
-
 }

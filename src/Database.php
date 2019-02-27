@@ -3,62 +3,37 @@
 use Exception;
 use Filebase\Config;
 use Filebase\Table;
-use Base\Support\Filesystem;
 
+/**
+ * The database class
+ * 
+ * This class access the core
+ * package functionality
+ * 
+ */
 class Database
 {
 
-    /**
-    * VERSION
-    *
-    * Stores the version of Filebase
-    * use $db->version()
-    *
-    * @return string
-    */
-    const VERSION = '2.0-beta';
-
-
-    /**
-    * $config
-    *
+   /**
     * Stores all the configuration object settings
     *
     * @see Filebase\Config
     */
     protected $config;
 
-
-    /**
-    * __construct
+   /**
+    * Start up the database class
     *
-    * @see Filebase\Config
+    * @param array $config
     */
     public function __construct(array $config = [])
     {
         // set up our configuration class
-        $this->config = (new Config($config));
-
-        // create database directory if does not exist.
-        $this->directory($this->config()->path);
+        $this->config = $this->setConfig($config);
     }
 
-
-    /**
-    * version
-    *
-    * gets the Filebase version
-    *
-    * @return VERSION
-    */
-    public function version()
-    {
-        return self::VERSION;
-    }
-
-
-    /**
-    * config
+   /**
+    * Public access to the config class and its methods
     *
     * @return Filebase\Config
     */
@@ -67,9 +42,22 @@ class Database
         return $this->config;
     }
 
-
     /**
-    * table
+    * Setting the configuration for our database
+    * This uses a fresh config
+    *
+    * @param array $config
+    * @return Filebase\Config
+    */
+    public function setConfig(array $config = [])
+    {
+        $this->config = (new Config($config));
+
+        return $this->config;
+    }
+
+   /**
+    * Public access to the config class and its methods
     *
     * @param string $name
     * @return Filebase\Table
@@ -79,134 +67,45 @@ class Database
         return (new Table($this, $name));
     }
 
-
     /**
-    * backup
+    * Get all of the tables within our database
+    * Returns a Collection object of Tables
     *
-    * @param string $location (optional)
-    * @return Filebase\Backup
+    * @return Collection
     */
-    /*public function backup($path = null)
+    public function tables()
     {
-        $path = ($path) ?? $this->config->backupPath;
-
-        return (new Backup($this, $path));
-    }*/
-
-
-    /**
-    * getTables()
-    *
-    * Get all the tables in the database (either by class or name)
-    *
-    * @param bool $isTableClass
-    * @return array
-    */
-    public function getTables()
-    {
-        return array_map(function($folder) {
-            return $this->table($folder);
-        }, $this->list());
+        return;
     }
 
-
     /**
-    * list
+    * This will EMPTY the entire database
+    * YOU CAN NOT UNDO THIS ACTION!
     *
-    * @param bool $realPath
-    * @return array
+    * It will keep the database directory alive
+    * This will delete all tables (directories)
+    * This will delete all documents (items)
+    *
+    * @return boolean
     */
-    public function list($realPath = false)
+    public function empty()
     {
-        try
-        {
-            return array_values(Filesystem::folders($this->config()->path, $realPath));
-        }
-        catch(Exception $e)
-        {
-            return [];
-        }
+        return;
     }
 
-
     /**
-    * allowErrors
+    * This will DELETE the entire database
+    * YOU CAN NOT UNDO THIS ACTION!
     *
-    * Check to see if errors are allowed to be thrown
+    * This will delete the root database directory
+    * This will delete all tables (directories)
+    * This will delete all documents (items)
     *
-    * @return bool
+    * @return boolean
     */
-    public function allowErrors()
+    public function delete()
     {
-        if ($this->config()->errors === true)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    /**
-    * isReadOnly
-    *
-    * Check to see if the database can be modified,
-    * Otherwise, throw an exception (checking if we can throw errors)
-    *
-    * @see truncate
-    * @return void
-    */
-    public function isReadOnly()
-    {
-        if ($this->config()->readOnly === true)
-        {
-            if ($this->allowErrors()===false) return true;
-
-            throw new Exception("Filebase: This database is set to be read-only. No modifications can be made.");
-        }
-
-        return false;
-    }
-
-
-    /**
-    *
-    * This function is for internal use.
-    * Create a directory for the database
-    *
-    * @param string $path
-    * @return void
-    */
-    public function directory($path = '')
-    {
-        if ($this->isReadOnly() === false)
-        {
-            if (!Filesystem::isDirectory($path))
-            {
-                if (!@Filesystem::makeDirectory($path, 0775, true))
-                {
-                    throw new Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $path));
-                }
-            }
-            else if (!Filesystem::isWritable($path))
-            {
-                throw new Exception(sprintf('`%s` is not writable.', $path));
-            }
-        }
-    }
-
-
-    /**
-    *
-    * This function is for internal use.
-    * Changes the name of a string to be formatted properly,
-    * For being used in file names and directories
-    *
-    * @return string $name
-    */
-    public function safeName($name)
-    {
-        return preg_replace('/[^A-Za-z0-9_\.-]/', '', $name);
+        return;
     }
 
 }

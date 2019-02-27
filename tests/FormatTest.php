@@ -2,48 +2,56 @@
 
 use Exception;
 use Filebase\Database;
-use Base\Support\Filesystem;
-
-class BadClass {
-
-}
+use Filebase\Format\FormatInterface;
+use Filebase\Format\Json;
 
 class FormatTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
-    * testMissingFormatClass()
+    * testFormatJson()
     *
     * TEST:
-    * Missing format class
+    * (1) check the interface is on FormatInterface
     *
     */
-    public function testMissingFormatClass()
+    public function testFormatJson()
     {
-        $this->expectException(Exception::class);
-
-        $db = new Database([
-            'path' => __DIR__.'/database',
-            'format' => ''
-        ]);
+        $this->assertEquals(true,((new Json) instanceof FormatInterface)); 
     }
 
-
     /**
-    * testBadFormatClass()
+    * testFormatJsonEncode()
     *
     * TEST:
-    * Test a BAD format class
+    * (1) Check that we encoded correctly
     *
     */
-    public function testBadFormatClass()
+    public function testFormatJsonEncode()
     {
-        $this->expectException(Exception::class);
+        $data = ['test1','test2'];
 
-        $db = new Database([
-            'path' => __DIR__.'/database',
-            'format' => BadClass::class
-        ]);
+        $jsonFormatter = new Json();
+        $encoded = $jsonFormatter->encode($data);
+
+        $this->assertEquals('["test1","test2"]', $encoded); 
+    }
+
+    /**
+    * testFormatJsonDecode()
+    *
+    * TEST:
+    * (1) Check that we decoded correctly
+    *
+    */
+    public function testFormatJsonDecode()
+    {
+        $data = ['test1','test2'];
+
+        $jsonFormatter = new Json();
+        $encoded = $jsonFormatter->encode($data);
+        $decoded = $jsonFormatter->decode($encoded);
+
+        $this->assertEquals($data, $decoded); 
     }
 
 }
