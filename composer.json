@@ -15,12 +15,12 @@
 
 	"require": {
 		"php": ">=7.0",
-		"basephp/support" : "1.*"
+		"league/flysystem": "^1.0"
 	},
 
 	"require-dev": {
 		"satooshi/php-coveralls": "^2.0",
-		"phpunit/phpunit": "^6.0"
+		"phpunit/phpunit": "^7.0"
 	},
 
 	"autoload": {
