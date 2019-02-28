@@ -24,6 +24,8 @@ class Document
     */
     protected $path;
 
+
+    protected $name;
     /**
     * Document data
     *
@@ -36,7 +38,7 @@ class Document
     *
     * @param string $attr
     */
-    public function __construct(Table $table,array $attr=[])
+    public function __construct(Table $table,$name,array $attr=[])
     {
         $this->table = $table;
 
@@ -44,7 +46,7 @@ class Document
         // attrs should be lowercased and be parsed to use underscores
         $this->attr = $attr;
 
-        // $this->path = $this->table()->path().'/'.$this->attr;
+        $this->name = $name;
     }
 
     /**
@@ -78,24 +80,16 @@ class Document
     }
 
     /**
-    * Get the document path
+    * Get the document name
     *
     * @return string
     */
-    public function path()
+    public function name()
     {
-        return $this->path;
+        return $this->name;
     }
 
-    /**
-    * Get the document data
-    *
-    * @return array
-    */
-    public function data()
-    {
-        return $this->data;
-    }
+    
 
     /**
     * Set the document data
@@ -121,7 +115,7 @@ class Document
 
         $data = $format::encode($data);
 
-        return $this->db()->fs()->write($this->path(), $data);
+        return $this->db()->fs()->write($this->name(), $data);
     }
 
     /**
@@ -131,7 +125,7 @@ class Document
     */
     public function delete()
     {
-        return $this->db()->fs()->delete($this->path());
+        return $this->db()->fs()->delete($this->table->name().DIRECTORY_SEPARATOR.$this->name());
     }
 
 

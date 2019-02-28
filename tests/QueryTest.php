@@ -4,6 +4,7 @@ namespace Filebase\Test;
 use org\bovigo\vfs\vfsStream;
 use Filebase\{Database,Table,Query};
 use Filebase\Test\TestCase;
+use Filebase\Document;
 class QueryTest extends TestCase
 {
     public $db;
@@ -56,15 +57,25 @@ class QueryTest extends TestCase
     public function testMustReturnDbRecordWithId()
     {
         $this->query->create(['name'=>'John','last_name'=>'Doe']);
-        $record=$this->query->find(0);
+        $record=$this->query->find(0)->toArray();
 
         $this->assertEquals(['name'=>'John','last_name'=>'Doe'],$record);
     }
     /** @test */
-    public function testMustReturnInstanceOfCollection()
+    public function testMustReturnInstanceOfDocument()
     {
-        // Test
+        $this->query->create(['name'=>'John','last_name'=>'Doe']);
+        $record=$this->query->find(0);
+
+        $this->assertInstanceOf(Document::class,$record);
     }
-    
+    /** @test */
+    public function testMustRemoveRecord()
+    {
+        $this->query->create(['name'=>'John','last_name'=>'Doe']);
+        $record=$this->query->find(0)->delete();
+
+        $this->assertFileNotExists($this->path."/tbl_one/0.json");
+    }
     
 }
