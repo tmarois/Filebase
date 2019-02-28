@@ -3,10 +3,21 @@
 use Exception;
 use Filebase\Database;
 use Filebase\Config;
+use org\bovigo\vfs\vfsStream;
 
 class DatabaseTest extends \PHPUnit\Framework\TestCase
 {
 
+    public $root;
+    public $db;
+
+    public function setUp()
+    {
+        $this->root=vfsStream::setup('baseFolderName',null,['tbl_one'=>[],'tbl_two'=>[]]);
+        $this->db=new Database([
+            'path' => $this->root->url()
+            ]);
+    }
     /**
     * testDatabaseConfig()
     *
@@ -65,9 +76,52 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
             'path' => $path1
         ]);
 
-        $tables = $db->table('table_one')->getList();
+        $tables = $db->table('table_one')->getAll();
 
-        print_r($tables);
+    }
+    /**
+     * @test
+     */
+    public function testMustReturnTablesName()
+    {
+        $tables = $this->db->tables();
+        $this->assertCount(2,$tables);
+    }
+    /**
+     * @test
+     */
+    public function testMustCreateTableDirIfNotExist()
+    {
+        $tables = $this->db->table('tbl_new');
+        $this->assertTrue($this->root->hasChild('tbl_new'));
+    }
+    /**
+     * @test 
+     */
+    public function testMustCreateTable()
+    {
+        $tables = $this->db->createTable('tbl_new');
+        $this->assertTrue($this->root->hasChild('tbl_new'));
+    }
+    /**
+     * @test 
+     */
+    public function testMustDeleteTable()
+    {
+        
+        $tables = $this->db->createTable('tbl_new');
+        $tables = $this->db->table('tbl_new')->delete();
+        $this->assertFalse($this->root->hasChild('tbl_new'));
+    }
+    /**
+     * @test
+     */
+    public function testMustReturnInstanceOfTable()
+    {
+        $tbl=$this->db->table('tbl_new');
+        $tb2=$this->db->table('tbl_one');
+        $this->assertInstanceOf(Table::class,$tbl);
+        $this->assertInstanceOf(Table::class,$tb2);
     }
 
 }
