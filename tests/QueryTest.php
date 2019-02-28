@@ -1,10 +1,9 @@
 <?php 
-namespace Filebase;
+namespace Filebase\Test;
 
-use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
-use Filebase\Table;
-
+use Filebase\{Database,Table,Query};
+use Filebase\Test\TestCase;
 class QueryTest extends TestCase
 {
     public $db;
@@ -12,9 +11,10 @@ class QueryTest extends TestCase
 
     public function setUp()
     {
-        $this->root=vfsStream::setup('baseFolderName',null,['tbl_one'=>[],'tbl_two'=>[]]);
+        parent::setUp();
+
         $this->db=new Database([
-            'path' => $this->root->url()
+            'path' => $this->path
             ]);
         $this->query=new Query(new Table($this->db,'tbl_one'));
     }
@@ -34,4 +34,5 @@ class QueryTest extends TestCase
         $db=$this->query->getDatabase();
         $this->assertInstanceOf(Database::class,$db);
     }
+   
 }

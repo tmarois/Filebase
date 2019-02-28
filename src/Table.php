@@ -87,6 +87,12 @@ class Table
         return $this->path;
     }
 
+    public function fullPath($path=null)
+    {
+        return $this->db()->config()->path
+                    .$this->path() ;
+    }
+
     /**
     * Get a single document within this table
     *
@@ -149,8 +155,22 @@ class Table
     {
         return $this->db()->fs()->rmdir('/'.$this->name());
     }
+    
     public function query()
     {
         return new Query($this);
+    }
+
+    public function genUniqFileId($item,$ext=".json")
+    {
+        $pre=0;
+        while(true)
+        {
+            if(!file_exists($this->fullPath()."/".($item+$pre).$ext))
+            {
+                return ($item+$pre).$ext;
+            }
+            $pre++;
+        }
     }
 }

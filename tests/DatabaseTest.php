@@ -1,7 +1,7 @@
-<?php namespace Filebase;
+<?php namespace Filebase\Test;
 
 use Exception;
-use Filebase\Database;
+use Filebase\{Database,Table};
 use Filebase\Config;
 use org\bovigo\vfs\vfsStream;
 

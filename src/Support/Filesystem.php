@@ -31,6 +31,10 @@ class Filesystem
         $this->filesystem = new FS((new Local($path)));
     }
 
+    public function getFS()
+    {
+        return $this->filesystem;
+    }
     /**
      * Read a specific file
      * 
