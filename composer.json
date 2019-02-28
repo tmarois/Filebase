@@ -28,5 +28,10 @@
 		"psr-4": {
 			"Filebase\\": "src/"
 		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Filebase\\Test\\": "tests/"
+		}
 	}
 }
