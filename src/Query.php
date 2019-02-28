@@ -37,7 +37,7 @@ class Query
         // TODO:set ext dina
         if($this->fs->has($id.'.json'))
         {
-            return json_decode($this->fs->read($id.'.json'),true);
+            return new Document($this->table,(array)json_decode($this->fs->read($id.'.json'),true));
         }
     }
 

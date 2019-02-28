@@ -1,4 +1,5 @@
-<?php namespace Filebase;
+<?php 
+namespace Filebase;
 
 /**
  * The document class
@@ -14,14 +15,7 @@ class Document
     *
     * @var Filebase\Table
     */
-    protected $tb;
-
-    /**
-    * Document name
-    *
-    * @var string
-    */
-    protected $name;
+    protected $table;
 
     /**
     * Document path
@@ -35,22 +29,22 @@ class Document
     *
     * @var array
     */
-    protected $data = [];
+    protected $attr = [];
 
     /**
     * Start up the table class
     *
-    * @param string $name
+    * @param string $attr
     */
-    public function __construct($tb, $name)
+    public function __construct(Table $table,array $attr=[])
     {
-        $this->tb = $tb;
+        $this->table = $table;
 
-        // TODO: We need to validate the name of this document
-        // names should be lowercased and be parsed to use underscores
-        $this->name = $name;
+        // TODO: We need to validate the attr of this document
+        // attrs should be lowercased and be parsed to use underscores
+        $this->attr = $attr;
 
-        $this->path = $this->table()->path().'/'.$this->name;
+        // $this->path = $this->table()->path().'/'.$this->attr;
     }
 
     /**
@@ -60,7 +54,7 @@ class Document
     */
     public function table()
     {
-        return $this->tb;
+        return $this->table;
     }
 
     /**
@@ -74,13 +68,13 @@ class Document
     }
 
     /**
-    * Get our document name (id)
+    * Get our document attr (id)
     *
     * @return string
     */
-    public function name()
+    public function attr()
     {
-        return $this->name;
+        return $this->attr;
     }
 
     /**
@@ -147,10 +141,10 @@ class Document
     *
     * @return mixed
     */
-    public function __get($name)
+    public function __get($attr)
     {
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
+        if (isset($this->data[$attr])) {
+            return $this->data[$attr];
         }
     }
 
@@ -161,7 +155,7 @@ class Document
     */
     public function toArray()
     {
-        return $this->data;
+        return $this->attr;
     }
 
     /**
