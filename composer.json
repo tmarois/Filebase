@@ -20,7 +20,8 @@
 
 	"require-dev": {
 		"satooshi/php-coveralls": "^2.0",
-		"phpunit/phpunit": "*"
+		"phpunit/phpunit": "*",
+		"mikey179/vfsStream": "^1.6"
 	},
 
 	"autoload": {
