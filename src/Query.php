@@ -13,7 +13,7 @@ class Query
     public function __construct(Table $table)
     {
         $this->table=$table;
-        $this->fs=new Filesystem($table->fullPath()."/");
+        $this->fs=new Filesystem($table->fullPath());
         $this->formater = new Json();
         
     }
@@ -26,9 +26,19 @@ class Query
         return $this->table->db();
     }
 
-    public function create($args)
+    public function create(array $args)
     {
-        $this->fs->write($this->table->genUniqFileId(0,'.json'),$this->formater->encode($args,true));
+        // TODO:ADD START POINT FOR ID 
+        // TODO:VALIDATE
+        $this->fs->write($this->table->genUniqFileId(0,'.json'),$this->formater->encode($args,true));  
+    }
+    public function find($id)
+    {
+        // TODO:set ext dina
+        if($this->fs->has($id.'.json'))
+        {
+            return json_decode($this->fs->read($id.'.json'),true);
+        }
     }
 
 }
