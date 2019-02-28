@@ -3,6 +3,7 @@
 use Exception;
 use Filebase\Config;
 use Filebase\Table;
+use Filebase\Support\Filesystem;
 
 /**
  * The database class
@@ -21,7 +22,14 @@ class Database
     */
     protected $config;
 
-   /**
+    /**
+    * The database filesystem
+    *
+    * @see Filebase\Support\Filesystem
+    */
+    protected $filesystem;
+
+    /**
     * Start up the database class
     *
     * @param array $config
@@ -53,6 +61,8 @@ class Database
     {
         $this->config = (new Config($config));
 
+        $this->filesystem = new Filesystem($this->config->path);
+
         return $this->config;
     }
 
@@ -71,11 +81,34 @@ class Database
     * Get all of the tables within our database
     * Returns a Collection object of Tables
     *
-    * @return Collection
+    * @return array
     */
     public function tables()
     {
-        return;
+        return array_map(function($folder) {
+            return $this->table($folder['basename']);
+        }, $this->tableList());
+    }
+
+    /**
+    * Get a list of tables within our database
+    * Returns an array of items
+    *
+    * @return array
+    */
+    public function tableList()
+    {
+        return $this->fs()->folders();
+    }
+
+    /**
+    * Ability to use the filesystem outside classes
+    *
+    * @return Filebase\Support\Filesystem
+    */
+    public function fs()
+    {
+        return $this->filesystem;
     }
 
     /**
@@ -105,7 +138,8 @@ class Database
     */
     public function delete()
     {
-        return;
+        // this might not work yet since its trying to delete the root dir ...
+        return $this->fs()->rmdir('/');
     }
 
 }

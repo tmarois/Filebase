@@ -16,7 +16,10 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     */
     public function testDatabaseConfig()
     {
-        $db = new Database();
+        $db = new Database([
+            'path' => __DIR__.'/database'
+        ]);
+
         $this->assertInstanceOf(Config::class,$db->config()); 
     }
     
@@ -30,27 +33,41 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     */
     public function testDatabaseConfigSetup()
     {
-        $path = __DIR__.'/database';
+        $path1 = __DIR__.'/database';
+        $path2 = __DIR__.'/database1';
 
         $db = new Database([
-            'path' => $path,
+            'path' => $path1,
             'readonly' => true
         ]);
 
         // (1) check we're getting the config variables
 
-        $this->assertEquals($path, $db->config()->path);
+        $this->assertEquals($path1, $db->config()->path);
         $this->assertEquals(true, $db->config()->readonly);
 
         // reset the config
-        $db->setConfig(['path'=>'/my/new/path']);
+        $db->setConfig(['path'=>$path2]);
 
         // (2) setting new database configs
 
         // check we replaced the variable
-        $this->assertEquals('/my/new/path', $db->config()->path);
+        $this->assertEquals($path2, $db->config()->path);
         // check the other variable reset to default
         $this->assertEquals(false, $db->config()->readonly);
+    }
+
+    public function testDatabaseTableList()
+    {
+        $path1 = __DIR__.'/database';
+
+        $db = new Database([
+            'path' => $path1
+        ]);
+
+        $tables = $db->table('table_one')->getList();
+
+        print_r($tables);
     }
 
 }
