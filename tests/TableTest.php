@@ -59,19 +59,5 @@ class TableTest extends TestCase
         $query_id=$this->tbl->genUniqFileId(100,'.json');
         $this->assertEquals('102.json',$query_id);
     }
-    /**
-     * @test
-     */
-    public function testMustInsertNewRecordOnTable()
-    {
-        $db=new Database([
-                    'path' => $this->path
-                ]);
-        $tbl=new Table($db,'tbl_one');
-        $tbl->query()->create(['name'=>'John','last_name'=>'Doe']);
-        $this->assertFileExists($this->path."/tbl_one/0.json");
-
-        $tbl->query()->create(['name'=>'John','last_name'=>'Doe']);
-        $this->assertFileExists($this->path."/tbl_one/1.json");
-    }
+    
 }
