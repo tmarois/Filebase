@@ -99,11 +99,11 @@ class Table
     *
     * @return array
     */
-    public function list()
+    public function all()
     {
         return array_map(function($document) {
-            return $this->get($document['basename']);
-        }, $this->getList());
+            return $this->get($document);
+        }, $this->list());
     }
 
     /**
@@ -112,9 +112,9 @@ class Table
     *
     * @return array
     */
-    public function getList()
+    public function list()
     {
-        return $this->db()->fs()->files($this->path());
+        return $this->db()->fs()->files($this->path(), $this->db()->config()->extension);
     }
 
     /**

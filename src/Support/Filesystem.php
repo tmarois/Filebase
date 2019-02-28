@@ -86,7 +86,7 @@ class Filesystem
         $folder = [];
         foreach($items as $item) {
             if ($item['type']=='dir') {
-                $folder[] = $item;
+                $folder[] = $item['basename'];
             }
         }
 
@@ -97,15 +97,16 @@ class Filesystem
      * Get all files within directory
      * 
      * @param string $path
+     * @param string $ext
      */
-    public function files($path = '')
+    public function files($path = '', $ext)
     {
         $items = $this->filesystem->listContents($path);
 
         $files = [];
         foreach($items as $item) {
-            if ($item['type']=='file') {
-                $files[] = $item;
+            if ($item['type']=='file' && ($ext && $item['extension']==$ext)) {
+                $files[] = $item['filename'];
             }
         }
 

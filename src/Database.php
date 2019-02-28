@@ -52,7 +52,7 @@ class Database
 
     /**
     * Setting the configuration for our database
-    * This uses a fresh config
+    * This uses a fresh config and update Filesystem (path)
     *
     * @param array $config
     * @return Filebase\Config
@@ -86,8 +86,8 @@ class Database
     public function tables()
     {
         return array_map(function($folder) {
-            return $this->table($folder['basename']);
-        }, $this->tableList());
+            return $this->table($folder);
+        }, $this->list());
     }
 
     /**
@@ -96,7 +96,7 @@ class Database
     *
     * @return array
     */
-    public function tableList()
+    public function list()
     {
         return $this->fs()->folders();
     }

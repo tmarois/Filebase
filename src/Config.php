@@ -30,6 +30,14 @@ class Config
     protected $format = Json::class;
 
     /**
+    * The file extension
+    * The default is set to json
+    *
+    * @var string
+    */
+    protected $extension = 'json';
+
+    /**
     * This will set the database to read-only mode
     * No changes can be made to the database
     *

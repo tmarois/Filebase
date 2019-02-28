@@ -65,7 +65,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
             'path' => $path1
         ]);
 
-        $tables = $db->table('table_one')->getList();
+        $tables = $db->table('table_one')->get('d2')->toArray();
 
         print_r($tables);
     }
