@@ -1,9 +1,8 @@
 <?php 
 
-use Filebase\Database;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
-use Filebase\Table;
+use Filebase\{Table,Query,Database};
 
 class TableTest extends TestCase 
 {
@@ -38,4 +37,15 @@ class TableTest extends TestCase
         $files=$this->db->table('tbl_one')->getAll();
         $this->assertCount(3,$files);
     }
+
+    // table query tests 
+
+    /**
+     * @test
+     */
+    public function testMustReturnInstanceOfQuery()
+    {
+        $query=$this->tbl->query();
+        $this->assertInstanceOf(Query::class,$query);
+    } 
 }

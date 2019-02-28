@@ -149,4 +149,8 @@ class Table
     {
         return $this->db()->fs()->rmdir('/'.$this->name());
     }
+    public function query()
+    {
+        return new Query($this);
+    }
 }
