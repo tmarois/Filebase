@@ -11,13 +11,20 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     public $root;
     public $db;
 
+    /**
+    * setUp()
+    *
+    *
+    */
     public function setUp()
     {
-        $this->root=vfsStream::setup('baseFolderName',null,['tbl_one'=>[],'tbl_two'=>[]]);
-        $this->db=new Database([
+        $this->root = vfsStream::setup('baseFolderName',null,['tbl_one'=>[],'tbl_two'=>[]]);
+
+        $this->db = new Database([
             'path' => $this->root->url()
-            ]);
+        ]);
     }
+
     /**
     * testDatabaseConfig()
     *
@@ -68,16 +75,15 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, $db->config()->readonly);
     }
 
-    /*public function testDatabaseTableList()
+    /**
+     * @test
+     */
+    public function testDatabaseTableList()
     {
-        $path1 = __DIR__.'/database';
+        $tables = $this->db->tableList();
 
-        $db = new Database([
-            'path' => $path1
-        ]);
-
-        $tables = $db->table('table_one')->getAll();
-    }*/
+        $this->assertCount(2,$tables);
+    }
 
     /**
      * @test

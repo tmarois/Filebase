@@ -83,20 +83,20 @@ class Database
     */
     public function tables()
     {
-        // TODO:create method for sanatize table names with prefix
         return array_map(function($folder) {
             return $this->table($folder);
-        }, $this->tableRawList());
+        }, $this->tableList());
     }
 
     /**
     * Get a list of tables within our database
-    * Returns an array of items
+    * Returns an array of table names
     *
     * @return array
     */
-    public function tableRawList()
+    public function tableList()
     {
+        // TODO: create method for sanatize table names with prefix
         return $this->fs()->folders();
     }
 
@@ -122,6 +122,8 @@ class Database
     */
     public function empty()
     {
+        // TODO: delete all table directores 
+        // keep the database directory alive
         return;
     }
 
