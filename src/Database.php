@@ -74,18 +74,15 @@ class Database
      */
     public function table($name)
     {
-        if (!in_array($name,$this->tableList())) {
+        if (!$this->hasTable($name)) {
             $this->fs()->mkdir($this->tableNameGenarator($name));
         }
         return (new Table($this, $this->tableNameGenarator($name)));
     }
     public function tableNameGenarator($name,$table_prefix='tbl_')
     {
-        if(preg_match("/^".$table_prefix."/is",$name))
-        {
-            return $name;
-        }
-        return $table_prefix.$name;
+        return preg_match("/^".$table_prefix."/is",$name)
+                                ? $name : $table_prefix.$name;
     }
     /**
     * Get all of the tables within our database
@@ -143,7 +140,9 @@ class Database
     {
         // TODO: delete all table directores
         // keep the database directory alive
-        return;
+        foreach ($this->tableList() as $key => $value) {
+            $this->fs()->rmdir($value);
+        }
     }
 
     /**
@@ -160,6 +159,10 @@ class Database
     {
         // this might not work yet since its trying to delete the root dir ...
         return $this->fs()->rmdir('/');
+    }
+    public function hasTable($name)
+    {
+        return in_array($name,$this->tableList());
     }
    
 }
