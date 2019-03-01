@@ -73,6 +73,10 @@ class Filesystem
     {
         return $this->filesystem->write($path, $data);
     }
+    public function put($path, $data = '')
+    {
+        return $this->filesystem->put($path, $data);
+    }
 
     /**
      * delete spceific file
