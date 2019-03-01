@@ -74,9 +74,19 @@ class Database
      */
     public function table($name)
     {
-        return (new Table($this, $name));
+        if (!in_array($name,$this->tableList())) {
+            $this->fs()->mkdir($this->tableNameGenarator($name));
+        }
+        return (new Table($this, $this->tableNameGenarator($name)));
     }
-
+    public function tableNameGenarator($name,$table_prefix='tbl_')
+    {
+        if(preg_match("/^".$table_prefix."/is",$name))
+        {
+            return $name;
+        }
+        return $table_prefix.$name;
+    }
     /**
     * Get all of the tables within our database
     * Returns a Collection object of Tables
@@ -98,10 +108,16 @@ class Database
     */
     public function tableList()
     {
-        // TODO: create method for sanatize table names with prefix
-        return $this->fs()->folders();
+        return $this->filterTables($this->fs()->folders());
     }
 
+    public function filterTables(array $args,$pattern='/^tbl_/is')
+    {
+        return array_values(array_filter($args,function($item) use ($pattern)
+        {
+            return preg_match($pattern,$item);   
+        }));
+    }
     /**
     * Ability to use the filesystem outside classes
     *
@@ -144,4 +160,5 @@ class Database
         // this might not work yet since its trying to delete the root dir ...
         return $this->fs()->rmdir('/');
     }
+   
 }
