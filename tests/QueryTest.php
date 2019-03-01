@@ -28,7 +28,7 @@ class QueryTest extends TestCase
      */
     public function testMustReturnTable()
     {
-        $tbl=$this->query->getTable();
+        $tbl = $this->query->table();
         $this->assertInstanceOf(Table::class,$tbl);
     }
     
@@ -37,7 +37,7 @@ class QueryTest extends TestCase
      */
     public function testMustReturnInstanceOfDatabase()
     {
-        $db=$this->query->getDatabase();
+        $db = $this->query->db();
         $this->assertInstanceOf(Database::class,$db);
     }
 
