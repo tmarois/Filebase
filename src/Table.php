@@ -133,6 +133,8 @@ class Table
     public function empty()
     {
         // TODO: empty table directory (but keep the table directory alive)
+        $this->delete();
+        $this->db()->fs()->mkdir($this->name());
         return;
     }
 
@@ -147,7 +149,7 @@ class Table
     */
     public function delete()
     {
-        return $this->db()->fs()->rmdir('/'.$this->name());
+        return $this->db()->fs()->rmdir($this->name());
     }
 
     /**
