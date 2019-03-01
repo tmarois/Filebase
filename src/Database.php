@@ -111,8 +111,9 @@ class Database
         return $this->filterTables($this->fs()->folders());
     }
 
-    public function filterTables(array $args,$pattern='/^tbl_/is')
+    public function filterTables(array $args,$pattern='tbl_')
     {
+        $pattern='/^'.$pattern.'/is';
         return array_values(array_filter($args,function($item) use ($pattern)
         {
             return preg_match($pattern,$item);   
