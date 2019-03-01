@@ -6,6 +6,7 @@ use Filebase\Config;
 
 use Filebase\Test\TestCase;
 use org\bovigo\vfs\vfsStream;
+use Filebase\Collection;
 
 
 class DatabaseTest extends TestCase
@@ -87,15 +88,17 @@ class DatabaseTest extends TestCase
     {
         $tables = $this->db->tableList();
         $this->assertCount(2,$tables);
+        $this->assertInternalType('array', $tables);
     }
 
     /**
      * @test
      */
-    public function testMustReturnTablesName()
+    public function testMustReturnTablesNameInstanceOfCollection()
     {
         $tables = $this->db->tables();
         $this->assertCount(2,$tables);
+        $this->assertInstanceOf(Collection::class,$tables);
     }
     /** @test */
     public function testMustReturnStandardName()
