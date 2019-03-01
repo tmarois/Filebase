@@ -31,10 +31,16 @@ class Filesystem
         $this->filesystem = new FS((new Local($path)));
     }
 
+    /**
+     * Retunrs the filesystem property
+     * 
+     * @param League\Flysystem\Filesystem
+     */
     public function getFS()
     {
         return $this->filesystem;
     }
+
     /**
      * Read a specific file
      * 
@@ -99,6 +105,9 @@ class Filesystem
 
     /**
      * Get all files within directory
+     * 
+     * This will ONLY get the files that have our "EXTENSION"
+     * For example ".json" (leave $ext blank and it will get all files)
      * 
      * @param string $path
      * @param string $ext
