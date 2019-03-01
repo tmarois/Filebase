@@ -92,9 +92,9 @@ class Database
     */
     public function tables()
     {
-        return array_map(function ($folder) {
+        return new Collection(array_map(function ($folder) {
             return $this->table($folder);
-        }, $this->tableList());
+        }, $this->tableList()));
     }
 
     /**
