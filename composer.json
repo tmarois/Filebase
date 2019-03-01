@@ -4,7 +4,6 @@
 	"name": "filebase/filebase",
 	"homepage": "https://github.com/filebase/Filebase",
 	"type": "package",
-	"licence": "MIT",
 
 	"authors": [
         {
@@ -29,6 +28,7 @@
 			"Filebase\\": "src/"
 		}
 	},
+	
 	"autoload-dev": {
 		"psr-4": {
 			"Filebase\\Test\\": "tests/"
