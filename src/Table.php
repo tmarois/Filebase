@@ -102,7 +102,9 @@ class Table
     */
     public function get($name)
     {
-        return (new Query($this))->find($name);
+        return $this->query()->find($name);
+        
+        // return (new Query($this))->find($name);
         // if($this->db()->fs()->has($name.'.json'))
         // {
         //     return new Document($this, $name,json_decode($this->db()->fs()->read($this->name.'/'.$name.'.json')));
