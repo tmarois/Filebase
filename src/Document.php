@@ -4,6 +4,7 @@ namespace Filebase;
 
 use ArrayAccess;
 use Countable;
+use ArrayObject;
 /**
  * The document class
  * 
@@ -59,6 +60,18 @@ class Document implements ArrayAccess,Countable
         // TODO: We need to validate the attr of this document
         // attrs should be lowercased and be parsed to use underscores
         $this->attr = $attr;
+    }
+    public function re_assign($item)
+    {
+         // assign our table
+         $this->table = $table;
+
+         // assign our document name
+         $this->name = $name;
+ 
+         // TODO: We need to validate the attr of this document
+         // attrs should be lowercased and be parsed to use underscores
+         $this->attr = $attr;
     }
     public function count()
     {
@@ -146,11 +159,13 @@ class Document implements ArrayAccess,Countable
      */
     public function save()
     {
-        $format = $this->db()->config()->format;
+        // $format = $this->db()->config()->format;
 
-        $data = $format::encode($data);
-
-        return $this->db()->fs()->write($this->name(), $data);
+        // $data = $format::encode($this->attr);
+        $data=json_encode($this->attr);
+        $this->table()->db()->fs()->put($this->table()->name()."/".$this->name(), $data);
+        // $this=$this->table()->get ($this->name());
+        return $this; 
     }
 
     /**
@@ -173,11 +188,16 @@ class Document implements ArrayAccess,Countable
      * 
      * @return mixed
      */
-    public function __get($key)
+    public function &__get($key)
     {
         if (isset($this->attr[$key])) {
             return $this->attr[$key];
         }
+    }
+    public function __set($key,$value)
+    {
+        $this->attr[$key]=$value;
+        return $this;
     }
 
     /**
