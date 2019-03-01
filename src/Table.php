@@ -44,7 +44,7 @@ class Table
         // TODO: We need to validate the name of this table
         // names should be lowercased and be parsed to use underscores
 
-        $this->name = $this->validateTableName($this->name);
+        $this->name = $this->validateTableName($name);
         $this->path = DIRECTORY_SEPARATOR.$this->name;
 
         // if this directory (table) does not exist
