@@ -14,16 +14,18 @@ class Query
     {
         $this->table = $table;
         $this->fs = new Filesystem($table->fullPath());
+
+        // we have access to this within $this->db()->config()->format
         $this->formater = new Json();
         
     }
 
-    public function getTable()
+    public function table()
     {
         return $this->table;
     }
 
-    public function getDatabase()
+    public function db()
     {
         return $this->table->db();
     }
@@ -32,7 +34,7 @@ class Query
     {
         // TODO:ADD START POINT FOR ID 
         // TODO:VALIDATE
-        $this->fs->write($this->table->genUniqFileId(0,'.json'),$this->formater->encode($args,true));  
+        $this->fs->write($this->table()->genUniqFileId(0,'.json'),$this->formater->encode($args,true));  
     }
 
     public function find($id)
@@ -40,7 +42,7 @@ class Query
         // TODO:set ext dina
         if($this->fs->has($id.'.json'))
         {
-            return new Document($this->table,$id.'.json',(array)json_decode($this->fs->read($id.'.json'),true));
+            return new Document($this->table(),$id.'.json',(array)json_decode($this->fs->read($id.'.json'),true));
         }
     }
 

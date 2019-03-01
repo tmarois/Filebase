@@ -75,7 +75,7 @@ class Table
     }
 
     /**
-    * Get our table path (directory location)
+    * Get our table path (directory location within db root)
     *
     * @return string
     */
@@ -85,14 +85,13 @@ class Table
     }
 
     /**
-    * ...
+    * Get the full path of the table directory
     *
     * @return string
     */
-    public function fullPath($path=null)
+    public function fullPath()
     {
-        return $this->db()->config()->path
-                    .$this->path() ;
+        return $this->db()->config()->path . $this->path();
     }
 
     /**
@@ -105,19 +104,6 @@ class Table
     {
         return (new Document($this, $name));
     }
-
-    // /**
-    // * Get all of the tables within our database
-    // * Returns a Collection object of Tables
-    // *
-    // * @return array
-    // */
-    // public function list()
-    // {
-    //     return array_map(function($document) {
-    //         return $this->get($document['basename']);
-    //     }, $this->getList());
-    // }
 
     /**
     * Get a list of documents within our table
