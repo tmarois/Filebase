@@ -2,6 +2,8 @@
 
 namespace Filebase;
 
+use ArrayAccess;
+use Countable;
 /**
  * The document class
  * 
@@ -9,7 +11,7 @@ namespace Filebase;
  * and functionality 
  * 
  */
-class Document
+class Document implements ArrayAccess,Countable
 {
     /**
      * The database table 
@@ -57,6 +59,29 @@ class Document
         // TODO: We need to validate the attr of this document
         // attrs should be lowercased and be parsed to use underscores
         $this->attr = $attr;
+    }
+    public function count()
+    {
+        return count($this->attr);
+    }
+    public function offsetSet($offset, $value) {
+        if (is_null($offset)) {
+            $this->attr[] = $value;
+        } else {
+            $this->attr[$offset] = $value;
+        }
+    }
+
+    public function offsetExists($offset) {
+        return isset($this->attr[$offset]);
+    }
+
+    public function offsetUnset($offset) {
+        unset($this->attr[$offset]);
+    }
+
+    public function offsetGet($offset) {
+        return isset($this->attr[$offset]) ? $this->attr[$offset] : null;
     }
 
     /**
