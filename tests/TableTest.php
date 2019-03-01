@@ -89,6 +89,12 @@ class TableTest extends TestCase
         $this->assertFileExists($this->path."tbl_name/0.json");
 
     }
-    
+    /** @test */
+    public function testMustReturnAllOnEmptyCall()
+    {
+        $this->fakeRecordCreator(5);
+        $all=$this->tmp_db->table('tbl_name')->query()->get();
+        $this->assertCount(5,$all);
+    }
     
 }

@@ -120,9 +120,18 @@ class QueryTest extends TestCase
         $this->assertCount(5,$all);
     }
     /** @test */
-    public function testMust()
+    public function testMustAddCondition()
     {
-        // Test
+        $tbl=$this->tmp_db->table('tbl_name');
+        $tbl=$tbl->query()->where('name','==','john')
+                            ->where('name','==','john');
+        $this->assertCount(2,$tbl->getConditions()['and']);
     }
-    
+    /** @test */
+    public function testMustFilterItemsWithWhere()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+        $result=$tbl->query()->where('Foo','==','bar1')->get();
+        $this->assertCount(1,$result);
+    }
 }
