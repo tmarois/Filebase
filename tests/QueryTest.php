@@ -1,10 +1,12 @@
 <?php 
 namespace Filebase\Test;
 
-use org\bovigo\vfs\vfsStream;
 use Filebase\{Database,Table,Query};
-use Filebase\Test\TestCase;
 use Filebase\Document;
+
+use Filebase\Test\TestCase;
+use org\bovigo\vfs\vfsStream;
+
 class QueryTest extends TestCase
 {
     public $db;

@@ -3,9 +3,12 @@
 use Exception;
 use Filebase\{Database,Table};
 use Filebase\Config;
+
+use Filebase\Test\TestCase;
 use org\bovigo\vfs\vfsStream;
 
-class DatabaseTest extends \PHPUnit\Framework\TestCase
+
+class DatabaseTest extends TestCase
 {
 
     public $root;
@@ -81,7 +84,6 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     public function testDatabaseTableList()
     {
         $tables = $this->db->tableList();
-
         $this->assertCount(2,$tables);
     }
 
@@ -106,19 +108,10 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
     /**
      * @test 
      */
-    /*public function testMustCreateTable()
-    {
-        $tables = $this->db->createTable('tbl_new');
-        $this->assertTrue($this->root->hasChild('tbl_new'));
-    }*/
-
-    /**
-     * @test 
-     */
     public function testMustDeleteTable()
     {
-        $table = $this->db->table('tbl_new');
-        $table = $this->db->table('tbl_new')->delete();
+        $this->db->table('tbl_new');
+        $this->db->table('tbl_new')->delete();
         $this->assertFalse($this->root->hasChild('tbl_new'));
     }
 

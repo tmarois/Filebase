@@ -1,11 +1,11 @@
 <?php namespace Filebase\Test;
 
-use Exception;
-use Filebase\Database;
 use Filebase\Format\FormatInterface;
 use Filebase\Format\Json;
 
-class FormatTest extends \PHPUnit\Framework\TestCase
+use Filebase\Test\TestCase;
+
+class FormatTest extends TestCase
 {
     /**
     * testFormatJson()

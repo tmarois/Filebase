@@ -11,11 +11,14 @@ class TestCase extends base_case
     {
         @mkdir($this->path);
     }
+    
     public function tearDown()
     {
         $this->rrmdir($this->path);
     }
-    public function rrmdir($dir) { 
+
+    public function rrmdir($dir) 
+    { 
         if (is_dir($dir)) { 
           $objects = scandir($dir); 
           foreach ($objects as $object) { 
