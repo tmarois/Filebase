@@ -51,7 +51,7 @@ class Table
 
         // if this directory (table) does not exist
         // lets automatically create it
-        $this->validateTable();
+        // $this->validateTable();
     }
 
     /**
@@ -187,7 +187,8 @@ class Table
     private function validateTableName($name)
     {
         // TODO: Validate and convert the name to the 
-        // correct format "table_name" not "Table Name" 
+        // correct format "table_name" not "Table Name"
+        
         return $name;
     }
 
@@ -197,10 +198,10 @@ class Table
     * 
     * @return void
     */
-    private function validateTable()
-    {
-        if (!$this->db->fs()->has($this->path)) {
-            $this->db->fs()->mkdir($this->path);
-        }
-    }
+    // private function validateTable()
+    // {
+    //     if (!$this->db->fs()->has($this->path)) {
+    //         $this->db->fs()->mkdir($this->path);
+    //     }
+    // }
 }
