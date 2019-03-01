@@ -37,7 +37,8 @@ class Database
     public function __construct(array $config = [])
     {
         // set up our configuration class
-        $this->config = $this->setConfig($config);
+        $this->setConfig($config);
+        
         $this->filesystem = new Filesystem($this->config->path);
     }
 

@@ -1,6 +1,8 @@
 <?php namespace Filebase;
 
 use Filebase\Database;
+use Filebase\Query;
+
 /**
  * The table class
  * 
@@ -156,21 +158,32 @@ class Table
     {
         return $this->db()->fs()->rmdir('/'.$this->name());
     }
-    
+
+    /**
+    * Query the table documents
+    *
+    * @return Filebase\Query
+    */
     public function query()
     {
-        return new Query($this);
+        return (new Query($this));
     }
 
+    /**
+    * Not exactly sure what this would be used for? 
+    * 
+    */
     public function genUniqFileId($item,$ext=".json")
     {
         $pre=0;
         while(true)
         {
+            // you can use $this->db()->fs()->has() ?
             if(!file_exists($this->fullPath()."/".($item+$pre).$ext))
             {
                 return ($item+$pre).$ext;
             }
+
             $pre++;
         }
     }
