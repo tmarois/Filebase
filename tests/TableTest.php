@@ -11,17 +11,20 @@ class TableTest extends TestCase
     public $db;
     public $root;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
+
         $this->root=vfsStream::setup('baseFolderName',null,['tbl_one'=>[
             'file1.json'=>'contestn',
             'file2.json'=>'contestn',
             'file3.json'=>'contestn',
         ],'tbl_two'=>[]]);
+
         $this->db=new Database([
             'path' => $this->root->url()
-            ]);
+        ]);
+        
         $this->tbl=new Table($this->db,'tbl_one');
     }
     /**

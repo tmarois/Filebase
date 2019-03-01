@@ -12,13 +12,14 @@ class QueryTest extends TestCase
     public $db;
     public $query;
 
-    public function setUp()
+    protected function setUp()
     {
         parent::setUp();
 
         $this->db=new Database([
             'path' => $this->path
-            ]);
+        ]);
+        
         $this->query=new Query(new Table($this->db,'tbl_one'));
     }
     /**

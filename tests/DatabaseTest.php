@@ -19,8 +19,10 @@ class DatabaseTest extends TestCase
     *
     *
     */
-    public function setUp()
+    protected function setUp()
     {
+        parent::setUp();
+        
         $this->root = vfsStream::setup('baseFolderName',null,['tbl_one'=>[],'tbl_two'=>[]]);
 
         $this->db = new Database([

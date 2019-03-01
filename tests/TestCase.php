@@ -7,7 +7,7 @@ class TestCase extends base_case
 {
     public $path=__DIR__.'/tmp/';
 
-    public function setUp()
+    protected function setUp()
     {
         @mkdir($this->path);
     }
