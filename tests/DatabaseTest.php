@@ -144,7 +144,7 @@ class DatabaseTest extends TestCase
     /** @test */
     public function testMustReturnFiltredResultWithPattern()
     {
-        $tbl=$this->db->filterTables(['one','two','tbl_three','tbl_four'],'/^tbl_/is');
+        $tbl=$this->db->filterTables(['one','two','tbl_three','tbl_four'],'tbl_');
 
         $this->assertCount(2,$tbl);
         $this->assertEquals(['tbl_three','tbl_four'],$tbl);        
