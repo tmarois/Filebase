@@ -5,15 +5,15 @@ use Filebase\Format\Json;
 
 /**
  * The config class
- * 
+ *
  * Used for setting up our main database
  * configuration
- * 
+ *
  */
 class Config
 {
     /**
-    * The path of the database directory 
+    * The path of the database directory
     * The default is set to your current location
     * plus /database/~
     *
@@ -48,7 +48,7 @@ class Config
     protected $readonly = false;
 
     /**
-    * The config starting point, load in the necessary config array 
+    * The config starting point, load in the necessary config array
     *
     * @param array $config
     */

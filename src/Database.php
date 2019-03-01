@@ -7,33 +7,33 @@ use Filebase\Support\Filesystem;
 
 /**
  * The database class
- * 
+ *
  * This class access the core
  * package functionality
- * 
+ *
  */
 class Database
 {
 
-   /**
-    * Stores all the configuration object settings
-    *
-    * @see Filebase\Config
-    */
+    /**
+     * Stores all the configuration object settings
+     *
+     * @see Filebase\Config
+     */
     protected $config;
 
     /**
-    * The database filesystem
-    *
-    * @see Filebase\Support\Filesystem
-    */
+     * The database filesystem
+     *
+     * @see Filebase\Support\Filesystem
+     */
     protected $filesystem;
 
     /**
-    * Start up the database class
-    *
-    * @param array $config
-    */
+     * Start up the database class
+     *
+     * @param array $config 
+     */
     public function __construct(array $config = [])
     {
         // set up our configuration class
@@ -42,11 +42,11 @@ class Database
         $this->filesystem = new Filesystem($this->config->path);
     }
 
-   /**
-    * Public access to the config class and its methods
-    *
-    * @return Filebase\Config
-    */
+    /**
+     * Public access to the config class and its methods
+     *
+     * @return Filebase\Config
+     */
     public function config()
     {
         return $this->config;
@@ -65,12 +65,13 @@ class Database
         return $this->config;
     }
 
-   /**
-    * Public access to the config class and its methods
-    *
-    * @param string $name
-    * @return Filebase\Table
-    */
+    /**
+     * Public access to the config class and its methods
+     *
+     * @param string $name
+     * 
+     * @return Filebase\Table
+     */
     public function table($name)
     {
         return (new Table($this, $name));
@@ -84,7 +85,7 @@ class Database
     */
     public function tables()
     {
-        return array_map(function($folder) {
+        return array_map(function ($folder) {
             return $this->table($folder);
         }, $this->tableList());
     }
@@ -123,7 +124,7 @@ class Database
     */
     public function empty()
     {
-        // TODO: delete all table directores 
+        // TODO: delete all table directores
         // keep the database directory alive
         return;
     }
