@@ -149,4 +149,24 @@ class DatabaseTest extends TestCase
         $this->assertCount(2,$tbl);
         $this->assertEquals(['tbl_three','tbl_four'],$tbl);        
     }
+    /** @test */
+    public function testMustCheckDatabaseHasTable()
+    {
+        $this->tmp_db->table('tbl_name');
+        $actual=$this->tmp_db->hasTable('tbl_name');
+        $this->assertTrue($actual);
+        $actual=$this->tmp_db->hasTable('tbl_name_f');
+        $this->assertFalse($actual);
+    }
+    
+    /** @test */
+    public function testMustRemoveAllDatabaseTables()
+    {
+        $this->tmp_db->table('tbl_name');
+        $this->tmp_db->table('tbl_name2');
+        $this->tmp_db->table('tbl_name3')->query()->create(['data']);
+        $this->tmp_db->empty();
+        $this->assertCount(0,$this->tmp_db->tableList());
+    }
+    
 }
