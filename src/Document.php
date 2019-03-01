@@ -188,7 +188,7 @@ class Document implements ArrayAccess,Countable
      * 
      * @return mixed
      */
-    public function &__get($key)
+    public function __get($key)
     {
         if (isset($this->attr[$key])) {
             return $this->attr[$key];
