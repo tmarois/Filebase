@@ -9,6 +9,7 @@ class Query
     public $table;
     public $fs;
     public $formater;
+    protected $conditions=[];
 
     public function __construct(Table $table)
     {
@@ -64,12 +65,47 @@ class Query
         $items=$this->db()->fs()->files($this->table()->path(), $this->db()->config()->extension);
         foreach($items as $item)
         {
-            $_items[]=new Document($this->table(),$item,(array)(
+            $_items[]=new Document($this->table(),$item,json_decode(
                 $this->db()->fs()->read($this->table()->name()."/".$item.".json")
-            ));
+            ,true));
         }
         return new Collection($_items);
         // return $this->db()->fs()->files($this->path(), $this->db()->config()->extension);
+    }
+    public function where($key,$con,$value)
+    {
+        $this->conditions['and'][]=[$key,$con,$value];
+        return $this;
+    }
+    public function getConditions()
+    {
+        return $this->conditions;
+    }
+    public function get()
+    {
+        if(isset($this->conditions['and']))
+        {
+            return $this->filter();
+        }
+        return $this->getAll();
+    }
+    public function filter()
+    {
+        $items=$this->getAll();
+        $result=[];
+        foreach($this->conditions['and'] as $condition)
+        {
+            foreach ($items as $key => $value) {
+                if(isset($value[$condition[0]]))
+                {
+                    if($value[$condition[0]]==$condition[2])
+                    {
+                        $result[]=$value;
+                    }
+                }
+            }
+        } 
+        return $result;
     }
 
 }
