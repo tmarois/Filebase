@@ -75,8 +75,13 @@ class TableTest extends TestCase
     /** @test */
     public function testMustReturnDucomentInstanceOnExistItem()
     {
-        // Test
+        $tbl=new Table($this->tmp_db,'tbl_one');
+        $doc=$tbl->query()->create(['name'=>'John Doe']);
+
+        $doc=$tbl->get('0');
+
+        $this->assertInstanceOf(Document::class,$doc);
+        $this->assertCount(1,$doc->toArray());
     }
-    
     
 }
