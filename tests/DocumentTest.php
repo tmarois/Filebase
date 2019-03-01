@@ -57,5 +57,14 @@ class DocumentTest extends TestCase
         $this->assertTrue($doc->delete());
         $this->assertFileNotExists($this->path."/tbl_name/0.json");
     }
-    
+    /** @test */
+    public function testMustUpdateDocumentWithUpdateMethod()
+    {
+        $tbl=$this->tmp_db->table('tbl_name');
+        $doc=$tbl->query()->create(['Foo'=>'bar']);
+        $this->assertEquals(['Foo'=>'bar'],$doc->toArray());
+        $doc->update(['Foo'=>'faryar']);
+        $this->assertEquals(['Foo'=>'faryar'],$doc->toArray());
+
+    }
 }

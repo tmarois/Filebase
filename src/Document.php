@@ -230,4 +230,9 @@ class Document implements ArrayAccess,Countable
     {
         return $this->toJson();
     }
+    public function update(array $args)
+    {
+        $this->attr=$args;
+        $this->save();
+    }
 }
