@@ -44,19 +44,14 @@ class Table
         // TODO: We need to validate the name of this table
         // names should be lowercased and be parsed to use underscores
 
-        $this->name = $name;
+        $this->name = $this->validateTableName($this->name);
         $this->path = DIRECTORY_SEPARATOR.$this->name;
 
         // if this directory (table) does not exist
         // lets automatically create it
         $this->validateTable();
     }
-    private function validateTable()
-    {
-        if (!$this->db->fs()->has($this->path)) {
-            $this->db->fs()->mkdir($this->path);
-        }
-    }
+
     /**
     * This is easy access to our database
     *
@@ -87,6 +82,11 @@ class Table
         return $this->path;
     }
 
+    /**
+    * ...
+    *
+    * @return string
+    */
     public function fullPath($path=null)
     {
         return $this->db()->config()->path
@@ -139,6 +139,7 @@ class Table
     */
     public function empty()
     {
+        // TODO: empty table directory (but keep the table directory alive)
         return;
     }
 
@@ -171,6 +172,31 @@ class Table
                 return ($item+$pre).$ext;
             }
             $pre++;
+        }
+    }
+
+    /**
+    * This will validate our table name
+    * It will rename the table to the correct format
+    * 
+    */
+    private function validateTableName($name)
+    {
+        // TODO: Validate and convert the name to the 
+        // correct format "table_name" not "Table Name" 
+        return $name;
+    }
+
+    /**
+    * This will validate our table
+    * It will create directory if does not exist
+    * 
+    * @return void
+    */
+    private function validateTable()
+    {
+        if (!$this->db->fs()->has($this->path)) {
+            $this->db->fs()->mkdir($this->path);
         }
     }
 }
