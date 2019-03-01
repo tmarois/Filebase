@@ -66,6 +66,4 @@ class TableTest extends TestCase
         $this->assertEquals('102.json',$query_id);
     }
     
-    
-    
 }
