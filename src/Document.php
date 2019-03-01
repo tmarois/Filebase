@@ -1,4 +1,5 @@
 <?php 
+
 namespace Filebase;
 
 /**
@@ -24,8 +25,13 @@ class Document
     */
     protected $path;
 
-
+    /**
+    * Document name
+    *
+    * @var string
+    */
     protected $name;
+
     /**
     * Document data
     *
@@ -36,17 +42,21 @@ class Document
     /**
     * Start up the table class
     *
-    * @param string $attr
+    * @param Filebase\Table
+    * @param string $name
+    * @param array $attr
     */
-    public function __construct(Table $table,$name,array $attr=[])
+    public function __construct(Table $table, $name, array $attr=[])
     {
+        // assign our table
         $this->table = $table;
+
+        // assign our document name
+        $this->name = $name;
 
         // TODO: We need to validate the attr of this document
         // attrs should be lowercased and be parsed to use underscores
         $this->attr = $attr;
-
-        $this->name = $name;
     }
 
     /**
@@ -70,7 +80,7 @@ class Document
     }
 
     /**
-    * Get our document attr (id)
+    * Get our document attr (data)
     *
     * @return string
     */
@@ -89,17 +99,15 @@ class Document
         return $this->name;
     }
 
-    
-
     /**
-    * Set the document data
+    * Set the document attr (data)
     * This will replace all existing data
     *
     * @return array
     */
-    public function set($data)
+    public function set(array $data = [])
     {
-        $this->data = $data;
+        $this->attr = $data;
 
         return $this;
     }
@@ -128,17 +136,16 @@ class Document
         return $this->db()->fs()->delete($this->table->name().DIRECTORY_SEPARATOR.$this->name());
     }
 
-
     /**
     * Magic GET method into our data
     * This allows the dev to quickly access data variables
     *
     * @return mixed
     */
-    public function __get($attr)
+    public function __get($key)
     {
-        if (isset($this->data[$attr])) {
-            return $this->data[$attr];
+        if (isset($this->attr[$key])) {
+            return $this->attr[$key];
         }
     }
 
@@ -159,7 +166,7 @@ class Document
     */
     public function toJson()
     {
-        return json_encode($this->data);
+        return json_encode($this->attr);
     }
 
     /**
