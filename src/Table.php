@@ -116,8 +116,16 @@ class Table
     *
     * @return array
     */
-    public function getAll()
+    public function getAllAsRaw()
     {
+        // $items=$this->db()->fs()->files($this->path(), $this->db()->config()->extension);
+        // foreach($items as $item)
+        // {
+        //     $_items[]=new Document($this,$item,(array)(
+        //         $this->db()->fs()->read($this->name()."/".$item.".json")
+        //     ));
+        // }
+        // return new Collection($_items);
         return $this->db()->fs()->files($this->path(), $this->db()->config()->extension);
     }
 

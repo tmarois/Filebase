@@ -53,5 +53,23 @@ class Query
         }
         return new Document($this->table(),$id.'.json');
     }
+    /**
+    * Get a list of documents within our table
+    * Returns an array of items
+    *
+    * @return array
+    */
+    public function getAll()
+    {
+        $items=$this->db()->fs()->files($this->table()->path(), $this->db()->config()->extension);
+        foreach($items as $item)
+        {
+            $_items[]=new Document($this->table(),$item,(array)(
+                $this->db()->fs()->read($this->table()->name()."/".$item.".json")
+            ));
+        }
+        return new Collection($_items);
+        // return $this->db()->fs()->files($this->path(), $this->db()->config()->extension);
+    }
 
 }
