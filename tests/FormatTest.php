@@ -1,4 +1,4 @@
-<?php namespace Filebase;
+<?php namespace Filebase\Test;
 
 use Exception;
 use Filebase\Database;

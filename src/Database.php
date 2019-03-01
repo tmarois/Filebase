@@ -38,6 +38,7 @@ class Database
     {
         // set up our configuration class
         $this->config = $this->setConfig($config);
+        $this->filesystem = new Filesystem($this->config->path);
     }
 
    /**
@@ -60,9 +61,6 @@ class Database
     public function setConfig(array $config = [])
     {
         $this->config = (new Config($config));
-
-        $this->filesystem = new Filesystem($this->config->path);
-
         return $this->config;
     }
 
@@ -85,9 +83,10 @@ class Database
     */
     public function tables()
     {
+        // TODO:create method for sanatize table names with prefix
         return array_map(function($folder) {
             return $this->table($folder);
-        }, $this->list());
+        }, $this->tableRawList());
     }
 
     /**
@@ -96,7 +95,7 @@ class Database
     *
     * @return array
     */
-    public function list()
+    public function tableRawList()
     {
         return $this->fs()->folders();
     }
@@ -141,5 +140,4 @@ class Database
         // this might not work yet since its trying to delete the root dir ...
         return $this->fs()->rmdir('/');
     }
-
 }

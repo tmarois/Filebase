@@ -31,6 +31,10 @@ class Filesystem
         $this->filesystem = new FS((new Local($path)));
     }
 
+    public function getFS()
+    {
+        return $this->filesystem;
+    }
     /**
      * Read a specific file
      * 
@@ -105,7 +109,7 @@ class Filesystem
 
         $files = [];
         foreach($items as $item) {
-            if ($item['type']=='file' && ($ext && $item['extension']==$ext)) {
+            if ($item['type']=='file' && ($ext && ($item['extension']??'')==$ext)) {
                 $files[] = $item['filename'];
             }
         }

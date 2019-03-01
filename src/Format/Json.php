@@ -31,7 +31,8 @@ class Json implements FormatInterface
     */
     public static function decode($data)
     {
-        return json_decode($data, 1);
+        return json_decode($data);
+        // return json_decode($data, 1);
     }
 
 }

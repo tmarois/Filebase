@@ -1,12 +1,23 @@
-<?php namespace Filebase;
+<?php namespace Filebase\Test;
 
 use Exception;
-use Filebase\Database;
+use Filebase\{Database,Table};
 use Filebase\Config;
+use org\bovigo\vfs\vfsStream;
 
 class DatabaseTest extends \PHPUnit\Framework\TestCase
 {
 
+    public $root;
+    public $db;
+
+    public function setUp()
+    {
+        $this->root=vfsStream::setup('baseFolderName',null,['tbl_one'=>[],'tbl_two'=>[]]);
+        $this->db=new Database([
+            'path' => $this->root->url()
+            ]);
+    }
     /**
     * testDatabaseConfig()
     *
@@ -57,7 +68,7 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(false, $db->config()->readonly);
     }
 
-    public function testDatabaseTableList()
+    /*public function testDatabaseTableList()
     {
         $path1 = __DIR__.'/database';
 
@@ -65,9 +76,55 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
             'path' => $path1
         ]);
 
-        $tables = $db->table('table_one')->get('d2')->toArray();
+        $tables = $db->table('table_one')->getAll();
+    }*/
 
-        print_r($tables);
+    /**
+     * @test
+     */
+    public function testMustReturnTablesName()
+    {
+        $tables = $this->db->tables();
+        $this->assertCount(2,$tables);
+    }
+
+    /**
+     * @test
+     */
+    public function testMustCreateTableDirIfNotExist()
+    {
+        $tables = $this->db->table('tbl_new');
+        $this->assertTrue($this->root->hasChild('tbl_new'));
+    }
+
+    /**
+     * @test 
+     */
+    /*public function testMustCreateTable()
+    {
+        $tables = $this->db->createTable('tbl_new');
+        $this->assertTrue($this->root->hasChild('tbl_new'));
+    }*/
+
+    /**
+     * @test 
+     */
+    public function testMustDeleteTable()
+    {
+        $table = $this->db->table('tbl_new');
+        $table = $this->db->table('tbl_new')->delete();
+        $this->assertFalse($this->root->hasChild('tbl_new'));
+    }
+
+    /**
+     * @test
+     */
+    public function testMustReturnInstanceOfTable()
+    {
+        $tbl=$this->db->table('tbl_new');
+        $tb2=$this->db->table('tbl_one');
+        $this->assertInstanceOf(Table::class,$tbl);
+        $this->assertInstanceOf(Table::class,$tb2);
     }
 
 }

@@ -1,5 +1,6 @@
 <?php namespace Filebase;
 
+use Filebase\Database;
 /**
  * The table class
  * 
@@ -36,22 +37,26 @@ class Table
     *
     * @param string $name
     */
-    public function __construct($db, $name)
+    public function __construct(Database $db, $name)
     {
         $this->db = $db;
 
         // TODO: We need to validate the name of this table
         // names should be lowercased and be parsed to use underscores
+
         $this->name = $name;
-        $this->path = '/'.$this->name;
+        $this->path = DIRECTORY_SEPARATOR.$this->name;
 
         // if this directory (table) does not exist
         // lets automatically create it
+        $this->validateTable();
+    }
+    private function validateTable()
+    {
         if (!$this->db->fs()->has($this->path)) {
             $this->db->fs()->mkdir($this->path);
         }
     }
-
     /**
     * This is easy access to our database
     *
@@ -82,6 +87,12 @@ class Table
         return $this->path;
     }
 
+    public function fullPath($path=null)
+    {
+        return $this->db()->config()->path
+                    .$this->path() ;
+    }
+
     /**
     * Get a single document within this table
     *
@@ -93,18 +104,18 @@ class Table
         return (new Document($this, $name));
     }
 
-    /**
-    * Get all of the tables within our database
-    * Returns a Collection object of Tables
-    *
-    * @return array
-    */
-    public function all()
-    {
-        return array_map(function($document) {
-            return $this->get($document);
-        }, $this->list());
-    }
+    // /**
+    // * Get all of the tables within our database
+    // * Returns a Collection object of Tables
+    // *
+    // * @return array
+    // */
+    // public function list()
+    // {
+    //     return array_map(function($document) {
+    //         return $this->get($document['basename']);
+    //     }, $this->getList());
+    // }
 
     /**
     * Get a list of documents within our table
@@ -112,7 +123,7 @@ class Table
     *
     * @return array
     */
-    public function list()
+    public function getAll()
     {
         return $this->db()->fs()->files($this->path(), $this->db()->config()->extension);
     }
@@ -143,5 +154,23 @@ class Table
     public function delete()
     {
         return $this->db()->fs()->rmdir('/'.$this->name());
+    }
+    
+    public function query()
+    {
+        return new Query($this);
+    }
+
+    public function genUniqFileId($item,$ext=".json")
+    {
+        $pre=0;
+        while(true)
+        {
+            if(!file_exists($this->fullPath()."/".($item+$pre).$ext))
+            {
+                return ($item+$pre).$ext;
+            }
+            $pre++;
+        }
     }
 }

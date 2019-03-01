@@ -1,4 +1,5 @@
-<?php namespace Filebase;
+<?php 
+namespace Filebase;
 
 /**
  * The document class
@@ -14,14 +15,7 @@ class Document
     *
     * @var Filebase\Table
     */
-    protected $tb;
-
-    /**
-    * Document name
-    *
-    * @var string
-    */
-    protected $name;
+    protected $table;
 
     /**
     * Document path
@@ -30,27 +24,29 @@ class Document
     */
     protected $path;
 
+
+    protected $name;
     /**
     * Document data
     *
     * @var array
     */
-    protected $data = [];
+    protected $attr = [];
 
     /**
     * Start up the table class
     *
-    * @param string $name
+    * @param string $attr
     */
-    public function __construct($tb, $name)
+    public function __construct(Table $table,$name,array $attr=[])
     {
-        $this->tb = $tb;
+        $this->table = $table;
 
-        // TODO: We need to validate the name of this document
-        // names should be lowercased and be parsed to use underscores
+        // TODO: We need to validate the attr of this document
+        // attrs should be lowercased and be parsed to use underscores
+        $this->attr = $attr;
+
         $this->name = $name;
-
-        $this->path = $this->table()->path().'/'.$this->name;
     }
 
     /**
@@ -60,7 +56,7 @@ class Document
     */
     public function table()
     {
-        return $this->tb;
+        return $this->table;
     }
 
     /**
@@ -74,7 +70,17 @@ class Document
     }
 
     /**
-    * Get our document name (id)
+    * Get our document attr (id)
+    *
+    * @return string
+    */
+    public function attr()
+    {
+        return $this->attr;
+    }
+
+    /**
+    * Get the document name
     *
     * @return string
     */
@@ -83,25 +89,7 @@ class Document
         return $this->name;
     }
 
-    /**
-    * Get the document path
-    *
-    * @return string
-    */
-    public function path()
-    {
-        return $this->path;
-    }
-
-    /**
-    * Get the document data
-    *
-    * @return array
-    */
-    public function data()
-    {
-        return $this->data;
-    }
+    
 
     /**
     * Set the document data
@@ -127,7 +115,7 @@ class Document
 
         $data = $format::encode($data);
 
-        return $this->db()->fs()->write($this->path(), $data);
+        return $this->db()->fs()->write($this->name(), $data);
     }
 
     /**
@@ -137,7 +125,7 @@ class Document
     */
     public function delete()
     {
-        return $this->db()->fs()->delete($this->path());
+        return $this->db()->fs()->delete($this->table->name().DIRECTORY_SEPARATOR.$this->name());
     }
 
 
@@ -147,10 +135,10 @@ class Document
     *
     * @return mixed
     */
-    public function __get($name)
+    public function __get($attr)
     {
-        if (isset($this->data[$name])) {
-            return $this->data[$name];
+        if (isset($this->data[$attr])) {
+            return $this->data[$attr];
         }
     }
 
@@ -161,7 +149,7 @@ class Document
     */
     public function toArray()
     {
-        return $this->data;
+        return $this->attr;
     }
 
     /**
