@@ -21,6 +21,8 @@ class TestCase extends base_case
     protected function tearDown():void
     {
         $this->rrmdir($this->path);
+        $this->rrmdir(__DIR__."/database/");
+        $this->rrmdir(__DIR__."/database1/");
     }
 
     /**
@@ -29,7 +31,7 @@ class TestCase extends base_case
     public function rrmdir($dir) 
     { 
         if (is_dir($dir)) { 
-          $objects = scandir($dir); 
+          $objects = scandir($dir);
           foreach ($objects as $object) { 
             if ($object != "." && $object != "..") { 
               if (filetype($dir."/".$object) == "dir") $this->rrmdir($dir."/".$object); else unlink($dir."/".$object); 
