@@ -5,7 +5,7 @@ use Filebase\{Table,Query,Database};
 
 use Filebase\Test\TestCase;
 use org\bovigo\vfs\vfsStream;
-
+use Filebase\Document;
 class TableTest extends TestCase 
 {
     public $db;
@@ -16,9 +16,9 @@ class TableTest extends TestCase
         parent::setUp();
 
         $this->root=vfsStream::setup('baseFolderName',null,['tbl_one'=>[
-            'file1.json'=>'contestn',
-            'file2.json'=>'contestn',
-            'file3.json'=>'contestn',
+            'file1.json'=>'content',
+            'file2.json'=>'content',
+            'file3.json'=>'content',
         ],'tbl_two'=>[]]);
 
         $this->db=new Database([
@@ -65,5 +65,18 @@ class TableTest extends TestCase
         $query_id=$this->tbl->genUniqFileId(100,'.json');
         $this->assertEquals('102.json',$query_id);
     }
+    /** @test */
+    public function testMustReturnEmptyDocumnetInstanceOnNoneExistItem()
+    {
+        $doc=$this->tbl->get('100');
+        $this->assertInstanceOf(Document::class,$doc);
+        $this->assertCount(0,$doc->toArray());
+    }
+    /** @test */
+    public function testMustReturnDucomentInstanceOnExistItem()
+    {
+        // Test
+    }
+    
     
 }
