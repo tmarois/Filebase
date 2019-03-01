@@ -86,5 +86,30 @@ class QueryTest extends TestCase
 
         $this->assertFileNotExists($this->path."/tbl_one/0.json");
     }
+    /** @test */
+    public function testMustReturnEmptyDocumnetInstanceOnNoneExistItem()
+    {
+        $doc=$this->tmp_db->table('tbl_one')->get(100);
+        $this->assertInstanceOf(Document::class,$doc);
+        $this->assertCount(0,$doc->toArray());
+    }
+    /** @test */
+    public function testMustReturnDucomentInstanceOnExistItem()
+    {
+        $tbl=$this->tmp_db->table('tbl_one');
+        $doc=$tbl->query()->create(['name'=>'John Doe']);
+
+        $doc=$tbl->get(0);
+
+        $this->assertInstanceOf(Document::class,$doc);
+        $this->assertCount(1,$doc->toArray());
+    }
+    /** @test */
+    public function testMustReturnDocumentInstanceOnCreateNewRecord()
+    {
+        $tbl=$this->tmp_db->table('tbfl_one');
+        $doc=$tbl->query()->create(['name'=>'john']);
+        $this->assertInstanceOf(Document::class,$doc);
+    }
     
 }

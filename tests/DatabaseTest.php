@@ -97,7 +97,21 @@ class DatabaseTest extends TestCase
         $tables = $this->db->tables();
         $this->assertCount(2,$tables);
     }
+    /** @test */
+    public function testMustReturnStandardName()
+    {
+        $tbl=$this->db->tableNameGenarator('name','tbl_');
+        $this->assertEquals('tbl_name',$tbl);
 
+        $tbl=$this->db->tableNameGenarator('tbl_name','tbl_');
+        $this->assertEquals('tbl_name',$tbl);
+    }
+    /** @test */
+    public function testMustCreateTableWithStandardName()
+    {
+        $tbl=$this->tmp_db->table('name');
+        $this->assertFileExists($this->path."/tbl_name");
+    }
     /**
      * @test
      */
@@ -127,5 +141,12 @@ class DatabaseTest extends TestCase
         $this->assertInstanceOf(Table::class,$tbl);
         $this->assertInstanceOf(Table::class,$tb2);
     }
+    /** @test */
+    public function testMustReturnFiltredResultWithPattern()
+    {
+        $tbl=$this->db->filterTables(['one','two','tbl_three','tbl_four'],'/^tbl_/is');
 
+        $this->assertCount(2,$tbl);
+        $this->assertEquals(['tbl_three','tbl_four'],$tbl);        
+    }
 }
