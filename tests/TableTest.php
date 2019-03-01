@@ -65,5 +65,33 @@ class TableTest extends TestCase
         $query_id=$this->tbl->genUniqFileId(100,'.json');
         $this->assertEquals('102.json',$query_id);
     }
+    /** @test */
+    public function testMustDeleteTable()
+    {
+        $tbl=$this->tmp_db->table('tbl_name');
+        $tbl->query()->create(['Foo'=>'bar']);
+        $tbl->delete();
+        $this->assertFileNotExists($this->path."tbl_name");
+    }
+    /** @test */
+    public function testMustEmptyTable()
+    {
+        $tbl=$this->tmp_db->table('tbl_name');
+        $tbl->query()->create(['Foo'=>'bar']);
+        $tbl->query()->create(['Foo'=>'bar']);
+        $tbl->empty();
+
+        $this->assertFileNotExists($this->path."tbl_name/0.json");
+        $this->assertFileNotExists($this->path."tbl_name/1.json");
+
+        // check table reCreate
+        $tbl->query()->create(['Foo'=>'bar']);
+        $this->assertFileExists($this->path."tbl_name/0.json");
+
+    }
+    
+    
+    
+    
     
 }
