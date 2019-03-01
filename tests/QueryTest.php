@@ -12,7 +12,7 @@ class QueryTest extends TestCase
     public $db;
     public $query;
 
-    protected function setUp()
+    protected function setUp():void
     {
         parent::setUp();
 
@@ -22,6 +22,7 @@ class QueryTest extends TestCase
         
         $this->query=new Query(new Table($this->db,'tbl_one'));
     }
+
     /**
      * @test
      */
@@ -30,6 +31,7 @@ class QueryTest extends TestCase
         $tbl=$this->query->getTable();
         $this->assertInstanceOf(Table::class,$tbl);
     }
+    
     /**
      * @test
      */
@@ -38,6 +40,7 @@ class QueryTest extends TestCase
         $db=$this->query->getDatabase();
         $this->assertInstanceOf(Database::class,$db);
     }
+
     /**
      * @test
      */
@@ -56,6 +59,7 @@ class QueryTest extends TestCase
             $this->path."/tbl_one/1.json", json_encode(['name'=>'John','last_name'=>'Doe'])
         );
     }
+    
     /** @test */
     public function testMustReturnDbRecordWithId()
     {
@@ -64,6 +68,7 @@ class QueryTest extends TestCase
 
         $this->assertEquals(['name'=>'John','last_name'=>'Doe'],$record);
     }
+
     /** @test */
     public function testMustReturnInstanceOfDocument()
     {
@@ -72,6 +77,7 @@ class QueryTest extends TestCase
 
         $this->assertInstanceOf(Document::class,$record);
     }
+
     /** @test */
     public function testMustRemoveRecord()
     {

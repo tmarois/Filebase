@@ -11,7 +11,7 @@ class TableTest extends TestCase
     public $db;
     public $root;
 
-    protected function setUp()
+    protected function setUp():void
     {
         parent::setUp();
 
@@ -27,6 +27,7 @@ class TableTest extends TestCase
         
         $this->tbl=new Table($this->db,'tbl_one');
     }
+    
     /**
      * @test
      */
