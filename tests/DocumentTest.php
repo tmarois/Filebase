@@ -65,6 +65,5 @@ class DocumentTest extends TestCase
         $this->assertEquals(['Foo'=>'bar'],$doc->toArray());
         $doc->update(['Foo'=>'faryar']);
         $this->assertEquals(['Foo'=>'faryar'],$doc->toArray());
-
     }
 }

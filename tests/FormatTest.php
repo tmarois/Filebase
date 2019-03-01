@@ -16,7 +16,7 @@ class FormatTest extends TestCase
     */
     public function testFormatJson()
     {
-        $this->assertEquals(true,((new Json) instanceof FormatInterface)); 
+        $this->assertInstanceOf(FormatInterface::class,(new Json)); 
     }
 
     /**

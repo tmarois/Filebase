@@ -41,5 +41,15 @@ class TestCase extends base_case
           rmdir($dir); 
         } 
      } 
+     public function fakeRecordCreator($limit=5)
+    {
+        $a=0;
+        $tbl=$this->tmp_db->table('tbl_name');
+        while($a < $limit)
+        {
+            $a++;
+            $tbl->query()->create(['Foo'.$a=>'bar']);
+        }
+    }
     
 }

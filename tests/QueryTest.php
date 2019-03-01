@@ -2,7 +2,7 @@
 namespace Filebase\Test;
 
 use Filebase\{Database,Table,Query};
-use Filebase\Document;
+use Filebase\{Document,Collection};
 
 use Filebase\Test\TestCase;
 use org\bovigo\vfs\vfsStream;
@@ -110,6 +110,19 @@ class QueryTest extends TestCase
         $tbl=$this->tmp_db->table('tbfl_one');
         $doc=$tbl->query()->create(['name'=>'john']);
         $this->assertInstanceOf(Document::class,$doc);
+    }
+    /** @test */
+    public function testMustReturnInstanceOfCollectionOnGetAll()
+    {
+        $this->fakeRecordCreator(5);
+        $all=$this->tmp_db->table('tbl_name')->query()->getAll();
+        $this->assertInstanceOf(Collection::class,$all);
+        $this->assertCount(5,$all);
+    }
+    /** @test */
+    public function testMust()
+    {
+        // Test
     }
     
 }

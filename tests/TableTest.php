@@ -5,7 +5,7 @@ use Filebase\{Table,Query,Database};
 
 use Filebase\Test\TestCase;
 use org\bovigo\vfs\vfsStream;
-use Filebase\Document;
+use Filebase\{Document,Collection};
 class TableTest extends TestCase 
 {
     public $db;
@@ -33,7 +33,7 @@ class TableTest extends TestCase
      */
     public function testMustReturnListOfFiles()
     {
-        $files=$this->tbl->getAll();
+        $files=$this->tbl->getAllAsRaw();
         $this->assertCount(3,$files);
 
         // check just return files
@@ -41,7 +41,7 @@ class TableTest extends TestCase
         mkdir($this->root->url().'/tbl_one/newjfolder');
         $this->assertFileExists($this->root->url().'/tbl_one/newjfolder');
 
-        $files=$this->db->table('tbl_one')->getAll();
+        $files=$this->db->table('tbl_one')->getAllAsRaw();
         $this->assertCount(3,$files);
     }
 
@@ -74,7 +74,7 @@ class TableTest extends TestCase
         $this->assertFileNotExists($this->path."tbl_name");
     }
     /** @test */
-    public function testMustEmptyTable()
+    public function testMustEmptyTableContent()
     {
         $tbl=$this->tmp_db->table('tbl_name');
         $tbl->query()->create(['Foo'=>'bar']);
@@ -89,9 +89,6 @@ class TableTest extends TestCase
         $this->assertFileExists($this->path."tbl_name/0.json");
 
     }
-    
-    
-    
     
     
 }
