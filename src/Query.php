@@ -44,6 +44,7 @@ class Query
         {
             return new Document($this->table(),$id.'.json',(array)json_decode($this->fs->read($id.'.json'),true));
         }
+        return new Document($this->table(),$id.'.json');
     }
 
 }
