@@ -11,8 +11,8 @@ class TestCase extends base_case
     {
         @mkdir($this->path);
     }
-    
-    public function tearDown()
+
+    protected function tearDown():void
     {
         $this->rrmdir($this->path);
     }
