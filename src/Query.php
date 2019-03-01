@@ -34,12 +34,19 @@ class Query
     {
         // TODO:ADD START POINT FOR ID 
         // TODO:VALIDATE
-        $this->fs->write($this->table()->genUniqFileId(0,'.json'),$this->formater->encode($args,true));  
+        $name=$this->table()->genUniqFileId(0,'.json');
+        $this->fs->write($name,$this->formater->encode($args,true));
+        return $this->find($name);  
     }
 
     public function find($id)
     {
         // TODO:set ext dina
+        // check if input has ext ...
+        if(strpos($id,'.json')!==false)
+        {
+            $id=str_replace('.json','',$id);
+        }
         if($this->fs->has($id.'.json'))
         {
             return new Document($this->table(),$id.'.json',(array)json_decode($this->fs->read($id.'.json'),true));
