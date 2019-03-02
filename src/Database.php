@@ -73,11 +73,13 @@ class Database
      */
     public function table($name)
     {
+        $name = $this->tableNameSanitizer($name);
+
         if (!$this->hasTable($name)) {
-            $this->fs()->mkdir($this->tableNameSanitizer($name));
+            $this->fs()->mkdir($name);
         }
         
-        return (new Table($this, $this->tableNameSanitizer($name)));
+        return (new Table($this, $name));
     }
 
    /**
