@@ -26,7 +26,7 @@ class Filesystem
      * 
      * @param string $path
      */
-    public function __construct($path)
+    public function __construct(String $path)
     {
         $this->filesystem = new FS((new Local($path)));
     }
