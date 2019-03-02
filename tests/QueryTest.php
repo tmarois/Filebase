@@ -243,6 +243,61 @@ class QueryTest extends TestCase
         $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(5); 
         $this->assertFalse($tbl);
     }
-     
+    /** 
+     * @test 
+     * @dataProvider matchDataProvider()
+     */
+    public function testMustReturnBool($key, $operator, $value,$expected)
+    {
+        $actual=$this->tmp_db->table('tbl_name')->query()->match($key, $operator, $value);
+        $this->assertEquals($expected,$actual);
+    }
+    public function matchDataProvider()
+    {
+        return [
+            ['3','=',3,true],
+            // ['3d','=',3,false],
+
+            ['name3','==','name3',true],
+            ['name3','==',3,false],
+
+            ['1234','===',1234,false],
+            [1234,'===',1234,true],
+
+            ['3','!==',3,true],
+            [1234,'!==',1234,false],
+            
+            ['name','!=',3,true],
+            ['3','!=',3,false],
+
+            ['name','not',3,true],
+            ['3','not',3,false],
+
+            [3,'>',3,false],
+            [5,'>',3,true],
+
+            [3,'>=',3,true],
+            [1,'>=',3,false],
+
+            // ['name','<=',3,false],
+            // ['name','<=',3,false],
+
+            ['fsdf3','like',3,true],
+            [4563,'like',3,true],
+            [4565,'like',3,false],
+            ['name','!like',3,true],
+            ['nam3e','not like',3,false],
+
+            ['45fd63','contain',3,true],
+            [4565,'contain',3,false],
+
+            ['3name','REGEX','/^3/is',true],
+            ['d3name','REGEX','/^3/is',false],
+
+            // ['name','in',3,false],
+            // ['name','in',3,false],
+        ];
+    }
+    
      
 }
