@@ -103,10 +103,14 @@ class DatabaseTest extends TestCase
     /** @test */
     public function testMustReturnStandardName()
     {
-        $tbl=$this->db->tableNameGenarator('name','tbl_');
-        $this->assertEquals('tbl_name',$tbl);
+        $tbl=$this->db->tableNameSanitizer('name','tbl_1');
+        $this->assertEquals('tbl_1name',$tbl);
+        
+        $tbl=$this->db->config()->table_prefix='fafa_';
+        $tbl=$this->db->tableNameSanitizer('name');
+        $this->assertEquals('fafa_name',$tbl);
 
-        $tbl=$this->db->tableNameGenarator('tbl_name','tbl_');
+        $tbl=$this->db->tableNameSanitizer('tbl_name','tbl_');
         $this->assertEquals('tbl_name',$tbl);
     }
     /** @test */
