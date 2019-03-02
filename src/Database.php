@@ -141,7 +141,6 @@ class Database
     */
     public function empty()
     {
-        // TODO: delete all table directores
         // keep the database directory alive
         foreach ($this->tableList() as $key => $value) {
             $this->fs()->rmdir($value);
