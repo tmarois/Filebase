@@ -123,10 +123,19 @@ class QueryTest extends TestCase
     public function testMustAddCondition()
     {
         $tbl=$this->tmp_db->table('tbl_name');
-        $tbl=$tbl->query()->where('name','==','john')
-                            ->where('name','==','john');
-        $this->assertCount(2,$tbl->getConditions()['and']);
+        $tbl=$tbl->query()->where('name','==','john');
+        $this->assertCount(1,$tbl->getConditions()['and']);
     }
+    /** @test */
+    public function testMustReplaceConditionWithSameKey()
+    {
+        $tbl=$this->tmp_db->table('tbl_name');
+        $tbl=$tbl->query()->where('name','==','john')
+                            ->where('name','==','john')
+                                ->where('email','==','john');
+        $this->assertCount(2,$tbl->getConditions()['and']); 
+    }
+    
     /** @test */
     public function testMustFilterItemsWithWhere()
     {
@@ -134,4 +143,72 @@ class QueryTest extends TestCase
         $result=$tbl->query()->where('Foo','==','bar1')->get();
         $this->assertCount(1,$result);
     }
+    /** @test */
+    public function testMustReturnFilterItemsOnWhereWithLikeKey()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+        $result=$tbl->query()->where('Foo','like','bar')->get();
+        $this->assertCount(5,$result);
+    }
+    // TODO:add test for switch items 
+    /** @test */
+    public function testMustReutrnValueOfLastWhereOnQueryWithSameKey()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+        $tbl=$tbl->query()->where('Foo','like','bar0')
+                            ->where('Foo','==','bar5')->get();
+        $this->assertEquals('bar5',$tbl[0]->Foo);
+    }
+    /** @test */
+    public function testMustReturnResultWithMultiFilterMatchWithAllConditions()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+        $tbl=$tbl->query()->where('Foo','like','bar')
+                            ->where('name','==','name5')->get();
+
+        $this->assertCount(1,$tbl);
+        $this->assertEquals('name5',$tbl[0]->name);
+        $this->assertEquals('bar5',$tbl[0]->Foo);
+    }
+    /** @test */
+    public function testMustRetutnWhereOnWhereWithAnd()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+        $tbl=$tbl->query()->where('Foo','like','bar')
+                            ->andWhere('name','==','name5')->get();
+        
+        $this->assertCount(1,$tbl);
+    }
+    /** @test */
+    public function testMustAddConditionWithOrWhere()
+    {
+        $tbl=$this->tmp_db->table('tbl_name')->query()
+                            ->orWhere('Foo','like','bar')
+                                ->orWhere('Foo','like','bar');
+        $this->assertCount(2,$tbl->getConditions()['or']);
+    }
+    
+    /** @test */
+    public function testMustReturnResultMatchWithOnorWhere()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+        $tbl=$tbl->query()->where('Foo','==','bar1')
+                            ->orWhere('Foo','==','bar2')->get();
+        
+        $this->assertCount(2,$tbl);
+    }
+    /** @test */
+    public function testMustReturnUniqResultOnOrWhere()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+        $tbl=$tbl->query()->where('Foo','==','bar1')
+                            ->orWhere('Foo','==','bar2')
+                                ->orWhere('Foo','==','bar2')->get();
+        
+        $this->assertCount(2,$tbl);
+    }
+    
+    
+    
+    
 }
