@@ -154,7 +154,13 @@ class DatabaseTest extends TestCase
         $tbl=$this->db->filterTables(['one','two','tbl_three','tbl_four'],'tbl_');
 
         $this->assertCount(2,$tbl);
-        $this->assertEquals(['tbl_three','tbl_four'],$tbl);        
+        $this->assertEquals(['tbl_three','tbl_four'],$tbl);     
+        
+        $this->db->config()->table_prefix="far_";
+        $tbl=$this->db->filterTables(['one','far_two','tbl_three','tbl_four']);
+
+        $this->assertCount(1,$tbl);
+        $this->assertEquals(['far_two'],$tbl);   
     }
     /** @test */
     public function testMustCheckDatabaseHasTable()
@@ -175,5 +181,14 @@ class DatabaseTest extends TestCase
         $this->tmp_db->empty();
         $this->assertCount(0,$this->tmp_db->tableList());
     }
-    
+    /**
+     * @test
+     */
+    public function testMustDeleteDatabase()
+    {
+        $this->assertFileExists($this->path);
+        $this->tmp_db->delete();
+        $this->assertFileNotExists($this->path);
+
+    }    
 }
