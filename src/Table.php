@@ -45,7 +45,7 @@ class Table
     public function __construct(Database $db, $name)
     {
         $this->db = $db;
-        $this->name=$name;
+        $this->name = $name;
         $this->path = DIRECTORY_SEPARATOR.$this->name;
         $this->fs = new Filesystem($this->fullPath());
     }
@@ -119,13 +119,12 @@ class Table
     * It will keep the table directory alive
     * This will delete all documents within the table
     *
-    * @return boolean
+    * @return void
     */
     public function empty()
     {
         $this->delete();
         $this->fs()->mkdir($this->name());
-        return;
     }
 
     /**
@@ -151,6 +150,19 @@ class Table
     public function query()
     {
         return (new Query($this));
+    }
+
+    /**
+    * Check if this table has a specific document
+    *
+    * @return boolean
+    */
+    public function has($name)
+    {
+        // might need a better check on this because "findOrFail"
+        // returns document data which increases memory usage
+        $doc = $this->query()->findOrFail($name);
+        return ($doc) ? true : false;
     }
 
     /**
