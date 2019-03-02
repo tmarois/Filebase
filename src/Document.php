@@ -220,7 +220,13 @@ class Document implements ArrayAccess,Countable
     }
     public function update(array $args)
     {
-        $this->attr=$args;
+        foreach($args as $key=>$item)
+        {
+            if(isset($this->attr[$key]))
+            {
+                $this->attr[$key]=$item;
+            }
+        }
         $this->save();
     }
 }

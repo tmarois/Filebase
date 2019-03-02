@@ -66,4 +66,23 @@ class DocumentTest extends TestCase
         $doc->update(['Foo'=>'faryar']);
         $this->assertEquals(['Foo'=>'faryar'],$doc->toArray());
     }
+    /** @test */
+    public function testMustUpdateJustNewKeysOnSaveMethod()
+    {
+        $tbl=$this->tmp_db->table('tbl_name');
+        $doc=$tbl->query()->create(['email'=>'foo@bar','name'=>'faryar']);
+        $doc->name='tmarios';
+        $doc->save();
+        $this->assertEquals(['email'=>'foo@bar','name'=>'tmarios'],$doc->toArray());
+    }
+    /** @test */
+    public function testMustUpdateJustNewKeysOnUpdateMethod()
+    {
+        $tbl=$this->tmp_db->table('tbl_name');
+        $doc=$tbl->query()->create(['email'=>'foo@bar','name'=>'faryar']);
+        $doc->update(['name'=>'tmarios']);
+        $this->assertEquals(['email'=>'foo@bar','name'=>'tmarios'],$doc->toArray());
+    }
+    
+    
 }
