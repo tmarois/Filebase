@@ -1,6 +1,5 @@
 <?php namespace Filebase;
 
-use Exception;
 use Filebase\Format\Json;
 
 /**
@@ -46,6 +45,7 @@ class Config
     * @var boolean
     */
     protected $readonly = false;
+    protected $table_prefix='tbl_';
 
     /**
     * The config starting point, load in the necessary config array
@@ -74,5 +74,10 @@ class Config
         }
 
         return null;
+    }
+    public function __set($key,$value)
+    {
+        if(isset($this->$key))
+        $this->$key=$value;
     }
 }
