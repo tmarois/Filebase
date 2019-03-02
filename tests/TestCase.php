@@ -48,7 +48,10 @@ class TestCase extends base_case
         while($a < $limit)
         {
             $a++;
-            $tbl->query()->create(['Foo'=>'bar'.$a]);
+            $tbl->query()->create([
+                'Foo'=>'bar'.$a,
+                'name'=>'name'.$a,
+                ]);
         }
         return $tbl;
     }
