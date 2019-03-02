@@ -197,7 +197,9 @@ class QueryTest extends TestCase
         
         $this->assertCount(2,$tbl);
     }
-    /** @test */
+    /** 
+     * @test 
+     */
     public function testMustReturnUniqResultOnOrWhere()
     {
         $tbl=$this->fakeRecordCreator(5);
@@ -207,8 +209,25 @@ class QueryTest extends TestCase
         
         $this->assertCount(2,$tbl);
     }
-    
-    
-    
-    
+    /** @test */
+    public function testMustAddConditionWithArray()
+    {
+        $tbl=$this->tmp_db->table('tbl_name')->query()
+                    ->Where([
+                        ['Foo','like','bar'],
+                        ['name','like','bar']
+                    ]);
+        $this->assertCount(2,$tbl->getConditions()['and']);
+    }
+     /** @test */
+     public function testMustAddConditionWithArrayOnOrWhere()
+     {
+         $tbl=$this->tmp_db->table('tbl_name')->query()
+                     ->orWhere([
+                         ['Foo','like','bar'],
+                         ['name','like','bar']
+                     ]);
+         $this->assertCount(2,$tbl->getConditions()['or']);
+     }
+        
 }
