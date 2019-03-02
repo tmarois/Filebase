@@ -73,8 +73,18 @@ class Query
         return new Collection($_items);
         // return $this->db()->fs()->files($this->path(), $this->db()->config()->extension);
     }
-    public function where($key,$con,$value)
+    public function where(...$args)
     {
+        if(is_array($args[0]))
+        {
+             foreach($args[0] as $item)
+             {
+                list($key,$con,$value)=[$item[0],$item[1],$item[2]];
+                $this->conditions['and'][$key]=[$con,$value];
+             }
+             return $this;
+        }
+        list($key,$con,$value)=$args;
         $this->conditions['and'][$key]=[$con,$value];
         return $this;
     }
@@ -82,8 +92,18 @@ class Query
     {
         return $this->where(...$args);
     }
-    public function orWhere($key,$con,$value)
+    public function orWhere(...$args)
     {
+        if(is_array($args[0]))
+        {
+             foreach($args[0] as $item)
+             {
+                list($key,$con,$value)=[$item[0],$item[1],$item[2]];
+                $this->conditions['or'][]=[$key,$con,$value];
+             }
+             return $this;
+        }
+        list($key,$con,$value)=$args;
         $this->conditions['or'][]=[$key,$con,$value];
         return $this;
     }
