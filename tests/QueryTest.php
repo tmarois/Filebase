@@ -238,6 +238,19 @@ class QueryTest extends TestCase
                         ['name','like','bar']
                     ]);
         $this->assertCount(2,$tbl->getConditions()['or']);
+
+    }
+    /** @test */
+    public function testMustAddConditionWithArrayOnOrWherewithManyArrays()
+    {
+        $tbl=$this->tmp_db->table('tbl_name')->query()
+                    ->orWhere(
+                        ['Foo','like','bar'],
+                        ['name','like','bar']
+                    );
+        // print_r($tbl->getConditions()['or']);
+
+        $this->assertCount(2,$tbl->getConditions()['or']);
     }
     /** 
     * @test
