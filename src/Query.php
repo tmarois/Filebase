@@ -157,6 +157,7 @@ class Query
     }
     public function match($key, $operator, $value)
     {
+        $operator=trim($operator);
         switch (true)
         {
             case ($operator === '=' && $key == $value):
