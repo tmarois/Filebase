@@ -61,18 +61,6 @@ class Document implements ArrayAccess,Countable
         // attrs should be lowercased and be parsed to use underscores
         $this->attr = $attr;
     }
-    public function re_assign($item)
-    {
-         // assign our table
-         $this->table = $table;
-
-         // assign our document name
-         $this->name = $name;
- 
-         // TODO: We need to validate the attr of this document
-         // attrs should be lowercased and be parsed to use underscores
-         $this->attr = $attr;
-    }
     public function count()
     {
         return count($this->attr);

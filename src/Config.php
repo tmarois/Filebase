@@ -26,7 +26,7 @@ class Config
     *
     * @var Filebase\Format\FormatInterface
     */
-    protected $format = Json::class;
+    protected $formater=Json::class;
 
     /**
     * The file extension

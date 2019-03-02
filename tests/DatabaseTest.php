@@ -179,6 +179,7 @@ class DatabaseTest extends TestCase
         $this->tmp_db->table('tbl_name2');
         $this->tmp_db->table('tbl_name3')->query()->create(['data'=>'content']);
         $this->tmp_db->empty();
+        $this->assertFileExists($this->path);
         $this->assertCount(0,$this->tmp_db->tableList());
     }
     /**

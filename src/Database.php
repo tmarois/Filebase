@@ -114,6 +114,7 @@ class Database
     {
         $table_prefix=$table_prefix==null ? $this->config->table_prefix : $table_prefix;
         $pattern='/^'.$table_prefix.'/is';
+        
         return array_values(array_filter($args,function($item) use ($pattern){
             return preg_match($pattern,$item);   
         }));

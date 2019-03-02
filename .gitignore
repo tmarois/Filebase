@@ -90,6 +90,6 @@ nb-configuration.xml
 
 # Visual Studio Code
 .vscode/
-
+cover/
 index.php
 test.php

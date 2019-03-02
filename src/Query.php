@@ -17,7 +17,7 @@ class Query
         $this->fs = new Filesystem($table->fullPath());
 
         // we have access to this within $this->db()->config()->format
-        $this->formater = new Json();
+        $this->formater = $this->db()->config()->format;
         
     }
 
@@ -36,7 +36,7 @@ class Query
         // TODO:ADD START POINT FOR ID 
         // TODO:VALIDATE
         $name=$this->table()->genUniqFileId(0,'.json');
-        $this->fs->write($name,$this->formater->encode($args,true));
+        $this->fs->write($name,$this->db()->config()->formater::encode($args,true));
         return $this->find($name);  
     }
 
