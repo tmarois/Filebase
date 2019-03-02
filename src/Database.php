@@ -121,6 +121,21 @@ class Database
         return $this->filterTables($this->fs()->folders());
     }
 
+    /**
+    * Check if this table exist
+    *
+    * @return boolean
+    */
+    public function hasTable($name)
+    {
+        return in_array($name,$this->tableList());
+    }
+
+    /**
+    * ...
+    *
+    * @return array
+    */
     public function filterTables(array $args,$table_prefix=null)
     {
         $table_prefix=$table_prefix==null ? $this->config->table_prefix : $table_prefix;
@@ -130,7 +145,7 @@ class Database
             return preg_match($pattern,$item);   
         }));
     }
-    
+
     /**
     * Ability to use the filesystem outside classes
     *
@@ -172,13 +187,9 @@ class Database
     */
     public function delete()
     {
-        $path=explode(DIRECTORY_SEPARATOR,trim($this->config()->path,DIRECTORY_SEPARATOR));
-        $fs=new Filesystem($this->config()->path."..".DIRECTORY_SEPARATOR);
+        $path = explode(DIRECTORY_SEPARATOR,trim($this->config()->path,DIRECTORY_SEPARATOR));
+        $fs = new Filesystem($this->config()->path."..".DIRECTORY_SEPARATOR);
         return $fs->rmdir(end($path));
-    }
-    public function hasTable($name)
-    {
-        return in_array($name,$this->tableList());
     }
    
 }

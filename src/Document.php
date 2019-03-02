@@ -61,30 +61,15 @@ class Document implements ArrayAccess,Countable
         // attrs should be lowercased and be parsed to use underscores
         $this->attr = $attr;
     }
-    
+
+    /**
+     * Get a count of data props in our document
+     *
+     * @return int
+     */
     public function count()
     {
         return count($this->attr);
-    }
-
-    public function offsetSet($offset, $value) {
-        if (is_null($offset)) {
-            $this->attr[] = $value;
-        } else {
-            $this->attr[$offset] = $value;
-        }
-    }
-
-    public function offsetExists($offset) {
-        return isset($this->attr[$offset]);
-    }
-
-    public function offsetUnset($offset) {
-        unset($this->attr[$offset]);
-    }
-
-    public function offsetGet($offset) {
-        return isset($this->attr[$offset]) ? $this->attr[$offset] : null;
     }
 
     /**
@@ -138,7 +123,6 @@ class Document implements ArrayAccess,Countable
     public function set(array $data = [])
     {
         $this->attr = $data;
-
         return $this;
     }
 
@@ -249,5 +233,26 @@ class Document implements ArrayAccess,Countable
     public function __toString()
     {
         return $this->toJson();
+    }
+
+
+    public function offsetSet($offset, $value) {
+        if (is_null($offset)) {
+            $this->attr[] = $value;
+        } else {
+            $this->attr[$offset] = $value;
+        }
+    }
+
+    public function offsetExists($offset) {
+        return isset($this->attr[$offset]);
+    }
+
+    public function offsetUnset($offset) {
+        unset($this->attr[$offset]);
+    }
+
+    public function offsetGet($offset) {
+        return isset($this->attr[$offset]) ? $this->attr[$offset] : null;
     }
 }
