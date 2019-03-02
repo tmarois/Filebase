@@ -180,4 +180,21 @@ class Table
             $pre++;
         }
     }
+
+   /**
+    * Magic method to give us access to query methods on db class
+    *
+    */
+    public function __call($method,$args)
+    {
+        if(method_exists($this,$method)) {
+            return $this->$method(...$args);
+        }
+
+        if(method_exists(Query::class,$method)) {
+            return $this->query()->$method(...$args);
+        }
+
+        throw new \BadMethodCallException("method {$method} not found on 'Database::class' and 'Query::class'");
+    }
 }

@@ -148,6 +148,10 @@ class QueryTest extends TestCase
         $tbl=$this->fakeRecordCreator(5);
         $result=$tbl->query()->where('Foo','like','bar')->get();
         $this->assertCount(5,$result);
+
+        // testing the magic call
+        $result=$tbl->where('Foo','like','bar')->get();
+        $this->assertCount(5,$result);
     }
     // TODO:add test for switch items 
     /** @test */
@@ -260,12 +264,21 @@ class QueryTest extends TestCase
         $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(); 
         $this->assertFalse($tbl);
 
+        // testing the magic call
+        $tbl=$this->tmp_db->table('tbl_name')->findOrFail(); 
+        $this->assertFalse($tbl);
+
         $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(12); 
+        $this->assertFalse($tbl);
+
+        // testing the magic call
+        $tbl=$this->tmp_db->table('tbl_name')->findOrFail(12); 
         $this->assertFalse($tbl);
 
         $this->fakeRecordCreator(5);
         $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(5); 
         $this->assertFalse($tbl);
+        
     }
     /** 
      * @test 
