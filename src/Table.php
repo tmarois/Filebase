@@ -45,6 +45,7 @@ class Table
     public function __construct(Database $db, $name)
     {
         $this->db = $db;
+        $this->name=$name;
         $this->path = DIRECTORY_SEPARATOR.$this->name;
         $this->fs=new Filesystem($this->fullPath());
     }
