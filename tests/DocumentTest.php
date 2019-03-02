@@ -13,7 +13,7 @@ class DocumentTest extends TestCase
     /** @test */
     public function testArrayAccess()
     {
-        $doc=$this->tmp_db->table('tbl_name')->get(0);
+        $doc=$this->tmp_db->table('tbl_name')->query()->find(0);
         
         // check countable
         $this->assertTrue($doc instanceof \Countable);
@@ -24,12 +24,12 @@ class DocumentTest extends TestCase
     /** @test */
     public function testMustUpdateRecordOnDocumentWithArrayMode()
     {
-        $doc=$this->tmp_db->table('tbl_name')->get(0);
+        $doc=$this->tmp_db->table('tbl_name')->query()->find(0);
         
         $doc['name']='john';
         $doc['last_name']='Doe';
         $doc->save();
-        $doc=$this->tmp_db->table('tbl_name')->get(0);
+        $doc=$this->tmp_db->table('tbl_name')->query()->find(0);
         $this->assertArrayHasKey('last_name',$doc);
 
         $this->assertEquals(['name'=>'john','last_name'=>'Doe'],$doc->toArray());
@@ -42,7 +42,7 @@ class DocumentTest extends TestCase
     /** @test */
     public function testMustReturnUpdatedDocumentInstance()
     {
-        $doc=$this->tmp_db->table('tbl_name')->get(0);
+        $doc=$this->tmp_db->table('tbl_name')->query()->find(0);
         
         $doc['name']='john';
         $doc['last_name']='Doe';

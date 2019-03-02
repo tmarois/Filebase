@@ -30,20 +30,22 @@ class Query
     {
         return $this->table->db();
     }
+    public function config()
+    {
+        return $this->db()->config(); 
+    }
 
     public function create(array $args)
     {
         // TODO:ADD START POINT FOR ID 
         // TODO:VALIDATE
-        $name=$this->table()->genUniqFileId(0,'.json');
-        $this->fs->write($name,$this->db()->config()->formater::encode($args,true));
+        $name=$this->table()->genUniqFileId();
+        $this->fs->write($name,$this->config()->formater::encode($args,true));
         return $this->find($name);  
     }
 
     public function find($id)
     {
-        // TODO:set ext dina
-        // check if input has ext ...
         if(strpos($id,'.json')!==false)
         {
             $id=str_replace('.json','',$id);
@@ -173,11 +175,11 @@ class Query
                 return true;
             case ($operator === '<=' && $key <= $value):
                 return true;
-            case (strtoupper($operator) === 'LIKE' && preg_match('/'.$value.'/is',$key)):
+            case ((strtoupper($operator) === 'LIKE' || strtoupper($operator) === 'CONTAIN') 
+                                                    && preg_match('/'.$value.'/is',$key)):
                 return true;
-            case (strtoupper($operator) === 'NOT LIKE' && !preg_match('/'.$value.'/is',$key)):
-                return true;
-            case (str_replace(' ','',strtoupper($operator)) === '!LIKE' && !preg_match('/'.$value.'/is',$key)):
+            case ((strtoupper($operator) === 'NOT LIKE' || str_replace(' ','',strtoupper($operator)) === '!LIKE') 
+                                                    && !preg_match('/'.$value.'/is',$key)):
                 return true;
             case (strtoupper($operator) === 'IN' && in_array($key, (array) $value)):
                 return true;

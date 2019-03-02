@@ -96,10 +96,10 @@ class Table
     * @param string $name
     * @return Filebase\Document
     */
-    public function get($name)
-    {
-        return $this->query()->find($name);
-    }
+    // public function get($name)
+    // {
+    //     return $this->query()->find($name);
+    // }
     public function fs()
     {
         return $this->fs;
@@ -142,7 +142,7 @@ class Table
     */
     public function delete()
     {
-        // filesystem cant delete Herself so use database filesystem to remove table
+        // table fileSystem cant delete Herself so use database filesystem to remove table
         return $this->db()->fs()->rmdir($this->name());
     }
 
@@ -160,16 +160,14 @@ class Table
     * Not exactly sure what this would be used for? 
     * 
     */
-    public function genUniqFileId($item,$ext=".json")
+    public function genUniqFileId($item=0,$ext=null)
     {
+        $ext=$ext==null ? $this->db->config()->extension : trim($ext,'.');
         $pre=0;
         while(true)
         {
-            if(!$this->fs()->has(($item+$pre).$ext))
-            {
-                return ($item+$pre).$ext;
-            }
-
+            if(!$this->fs()->has(($item+$pre).'.'.$ext))
+                return ($item+$pre).'.'.$ext;
             $pre++;
         }
     }

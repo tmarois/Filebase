@@ -89,7 +89,7 @@ class QueryTest extends TestCase
     /** @test */
     public function testMustReturnEmptyDocumnetInstanceOnNoneExistItem()
     {
-        $doc=$this->tmp_db->table('tbl_one')->get(100);
+        $doc=$this->tmp_db->table('tbl_one')->query()->find(100);
         $this->assertInstanceOf(Document::class,$doc);
         $this->assertCount(0,$doc->toArray());
     }
@@ -99,7 +99,7 @@ class QueryTest extends TestCase
         $tbl=$this->tmp_db->table('tbl_one');
         $doc=$tbl->query()->create(['name'=>'John Doe']);
 
-        $doc=$tbl->get(0);
+        $doc=$tbl->query()->find(0);
 
         $this->assertInstanceOf(Document::class,$doc);
         $this->assertCount(1,$doc->toArray());
