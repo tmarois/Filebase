@@ -134,7 +134,7 @@ class Query
             foreach ($items as $key => $value) {
                 if(isset($value[$and_condition_key]))
                 {
-                    if($this->match($value,$and_condition_key,$and_condition[0],$and_condition[1]))
+                    if($this->match($value[$and_condition_key],$and_condition[0],$and_condition[1]))
                     {
                         $result[]=$value;
                         continue;
@@ -142,7 +142,7 @@ class Query
                     // just if record rejected with 'and' conditions we need to match record with 'or' conditions
                     if(!isset($this->conditions['or'])) continue;
                     foreach ($this->conditions['or'] as $or_condition) {
-                        if($this->match($value,$or_condition[0],$or_condition[1],$or_condition[2]))
+                        if($this->match($value[$or_condition[0]],$or_condition[1],$or_condition[2]))
                         {
                             $result[]=$value;
                             continue;
@@ -155,9 +155,8 @@ class Query
         } 
         return array_unique($result);
     }
-    public function match($document, $key, $operator, $value)
+    public function match($key, $operator, $value)
     {
-        $key = $document->$key;
         switch (true)
         {
             case ($operator === '=' && $key == $value):
