@@ -18,7 +18,7 @@ class Config
     *
     * @var string
     */
-    protected $path = __DIR__.'/database';
+    protected $path = __DIR__.DIRECTORY_SEPARATOR.'database';
 
     /**
     * The current format class

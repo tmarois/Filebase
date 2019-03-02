@@ -84,7 +84,7 @@ class Document implements ArrayAccess,Countable
     public function offsetGet($offset) {
         return isset($this->attr[$offset]) ? $this->attr[$offset] : null;
     }
-    
+
     /**
      * This is easy access to our table
      *
@@ -151,7 +151,7 @@ class Document implements ArrayAccess,Countable
 
         // $data = $format::encode($this->attr);
         $data=json_encode($this->attr);
-        $this->table()->db()->fs()->put($this->table()->name()."/".$this->name(), $data);
+        $this->table()->db()->fs()->put($this->table()->name().DIRECTORY_SEPARATOR.$this->name(), $data);
         // $this=$this->table()->get ($this->name());
         return $this; 
     }

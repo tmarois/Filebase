@@ -114,7 +114,7 @@ class Database
     {
         $table_prefix=$table_prefix==null ? $this->config->table_prefix : $table_prefix;
         $pattern='/^'.$table_prefix.'/is';
-        
+
         return array_values(array_filter($args,function($item) use ($pattern){
             return preg_match($pattern,$item);   
         }));
@@ -161,8 +161,8 @@ class Database
     */
     public function delete()
     {
-        $path=explode('/',trim($this->config()->path,'/'));
-        $fs=new Filesystem($this->config()->path."../");
+        $path=explode(DIRECTORY_SEPARATOR,trim($this->config()->path,DIRECTORY_SEPARATOR));
+        $fs=new Filesystem($this->config()->path."..".DIRECTORY_SEPARATOR);
         return $fs->rmdir(end($path));
     }
     public function hasTable($name)

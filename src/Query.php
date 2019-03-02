@@ -74,7 +74,7 @@ class Query
         foreach($items as $item)
         {
             $_items[]=new Document($this->table(),$item,json_decode(
-                $this->db()->fs()->read($this->table()->name()."/".$item.".".$this->config()->extension)
+                $this->db()->fs()->read($this->table()->name().DIRECTORY_SEPARATOR.$item.".".$this->config()->extension)
             ,true));
         }
         return new Collection($_items);
