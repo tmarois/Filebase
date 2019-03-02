@@ -54,14 +54,32 @@ class Query
         $result=$this->find($id);
         return !empty($result->attr)  ? $result : false;
     } 
-    public function find($id)
+    public function find(...$id)
     {
+        // call findMany on find([1,2,3])
+        if(is_array($id[0]))
+            return $this->findMany(...$id[0]);
+        // call findMany on find(1,2,3,) 
+        if(count($id) > 1 )
+            return $this->findMany(...$id);
+        // return single document on find(1)
+        $id=$id[0];
         $ext=$this->config()->extension;
         $id=strpos($id,'.'.$ext)!==false ? str_replace('.'.$ext,'',$id) : $id;
 
         return $this->fs->has($id.'.'.$ext) ?
             (new Document($this->table(),$id.'.'.$ext,(array)json_decode($this->fs->read($id.'.'.$ext),true))): 
                 (new Document($this->table(),$id.'.'.$ext));
+    }
+    public function findMany(...$ids)
+    {
+        $ids=is_array($ids[0]) ? $ids[0] : $ids;
+        $docs=[];
+        foreach($ids as $id)
+        {
+            $docs[]=$this->find($id);
+        }
+        return new Collection($docs);
     }
     /**
     * Get a list of documents within our table

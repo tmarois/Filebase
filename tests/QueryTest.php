@@ -252,7 +252,6 @@ class QueryTest extends TestCase
                         ['Foo','like','bar'],
                         ['name','like','bar']
                     );
-        // print_r($tbl->getConditions()['or']);
 
         $this->assertCount(2,$tbl->getConditions()['or']);
     }
@@ -335,6 +334,34 @@ class QueryTest extends TestCase
             // ['name','in',3,false],
         ];
     }
+    /** @test */
+    public function testMustReturnCollactionOfItemsOnFindMany()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+
+        $result=$tbl->query()->findMany([1,2,3]);
+        $this->assertInstanceOf(Collection::class,$result);
+        $this->assertCount(3,$result);
+        
+        $result=$tbl->query()->findMany(1,2,3);
+        $this->assertInstanceOf(Collection::class,$result);
+        $this->assertCount(3,$result);
+    }
+    /** @test */
+    public function testMustReturnCollactionOfItemsOnFindWithArray()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+
+        $result=$tbl->query()->find([1,2,3]);
+        $this->assertInstanceOf(Collection::class,$result);
+        $this->assertCount(3,$result);
+        
+        $result=$tbl->query()->find(1,2,3);
+        $this->assertInstanceOf(Collection::class,$result);
+        $this->assertCount(3,$result);
+    }
+    
+    
     
      
 }
