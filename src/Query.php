@@ -43,18 +43,23 @@ class Query
         $this->fs->write($name,$this->config()->formater::encode($args,true));
         return $this->find($name);  
     }
-
+    public function findOrFail($id=null)
+    {
+        if($id==null)
+        {
+            return false;
+        }
+        $result=$this->find($id);
+        return !empty($result->attr)  ? $result : false;
+    } 
     public function find($id)
     {
-        if(strpos($id,'.json')!==false)
-        {
-            $id=str_replace('.json','',$id);
-        }
-        if($this->fs->has($id.'.json'))
-        {
-            return new Document($this->table(),$id.'.json',(array)json_decode($this->fs->read($id.'.json'),true));
-        }
-        return new Document($this->table(),$id.'.json');
+        $ext=$this->config()->extension;
+        $id=strpos($id,'.'.$ext)!==false ? str_replace('.'.$ext,'',$id) : $id;
+
+        return $this->fs->has($id.'.'.$ext) ?
+            (new Document($this->table(),$id.'.'.$ext,(array)json_decode($this->fs->read($id.'.'.$ext),true))): 
+                (new Document($this->table(),$id.'.'.$ext));
     }
     /**
     * Get a list of documents within our table
@@ -64,12 +69,12 @@ class Query
     */
     public function getAll()
     {
-        $items=$this->db()->fs()->files($this->table()->path(), $this->db()->config()->extension);
+        $items=$this->table()->fs()->files('.', $this->config()->extension);
         $_items=[];
         foreach($items as $item)
         {
             $_items[]=new Document($this->table(),$item,json_decode(
-                $this->db()->fs()->read($this->table()->name()."/".$item.".json")
+                $this->db()->fs()->read($this->table()->name()."/".$item.".".$this->config()->extension)
             ,true));
         }
         return new Collection($_items);
