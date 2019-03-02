@@ -80,10 +80,11 @@ class Database
     }
     public function tableNameSanitizer($name,$table_prefix=null)
     {
-        $table_prefix=$table_prefix==null ? $this->config->table_prefix : $table_prefix;
+        $table_prefix=$table_prefix==null ? $this->config
+                                ->table_prefix : $table_prefix;
 
         return preg_match("/^".$table_prefix."/is",$name)
-                                ? $name : $table_prefix.$name;
+                                 ? $name : $table_prefix.$name;
     }
     /**
     * Get all of the tables within our database
@@ -93,8 +94,8 @@ class Database
     */
     public function tables()
     {
-        return new Collection(array_map(function ($folder) {
-            return $this->table($folder);
+        return new Collection(array_map(function ($table) {
+            return $this->table($table);
         }, $this->tableList()));
     }
 
@@ -109,11 +110,11 @@ class Database
         return $this->filterTables($this->fs()->folders());
     }
 
-    public function filterTables(array $args,$pattern='tbl_')
+    public function filterTables(array $args,$table_prefix=null)
     {
-        $pattern='/^'.$pattern.'/is';
-        return array_values(array_filter($args,function($item) use ($pattern)
-        {
+        $table_prefix=$table_prefix==null ? $this->config->table_prefix : $table_prefix;
+        $pattern='/^'.$table_prefix.'/is';
+        return array_values(array_filter($args,function($item) use ($pattern){
             return preg_match($pattern,$item);   
         }));
     }
@@ -144,6 +145,7 @@ class Database
         foreach ($this->tableList() as $key => $value) {
             $this->fs()->rmdir($value);
         }
+        return true;
     }
 
     /**
@@ -158,8 +160,9 @@ class Database
     */
     public function delete()
     {
-        // this might not work yet since its trying to delete the root dir ...
-        return $this->fs()->rmdir('/');
+        $path=explode('/',trim($this->config()->path,'/'));
+        $fs=new Filesystem($this->config()->path."../");
+        return $fs->rmdir(end($path));
     }
     public function hasTable($name)
     {
