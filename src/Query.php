@@ -123,28 +123,28 @@ class Query
     public function filter()
     {
         $items=$this->getAll();
-        foreach($this->conditions['and'] as $v_key=>$condition)
+        foreach($this->conditions['and'] as $and_condition_key=>$and_condition)
         {
             $result=[];
             foreach ($items as $key => $value) {
-                if(isset($value[$v_key]))
+                if(isset($value[$and_condition_key]))
                 {
-                    if($this->match($value,$v_key,$condition[0],$condition[1]))
+                    if($this->match($value,$and_condition_key,$and_condition[0],$and_condition[1]))
                     {
                         $result[]=$value;
                         continue;
                     }
-                    if(isset($this->conditions['or'])) 
-                    {
-                        foreach ($this->conditions['or'] as $condition) {
-                            if($this->match($value,$condition[0],$condition[1],$condition[2]))
-                            {
-                                $result[]=$value;
-                                continue;
-                            }
+                    // just if record rejected with 'and' conditions we need to match record with 'or' conditions
+                    if(!isset($this->conditions['or'])) continue;
+                    foreach ($this->conditions['or'] as $or_condition) {
+                        if($this->match($value,$or_condition[0],$or_condition[1],$or_condition[2]))
+                        {
+                            $result[]=$value;
+                            continue;
                         }
                     }
                 }
+
             }
             $items=array_unique($result);
         } 
