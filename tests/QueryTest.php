@@ -1,8 +1,8 @@
 <?php 
 namespace Filebase\Test;
 
-use Filebase\{Database,Table,Query};
-use Filebase\{Document,Collection};
+use Filebase\{Database,Table,Query,Document};
+use Filebase\Support\Collection;
 use Filebase\Test\TestCase;
 use org\bovigo\vfs\vfsStream;
 

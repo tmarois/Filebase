@@ -4,6 +4,7 @@ use Exception;
 use Filebase\Config;
 use Filebase\Table;
 use Filebase\Support\Filesystem;
+use Filebase\Support\Collection;
 
 /**
  * The database class

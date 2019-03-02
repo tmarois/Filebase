@@ -1,5 +1,4 @@
-<?php 
-namespace Filebase;
+<?php namespace Filebase\Support;
 
 use ArrayObject;
 

@@ -6,7 +6,7 @@ use Filebase\Config;
 
 use Filebase\Test\TestCase;
 use org\bovigo\vfs\vfsStream;
-use Filebase\Collection;
+use Filebase\Support\Collection;
 
 
 class DatabaseTest extends TestCase

@@ -5,7 +5,9 @@ use Filebase\{Table,Query,Database};
 
 use Filebase\Test\TestCase;
 use org\bovigo\vfs\vfsStream;
-use Filebase\{Document,Collection};
+use Filebase\Document;
+use Filebase\Support\Collection;
+
 class TableTest extends TestCase 
 {
     public $db;

@@ -2,7 +2,9 @@
 
 use Filebase\Table;
 use Filebase\Support\Filesystem;
+use Filebase\Support\Collection;
 use Filebase\Format\Json;
+
 
 class Query 
 {
