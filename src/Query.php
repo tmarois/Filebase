@@ -63,6 +63,7 @@ class Query
     public function getAll()
     {
         $items=$this->db()->fs()->files($this->table()->path(), $this->db()->config()->extension);
+        $_items=[];
         foreach($items as $item)
         {
             $_items[]=new Document($this->table(),$item,json_decode(
@@ -74,7 +75,16 @@ class Query
     }
     public function where($key,$con,$value)
     {
-        $this->conditions['and'][]=[$key,$con,$value];
+        $this->conditions['and'][$key]=[$con,$value];
+        return $this;
+    }
+    public function andWhere(...$args)
+    {
+        return $this->where(...$args);
+    }
+    public function orWhere($key,$con,$value)
+    {
+        $this->conditions['or'][]=[$key,$con,$value];
         return $this;
     }
     public function getConditions()
@@ -92,20 +102,71 @@ class Query
     public function filter()
     {
         $items=$this->getAll();
-        $result=[];
-        foreach($this->conditions['and'] as $condition)
+        foreach($this->conditions['and'] as $v_key=>$condition)
         {
+            $result=[];
             foreach ($items as $key => $value) {
-                if(isset($value[$condition[0]]))
+                if(isset($value[$v_key]))
                 {
-                    if($value[$condition[0]]==$condition[2])
+                    if($this->match($value,$v_key,$condition[0],$condition[1]))
                     {
                         $result[]=$value;
+                        continue;
+                    }
+                    if(isset($this->conditions['or'])) 
+                    {
+                        foreach ($this->conditions['or'] as $condition) {
+                            if($this->match($value,$condition[0],$condition[1],$condition[2]))
+                            {
+                                $result[]=$value;
+                                continue;
+                            }
+                        }
                     }
                 }
             }
+            $items=array_unique($result);
         } 
-        return $result;
+        return array_unique($result);
+    }
+    public function match($document, $key, $operator, $value)
+    {
+        $key = $document->$key;
+        switch (true)
+        {
+            case ($operator === '=' && $key == $value):
+                return true;
+            case ($operator === '==' && $key == $value):
+                return true;
+            case ($operator === '===' && $key === $value):
+                return true;
+            case ($operator === '!=' && $key != $value):
+                return true;
+            case ($operator === '!==' && $key !== $value):
+                return true;
+            case (strtoupper($operator) === 'NOT' && $key != $value):
+                return true;
+            case ($operator === '>'  && $key >  $value):
+                return true;
+            case ($operator === '>=' && $key >= $value):
+                return true;
+            case ($operator === '<'  && $key <  $value):
+                return true;
+            case ($operator === '<=' && $key <= $value):
+                return true;
+            case (strtoupper($operator) === 'LIKE' && preg_match('/'.$value.'/is',$key)):
+                return true;
+            case (strtoupper($operator) === 'NOT LIKE' && !preg_match('/'.$value.'/is',$key)):
+                return true;
+            case (strtoupper($operator) === 'IN' && in_array($key, (array) $value)):
+                return true;
+            case (strtoupper($operator) === 'IN' && in_array($value, (array) $key)):
+                return true;
+            case (strtoupper($operator) === 'REGEX' && preg_match($value, $key)):
+                return true;
+            default:
+                return false;
+        }
     }
 
 }
