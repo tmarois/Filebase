@@ -35,6 +35,11 @@ class Table
     */
     protected $path;
 
+    /**
+    * Filesystem class
+    *
+    * @var Filebase\Support\Filesystem
+    */
     protected $fs;
 
     /**
@@ -182,7 +187,7 @@ class Table
     }
 
    /**
-    * Magic method to give us access to query methods on db class
+    * Magic method to give us access to query methods on table class
     *
     */
     public function __call($method,$args)

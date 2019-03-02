@@ -175,7 +175,7 @@ class Document implements ArrayAccess,Countable
     }
 
     /**
-     * Magic GET method into our data
+     * Magic __GET method into our data
      * This allows the dev to quickly access data variables
      *
      * @param string $key 
@@ -190,7 +190,7 @@ class Document implements ArrayAccess,Countable
     }
 
     /**
-     * Magic SET method 
+     * Magic __SET method 
      * This will allow the dev to save into the data prop
      *
      * @param string $key 
@@ -202,6 +202,32 @@ class Document implements ArrayAccess,Countable
     {
         $this->attr[$key] = $value;
         return $this;
+    }
+
+    /**
+     * Magic __ISSET method 
+     * Allows ability to isset() prop exist
+     *
+     * @param string $key 
+     * 
+     * @return boolean
+     */
+    public function __isset($key)
+    {
+        return isset($this->attr[$key]);
+    }
+
+    /**
+     * Magic __UNSET method 
+     * Allows ability to unset() prop
+     *
+     * @param string $key 
+     * 
+     * @return void
+     */
+    public function __unset($key)
+    {
+        unset($this->attr[$key]);
     }
 
     /**
@@ -236,7 +262,8 @@ class Document implements ArrayAccess,Countable
     }
 
 
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value) 
+    {
         if (is_null($offset)) {
             $this->attr[] = $value;
         } else {
@@ -244,15 +271,18 @@ class Document implements ArrayAccess,Countable
         }
     }
 
-    public function offsetExists($offset) {
+    public function offsetExists($offset) 
+    {
         return isset($this->attr[$offset]);
     }
 
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset) 
+    {
         unset($this->attr[$offset]);
     }
 
-    public function offsetGet($offset) {
+    public function offsetGet($offset) 
+    {
         return isset($this->attr[$offset]) ? $this->attr[$offset] : null;
     }
 }
