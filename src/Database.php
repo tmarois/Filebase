@@ -76,16 +76,27 @@ class Database
         if (!$this->hasTable($name)) {
             $this->fs()->mkdir($this->tableNameSanitizer($name));
         }
+        
         return (new Table($this, $this->tableNameSanitizer($name)));
     }
+
+   /**
+    * Sanitize the table name
+    *
+    * @param string $name 
+    * @param string $table_prefix 
+    *
+    * @return string 
+    */
     public function tableNameSanitizer($name,$table_prefix=null)
     {
-        $table_prefix=$table_prefix==null ? $this->config
-                                ->table_prefix : $table_prefix;
+        $table_prefix = $table_prefix==null ? $this->config
+            ->table_prefix : $table_prefix;
 
         return preg_match("/^".$table_prefix."/is",$name)
-                                 ? $name : $table_prefix.$name;
+            ? $name : $table_prefix.$name;
     }
+
     /**
     * Get all of the tables within our database
     * Returns a Collection object of Tables
@@ -119,6 +130,7 @@ class Database
             return preg_match($pattern,$item);   
         }));
     }
+    
     /**
     * Ability to use the filesystem outside classes
     *

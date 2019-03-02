@@ -61,10 +61,12 @@ class Document implements ArrayAccess,Countable
         // attrs should be lowercased and be parsed to use underscores
         $this->attr = $attr;
     }
+    
     public function count()
     {
         return count($this->attr);
     }
+
     public function offsetSet($offset, $value) {
         if (is_null($offset)) {
             $this->attr[] = $value;
@@ -169,6 +171,26 @@ class Document implements ArrayAccess,Countable
     }
 
     /**
+     * Bulk Update items in the data prop
+     *
+     * @param array $args 
+     * 
+     * @return void
+     */
+    public function update(array $args)
+    {
+        foreach($args as $key=>$item)
+        {
+            if(isset($this->attr[$key]))
+            {
+                $this->attr[$key]=$item;
+            }
+        }
+
+        $this->save();
+    }
+
+    /**
      * Magic GET method into our data
      * This allows the dev to quickly access data variables
      *
@@ -182,11 +204,22 @@ class Document implements ArrayAccess,Countable
             return $this->attr[$key];
         }
     }
-    public function __set($key,$value)
+
+    /**
+     * Magic SET method 
+     * This will allow the dev to save into the data prop
+     *
+     * @param string $key 
+     * @param string $value 
+     * 
+     * @return this
+     */
+    public function __set($key, $value)
     {
-        $this->attr[$key]=$value;
+        $this->attr[$key] = $value;
         return $this;
     }
+
     /**
      * Get our data as normal array
      *
@@ -216,16 +249,5 @@ class Document implements ArrayAccess,Countable
     public function __toString()
     {
         return $this->toJson();
-    }
-    public function update(array $args)
-    {
-        foreach($args as $key=>$item)
-        {
-            if(isset($this->attr[$key]))
-            {
-                $this->attr[$key]=$item;
-            }
-        }
-        $this->save();
     }
 }

@@ -47,7 +47,7 @@ class Table
         $this->db = $db;
         $this->name=$name;
         $this->path = DIRECTORY_SEPARATOR.$this->name;
-        $this->fs=new Filesystem($this->fullPath());
+        $this->fs = new Filesystem($this->fullPath());
     }
 
     /**
@@ -96,14 +96,11 @@ class Table
     * @param string $name
     * @return Filebase\Document
     */
-    // public function get($name)
-    // {
-    //     return $this->query()->find($name);
-    // }
     public function fs()
     {
         return $this->fs;
     }
+
     /**
     * Get a list of documents within our table
     * Returns an array of items
