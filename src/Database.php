@@ -38,7 +38,6 @@ class Database
     {
         // set up our configuration class
         $this->setConfig($config);
-        
         $this->filesystem = new Filesystem($this->config->path);
     }
 
@@ -75,12 +74,14 @@ class Database
     public function table($name)
     {
         if (!$this->hasTable($name)) {
-            $this->fs()->mkdir($this->tableNameGenarator($name));
+            $this->fs()->mkdir($this->tableNameSanitizer($name));
         }
-        return (new Table($this, $this->tableNameGenarator($name)));
+        return (new Table($this, $this->tableNameSanitizer($name)));
     }
-    public function tableNameGenarator($name,$table_prefix='tbl_')
+    public function tableNameSanitizer($name,$table_prefix=null)
     {
+        $table_prefix=$table_prefix==null ? $this->config->table_prefix : $table_prefix;
+
         return preg_match("/^".$table_prefix."/is",$name)
                                 ? $name : $table_prefix.$name;
     }

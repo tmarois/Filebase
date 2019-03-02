@@ -71,7 +71,6 @@ class Query
             ,true));
         }
         return new Collection($_items);
-        // return $this->db()->fs()->files($this->path(), $this->db()->config()->extension);
     }
     public function where(...$args)
     {
