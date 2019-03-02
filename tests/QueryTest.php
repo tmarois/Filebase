@@ -219,6 +219,17 @@ class QueryTest extends TestCase
         $this->assertCount(2,$tbl->getConditions()['and']);
     }
     /** @test */
+    public function testMustAddConditionWithManyArray()
+    {
+        $tbl=$this->tmp_db->table('tbl_name')->query()
+                    ->Where(
+                        ['Foo','like','bar'],
+                        ['name','like','bar']
+                    );
+        $this->assertCount(2,$tbl->getConditions()['and']);
+    }
+    
+    /** @test */
     public function testMustAddConditionWithArrayOnOrWhere()
     {
         $tbl=$this->tmp_db->table('tbl_name')->query()
@@ -231,7 +242,7 @@ class QueryTest extends TestCase
     /** 
     * @test
     */
-    public function testMustReturnExceptionOnFindOrFail()
+    public function testMustReturnBoolonOnFindOrFail()
     {
         $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(); 
         $this->assertFalse($tbl);
@@ -247,7 +258,7 @@ class QueryTest extends TestCase
      * @test 
      * @dataProvider matchDataProvider()
      */
-    public function testMustReturnBool($key, $operator, $value,$expected)
+    public function testMustReturnBoolOnMatch($key, $operator, $value,$expected)
     {
         $actual=$this->tmp_db->table('tbl_name')->query()->match($key, $operator, $value);
         $this->assertEquals($expected,$actual);

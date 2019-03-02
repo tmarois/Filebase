@@ -81,7 +81,7 @@ class Query
     }
     public function where(...$args)
     {
-        if(is_array($args[0]))
+        if(count($args)==1 && is_array($args[0]))
         {
              foreach($args[0] as $item)
              {
@@ -90,6 +90,20 @@ class Query
              }
              return $this;
         }
+        // check for multi array input
+        $array=array_map(function($r){
+            return is_array($r);
+        },$args);
+        if(array_product($array))
+        {
+            foreach($args as $item)
+            {
+                list($key,$con,$value)=[$item[0],$item[1],$item[2]];
+                $this->conditions['and'][$key]=[$con,$value];
+            }
+            return $this;
+        }
+        // on normal request
         list($key,$con,$value)=$args;
         $this->conditions['and'][$key]=[$con,$value];
         return $this;
