@@ -158,6 +158,8 @@ class Query
                 return true;
             case (strtoupper($operator) === 'NOT LIKE' && !preg_match('/'.$value.'/is',$key)):
                 return true;
+            case (str_replace(' ','',strtoupper($operator)) === '!LIKE' && !preg_match('/'.$value.'/is',$key)):
+                return true;
             case (strtoupper($operator) === 'IN' && in_array($key, (array) $value)):
                 return true;
             case (strtoupper($operator) === 'IN' && in_array($value, (array) $key)):
