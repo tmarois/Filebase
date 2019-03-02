@@ -3,7 +3,6 @@ namespace Filebase\Test;
 
 use Filebase\{Database,Table,Query};
 use Filebase\{Document,Collection};
-
 use Filebase\Test\TestCase;
 use org\bovigo\vfs\vfsStream;
 
@@ -219,15 +218,31 @@ class QueryTest extends TestCase
                     ]);
         $this->assertCount(2,$tbl->getConditions()['and']);
     }
-     /** @test */
-     public function testMustAddConditionWithArrayOnOrWhere()
-     {
-         $tbl=$this->tmp_db->table('tbl_name')->query()
-                     ->orWhere([
-                         ['Foo','like','bar'],
-                         ['name','like','bar']
-                     ]);
-         $this->assertCount(2,$tbl->getConditions()['or']);
-     }
-        
+    /** @test */
+    public function testMustAddConditionWithArrayOnOrWhere()
+    {
+        $tbl=$this->tmp_db->table('tbl_name')->query()
+                    ->orWhere([
+                        ['Foo','like','bar'],
+                        ['name','like','bar']
+                    ]);
+        $this->assertCount(2,$tbl->getConditions()['or']);
+    }
+    /** 
+    * @test
+    */
+    public function testMustReturnExceptionOnFindOrFail()
+    {
+        $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(); 
+        $this->assertFalse($tbl);
+
+        $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(12); 
+        $this->assertFalse($tbl);
+
+        $this->fakeRecordCreator(5);
+        $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(5); 
+        $this->assertFalse($tbl);
+    }
+     
+     
 }
