@@ -32,7 +32,6 @@ class Json implements FormatInterface
     public static function decode($data,$object=false)
     {
         return json_decode($data,$object);
-        // return json_decode($data, 1);
     }
 
 }
