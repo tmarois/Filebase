@@ -27,7 +27,7 @@ class QueryTest extends TestCase
      */
     public function testMustReturnTable()
     {
-        $tbl = $this->query->table();
+        $tbl = $this->query->getTable();
         $this->assertInstanceOf(Table::class,$tbl);
     }
     
@@ -36,7 +36,7 @@ class QueryTest extends TestCase
      */
     public function testMustReturnInstanceOfDatabase()
     {
-        $db = $this->query->db();
+        $db = $this->query->getDb();
         $this->assertInstanceOf(Database::class,$db);
     }
 
@@ -275,8 +275,9 @@ class QueryTest extends TestCase
         $this->assertFalse($tbl);
 
         $this->fakeRecordCreator(5);
-        $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(5); 
-        $this->assertFalse($tbl);
+        $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(4);
+        $this->assertInstanceOf(Document::class,$tbl); 
+        $this->assertTrue((bool)$tbl);
         
     }
     /** 
@@ -358,10 +359,15 @@ class QueryTest extends TestCase
         
         $result=$tbl->query()->find(1,2,3);
         $this->assertInstanceOf(Collection::class,$result);
+        
         $this->assertCount(3,$result);
     }
-    
-    
-    
-     
+    /** @test */
+    public function testMustRemoveEmptyDocumentsOnFindMany()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+        $result=$tbl->query()->find(1,2,12,3);
+        
+        $this->assertCount(3,$result);
+    }
 }

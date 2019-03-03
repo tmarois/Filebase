@@ -13,71 +13,112 @@ class Query
     public $formater;
     protected $conditions=[];
 
+    /**
+     * __construct function
+     *
+     * @param Table $table
+     */
     public function __construct(Table $table)
     {
         $this->table = $table;
         $this->fs = new Filesystem($table->fullPath());
 
         // we have access to this within $this->db()->config()->format
-        $this->formater = $this->db()->config()->format;
+        $this->formater = $this->getDb()->config()->formater;
         
     }
-
-    public function table()
+    /**
+     * getTable function
+     *
+     * @return Table
+     */
+    public function getTable() : Table
     {
         return $this->table;
     }
-
-    public function db()
+    /**
+     * getDb function
+     *
+     * @return Database
+     */
+    public function getDb() : Database
     {
         return $this->table->db();
     }
-    public function config()
+    /**
+     * getConfig function
+     *
+     * @return Config
+     */
+    public function getConfig() : Config
     {
-        return $this->db()->config(); 
+        return $this->getDb()->config(); 
     }
-
-    public function create(array $args)
+    /**
+     * create function
+     *
+     * @param array $args
+     * @return Document
+     */
+    public function create(array $args) : Document
     {
         // TODO:ADD START POINT FOR ID 
         // TODO:VALIDATE
-        $name=$this->table()->genUniqFileId();
-        $this->fs->write($name,$this->config()->formater::encode($args,true));
+        $name=$this->getTable()->genUniqFileId();
+        $this->fs->write($name,$this->formater::encode($args,true));
         return $this->find($name);  
     }
+    /**
+     * findOrFail function
+     *
+     * @param [type] $id
+     * @return void
+     */
     public function findOrFail($id=null)
     {
-        if($id==null)
-        {
-            return false;
-        }
+        if($id===null)return false;
+
         $result=$this->find($id);
-        return !empty($result->attr)  ? $result : false;
+        return count($result)==0  ? false : $result;
     } 
+    /**
+     * find function
+     *
+     * @param [type] ...$id
+     * @return Document|Collection
+     */
     public function find(...$id)
     {
         // call findMany on find([1,2,3])
-        if(is_array($id[0]))
-            return $this->findMany(...$id[0]);
+        if(is_array($id[0]))return $this->findMany(...$id[0]);
         // call findMany on find(1,2,3,) 
-        if(count($id) > 1 )
-            return $this->findMany(...$id);
+        if(count($id) > 1 ) return $this->findMany(...$id);
+
         // return single document on find(1)
-        $id=$id[0];
-        $ext=$this->config()->extension;
-        $id=strpos($id,'.'.$ext)!==false ? str_replace('.'.$ext,'',$id) : $id;
+        $ext=$this->getConfig()->extension;
+        $id=strpos($id[0],'.'.$ext)!==false ? str_replace('.'.$ext,'',$id[0]) : $id[0];
 
         return $this->fs->has($id.'.'.$ext) ?
-            (new Document($this->table(),$id.'.'.$ext,(array)json_decode($this->fs->read($id.'.'.$ext),true))): 
-                (new Document($this->table(),$id.'.'.$ext));
+            (new Document($this->getTable(),
+                                $id.'.'.$ext,
+                                    $this->formater::decode($this->fs->read($id.'.'.$ext),true))):
+                // empty Document on if item not exist 
+                (new Document($this->getTable(),$id.'.'.$ext));
     }
-    public function findMany(...$ids)
+    /**
+     * findMany function
+     *
+     * @param [type] ...$ids
+     * @return Collection
+     */
+    public function findMany(...$ids) : Collection
     {
         $ids=is_array($ids[0]) ? $ids[0] : $ids;
         $docs=[];
         foreach($ids as $id)
         {
-            $docs[]=$this->find($id);
+            // if doc is true will store
+            if($doc=$this->findOrFail($id)) $docs[]=$doc;
         }
         return new Collection($docs);
     }
@@ -85,21 +126,27 @@ class Query
     * Get a list of documents within our table
     * Returns an array of items
     *
-    * @return array
+    * @return Collection
     */
-    public function getAll()
+    public function getAll() : Collection
     {
-        $items=$this->table()->fs()->files('.', $this->config()->extension);
+        $items=$this->getTable()->fs()->files('.', $this->getConfig()->extension);
         $_items=[];
         foreach($items as $item)
         {
-            $_items[]=new Document($this->table(),$item,json_decode(
-                $this->db()->fs()->read($this->table()->name().DIRECTORY_SEPARATOR.$item.".".$this->config()->extension)
+            $_items[]=new Document($this->getTable(),$item,json_decode(
+                $this->getDb()->fs()->read($this->getTable()->name().DIRECTORY_SEPARATOR.$item.".".$this->getConfig()->extension)
             ,true));
         }
         return new Collection($_items);
     }
-    public function where(...$args)
+    /**
+     * where function
+     *
+     * @param [type] ...$args
+     * @return Query
+     */
+    public function where(...$args) : Query
     {
         if(count($args)==1 && is_array($args[0]))
         {
@@ -128,11 +175,23 @@ class Query
         $this->conditions['and'][$key]=[$con,$value];
         return $this;
     }
-    public function andWhere(...$args)
+    /**
+     * andWhere function
+     *
+     * @param [type] ...$args
+     * @return Query
+     */
+    public function andWhere(...$args) : Query
     {
         return $this->where(...$args);
     }
-    public function orWhere(...$args)
+    /**
+     * orWhere function
+     *
+     * @param [type] ...$args
+     * @return Query
+     */
+    public function orWhere(...$args) : Query
     {
         if(count($args) ==1 && is_array($args[0]))
         {
@@ -161,11 +220,21 @@ class Query
         $this->conditions['or'][]=[$key,$con,$value];
         return $this;
     }
-    public function getConditions()
+    /**
+     * getConditions function
+     *
+     * @return array
+     */
+    public function getConditions() : array
     {
         return $this->conditions;
     }
-    public function get()
+    /**
+     * get function
+     *
+     * @return Collection
+     */
+    public function get() : Collection
     {
         if(isset($this->conditions['and']))
         {
@@ -173,7 +242,12 @@ class Query
         }
         return $this->getAll();
     }
-    public function filter()
+    /**
+     * filter function
+     *
+     * @return Collection
+     */
+    public function filter() : Collection
     {
         $items=$this->getAll();
         foreach($this->conditions['and'] as $and_condition_key=>$and_condition)
@@ -201,9 +275,17 @@ class Query
             }
             $items=array_unique($result);
         } 
-        return array_unique($result);
+        return new Collection(array_unique($result));
     }
-    public function match($key, $operator, $value)
+    /**
+     * match function
+     *
+     * @param [type] $key
+     * @param [type] $operator
+     * @param [type] $value
+     * @return bool
+     */
+    public function match($key, $operator, $value) : bool
     {
         $operator=trim($operator);
         switch (true)

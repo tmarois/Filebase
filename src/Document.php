@@ -168,10 +168,11 @@ class Document implements ArrayAccess,Countable
     {
         foreach($args as $key=>$item)
         {
-            if(isset($this->attr[$key]))
-            {
+            // must add a new config for accept new key or not
+            // if(isset($this->attr[$key]))
+            // {
                 $this->attr[$key]=$item;
-            }
+            // }
         }
 
         $this->save();
