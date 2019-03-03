@@ -29,9 +29,9 @@ class Json implements FormatInterface
     * @param array data
     * @return string json_decode
     */
-    public static function decode($data)
+    public static function decode($data,$object=false)
     {
-        return json_decode($data);
+        return json_decode($data,$object);
         // return json_decode($data, 1);
     }
 
