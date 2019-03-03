@@ -55,9 +55,12 @@ class TestCase extends base_case
 			
 			$status = 'enabled';
 
-			if ($a > 5)
-			{
+			if ($a > 5) {
 				$status = 'disabled';
+			}
+
+			if ($a > 8) {
+				$status = 'pending';
 			}
 
         
