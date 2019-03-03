@@ -47,12 +47,10 @@ class Query
     }
     public function findOrFail($id=null)
     {
-        if($id==null)
-        {
-            return false;
-        }
+        if($id===null)return false;
+
         $result=$this->find($id);
-        return !empty($result->attr)  ? $result : false;
+        return count($result)==0  ? false : $result;
     } 
     public function find(...$id)
     {
@@ -68,7 +66,8 @@ class Query
         $id=strpos($id,'.'.$ext)!==false ? str_replace('.'.$ext,'',$id) : $id;
 
         return $this->fs->has($id.'.'.$ext) ?
-            (new Document($this->table(),$id.'.'.$ext,(array)json_decode($this->fs->read($id.'.'.$ext),true))): 
+            (new Document($this->table(),$id.'.'.$ext,(array)json_decode($this->fs->read($id.'.'.$ext),true))):
+                // empty Document on if item not exist 
                 (new Document($this->table(),$id.'.'.$ext));
     }
     public function findMany(...$ids)

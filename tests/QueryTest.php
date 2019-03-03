@@ -275,8 +275,9 @@ class QueryTest extends TestCase
         $this->assertFalse($tbl);
 
         $this->fakeRecordCreator(5);
-        $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(5); 
-        $this->assertFalse($tbl);
+        $tbl=$this->tmp_db->table('tbl_name')->query()->findOrFail(4);
+        $this->assertInstanceOf(Document::class,$tbl); 
+        $this->assertTrue((bool)$tbl);
         
     }
     /** 
@@ -358,8 +359,19 @@ class QueryTest extends TestCase
         
         $result=$tbl->query()->find(1,2,3);
         $this->assertInstanceOf(Collection::class,$result);
+        
         $this->assertCount(3,$result);
     }
+    // TODO:testMustRemoveEmptyDocumentsOnFindMany
+    /** @test */
+    // public function testMustRemoveEmptyDocumentsOnFindMany()
+    // {
+    //     $tbl=$this->fakeRecordCreator(5);
+    //     $result=$tbl->query()->find(1,2,12);
+        
+    //     $this->assertCount(2,$result);
+    // }
+    
     
     
     
