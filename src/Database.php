@@ -190,6 +190,7 @@ class Database
     */
     public function delete()
     {
+        // TODO:THIS MUST CHANGE
         $path = explode(DIRECTORY_SEPARATOR,trim($this->config()->path,DIRECTORY_SEPARATOR));
         $fs = new Filesystem($this->config()->path."..".DIRECTORY_SEPARATOR);
         return $fs->rmdir(end($path));

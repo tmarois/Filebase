@@ -21,7 +21,7 @@ class Query
     public function __construct(Table $table)
     {
         $this->table = $table;
-        $this->fs = new Filesystem($table->fullPath());
+        $this->fs = $this->getDb()->fs();
 
         // we have access to this within $this->db()->config()->format
         $this->formater = $this->getDb()->config()->formater;
@@ -65,7 +65,7 @@ class Query
         // TODO:ADD START POINT FOR ID 
         // TODO:VALIDATE
         $name=$this->getTable()->genUniqFileId();
-        $this->fs->write($name,$this->formater::encode($args,true));
+        $this->fs->write($this->getTable()->name().'/'.$name,$this->formater::encode($args,true));
         return $this->find($name);  
     }
     /**
@@ -98,10 +98,10 @@ class Query
         $ext=$this->getConfig()->extension;
         $id=strpos($id[0],'.'.$ext)!==false ? str_replace('.'.$ext,'',$id[0]) : $id[0];
 
-        return $this->fs->has($id.'.'.$ext) ?
+        return $this->getDb()->fs()->has($this->getTable()->name().'/'.$id.'.'.$ext) ?
             (new Document($this->getTable(),
                                 $id.'.'.$ext,
-                                    $this->formater::decode($this->fs->read($id.'.'.$ext),true))):
+                                    $this->formater::decode($this->getDb()->fs()->read($this->getTable()->name().'/'.$id.'.'.$ext),true))):
                 // empty Document on if item not exist 
                 (new Document($this->getTable(),$id.'.'.$ext));
     }
@@ -130,7 +130,7 @@ class Query
     */
     public function getAll() : Collection
     {
-        $items=$this->getTable()->fs()->files('.', $this->getConfig()->extension);
+        $items=$this->getDb()->fs()->files($this->getTable()->name(), $this->getConfig()->extension);
         $_items=[];
         foreach($items as $item)
         {

@@ -52,7 +52,7 @@ class Table
         $this->db = $db;
         $this->name = $name;
         $this->path = DIRECTORY_SEPARATOR.$this->name;
-        $this->fs = new Filesystem($this->fullPath());
+        $this->fs = $db->fs();
     }
 
     /**
@@ -114,7 +114,7 @@ class Table
     */
     public function getAllAsRaw()
     {
-        return $this->fs()->files('.', $this->db()->config()->extension);
+        return $this->fs()->files($this->name(), $this->db()->config()->extension);
     }
 
     /**
@@ -144,7 +144,7 @@ class Table
     public function delete()
     {
         // table fileSystem cant delete Herself so use database filesystem to remove table
-        return $this->db()->fs()->rmdir($this->name());
+        return $this->fs()->rmdir($this->name());
     }
 
     /**
@@ -180,7 +180,7 @@ class Table
         $pre=0;
         while(true)
         {
-            if(!$this->fs()->has(($item+$pre).'.'.$ext))
+            if(!$this->fs()->has($this->name().'/'.($item+$pre).'.'.$ext))
                 return ($item+$pre).'.'.$ext;
             $pre++;
         }
