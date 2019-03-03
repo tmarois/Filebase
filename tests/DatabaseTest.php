@@ -192,4 +192,15 @@ class DatabaseTest extends TestCase
         $this->assertFileNotExists($this->path);
 
     }    
+    /** @test */
+    public function testMustCreateFilesystemInstanceWithObject()
+    {
+        $root=$this->root->url();
+        $this->db = new Database([
+            'path' => function() use ($root){
+                return $root;
+            },
+        ]);
+    }
+    
 }

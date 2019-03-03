@@ -39,7 +39,7 @@ class Database
     {
         // set up our configuration class
         $this->setConfig($config);
-        $this->filesystem = new Filesystem($this->config->path);
+        $this->filesystem = new Filesystem($config['path']);
     }
 
     /**

@@ -2,6 +2,7 @@
 
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem as FS;
+use League\Flysystem\AdapterInterface;
 
 /**
  * The filesystem controls the files
@@ -26,9 +27,19 @@ class Filesystem
      * 
      * @param string $path
      */
-    public function __construct(String $path)
+    public function __construct($adapter)
     {
-        $this->filesystem = new FS((new Local($path)));
+        if(is_callable($adapter) )
+        {
+            if(($adapter=$adapter()) instanceof AdapterInterface)
+            {
+                $this->filesystem = $adapter;
+            } 
+        }else{
+            // by defult will set local path
+            $this->filesystem = new FS((new Local($adapter)));
+        }
+
     }
 
     /**
