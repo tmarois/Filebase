@@ -135,8 +135,7 @@ class Document implements ArrayAccess,Countable
     {
         // $format = $this->db()->config()->format;
 
-        // $data = $format::encode($this->attr);
-        $data=json_encode($this->attr);
+        $data = $this->db()->config()->formater::encode($this->attr,true);
         $this->table()->db()->fs()->put($this->table()->name().DIRECTORY_SEPARATOR.$this->name(), $data);
         // $this=$this->table()->get ($this->name());
         return $this; 
@@ -165,10 +164,11 @@ class Document implements ArrayAccess,Countable
     {
         foreach($args as $key=>$item)
         {
-            if(isset($this->attr[$key]))
-            {
+            // must add a new config for accept new key or not
+            // if(isset($this->attr[$key]))
+            // {
                 $this->attr[$key]=$item;
-            }
+            // }
         }
 
         $this->save();

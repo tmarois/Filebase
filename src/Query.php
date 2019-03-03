@@ -19,7 +19,7 @@ class Query
         $this->fs = new Filesystem($table->fullPath());
 
         // we have access to this within $this->db()->config()->format
-        $this->formater = $this->db()->config()->format;
+        $this->formater = $this->db()->config()->formater;
         
     }
 
@@ -42,7 +42,7 @@ class Query
         // TODO:ADD START POINT FOR ID 
         // TODO:VALIDATE
         $name=$this->table()->genUniqFileId();
-        $this->fs->write($name,$this->config()->formater::encode($args,true));
+        $this->fs->write($name,$this->formater::encode($args,true));
         return $this->find($name);  
     }
     public function findOrFail($id=null)
@@ -55,11 +55,10 @@ class Query
     public function find(...$id)
     {
         // call findMany on find([1,2,3])
-        if(is_array($id[0]))
-            return $this->findMany(...$id[0]);
+        if(is_array($id[0]))return $this->findMany(...$id[0]);
         // call findMany on find(1,2,3,) 
-        if(count($id) > 1 )
-            return $this->findMany(...$id);
+        if(count($id) > 1 ) return $this->findMany(...$id);
+
         // return single document on find(1)
         $id=$id[0];
         $ext=$this->config()->extension;
