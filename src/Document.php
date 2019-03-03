@@ -129,16 +129,19 @@ class Document implements ArrayAccess,Countable
     /**
      * Write document data into file
      *
-     * @return array
+     * @return this
      */
     public function save()
     {
+        // need to figure out how to use the format class
         // $format = $this->db()->config()->format;
-
         // $data = $format::encode($this->attr);
-        $data=json_encode($this->attr);
-        $this->table()->db()->fs()->put($this->table()->name().DIRECTORY_SEPARATOR.$this->name(), $data);
-        // $this=$this->table()->get ($this->name());
+
+        $data = json_encode($this->attr);
+        $this->table()->db()->fs()->put(
+            $this->table()->name().DIRECTORY_SEPARATOR.$this->name(), $data
+        );
+
         return $this; 
     }
 
