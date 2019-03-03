@@ -136,15 +136,138 @@ class Query
     */
     public function getAll() : Collection
     {
-        $items=$this->getTable()->fs()->files('.', $this->getConfig()->extension);
-        $_items=[];
-        foreach($items as $item)
+        $files = $this->getTable()->fs()->files('.', $this->getConfig()->extension);
+        $documents = [];
+        foreach($files as $fileName)
         {
-            $_items[]=new Document($this->getTable(),$item,json_decode(
-                $this->getDb()->fs()->read($this->getTable()->name().DIRECTORY_SEPARATOR.$item.".".$this->getConfig()->extension)
+            $documents[] = new Document($this->getTable(), $fileName, json_decode(
+                $this->getDb()->fs()->read($this->getTable()->name().DIRECTORY_SEPARATOR.$fileName.".".$this->getConfig()->extension)
             ,true));
         }
-        return new Collection($_items);
+
+        return new Collection($documents);
+    }
+
+    /**
+     * where function
+     *
+     * @param [type] ...$args
+     * @return Query
+     */
+    public function addCondition($type, ...$args) : Query
+    {       
+        // check if we are passing anonymous function
+        // to create (A=X AND B=C) AND (C=X OR D=X)
+        if (is_callable($args[0]))
+        {
+            $this->conditions['__tmp'] = [];
+
+            // build our clause group
+            $args[0]($this);
+
+            // add all clauses from this group
+            $this->conditions[$type][] = $this->conditions['__tmp'];
+
+            // remove temp
+            unset($this->conditions['__tmp']);
+
+            return $this;
+        }
+
+        // reset the new clause
+        $newClause = [];
+
+        // If we are passing an array of clauses
+
+        if(is_array($args[0]))
+        {
+            foreach($args[0] as $index=>$clause)
+            {
+                // check if we are trying to quickly get an equal statement 
+                // [key] => value
+                if (!is_array($clause)) 
+                {
+                    $newClause = [$index, '==', $clause];
+
+                    if (isset($this->conditions['__tmp']))  {
+                        $this->conditions['__tmp'][$type][] = $newClause;
+                    }
+                    else {
+                        $this->conditions[$type][] = $newClause;
+                    }
+                }
+                else 
+                {
+                    foreach ($clause as $c) 
+                    {
+                        list($key, $con, $value) = [$c[0], $c[1], $c[2]];
+                        $newClause = [$key, $con, $value];
+
+                        if (isset($this->conditions['__tmp']))  {
+                            $this->conditions['__tmp'][$type][] = $newClause;
+                        }
+                        else {
+                            $this->conditions[$type][] = $newClause;
+                        }
+                    }
+                }
+
+                
+            }
+
+            return $this;
+        }
+
+        if (is_array($args) && count($args)==2) 
+        {
+            $newClause = [$args[0], '==', $args[1]];
+
+            if (isset($this->conditions['__tmp']))  {
+                $this->conditions['__tmp'][$type][] = $newClause;
+            }
+            else {
+                $this->conditions[$type][] = $newClause;
+            }
+
+            return $this;
+        }
+
+        // check for multi array input
+        // $array = array_map(function($r){
+        //     return is_array($r);
+        // },$args);
+
+        // if(array_product($array))
+        // {
+        //     foreach($args as $item)
+        //     {
+        //         list($key, $con, $value) = [$item[0], $item[1], $item[2]];
+
+        //         if (isset($this->conditions['__tmp'])) 
+        //         {
+        //             $this->conditions['__tmp'][$type][] = [$key, $con, $value];
+        //         }
+        //         else 
+        //         {
+        //             $this->conditions[$type][] = [$key, $con, $value];
+        //         }
+        //     }
+
+        //     return $this;
+        // }
+
+        // on normal request
+        list($key, $con, $value) = $args;
+        $newClause = [$key, $con, $value];
+
+        if (isset($this->conditions['__tmp']))  {
+            $this->conditions['__tmp'][$type][] = $newClause;
+        }
+        else {
+            $this->conditions[$type][] = $newClause;
+        }
+
+        return $this;
     }
 
     /**
@@ -155,46 +278,7 @@ class Query
      */
     public function where(...$args) : Query
     {
-        // check if we are passing anonymous function
-        // to create (A=X AND B=C) AND (C=X OR D=X)
-        if (is_callable($args[0]))
-        {
-            // TODO: need to make this functional 
-            // return $args[0]($this);
-        }
-
-        if(count($args)==1 && is_array($args[0]))
-        {
-             foreach($args[0] as $item)
-             {
-                list($key,$con,$value) = [$item[0],$item[1],$item[2]];
-                $this->conditions['and'][$key] = [$con,$value];
-             }
-
-             return $this;
-        }
-
-        // check for multi array input
-        $array = array_map(function($r){
-            return is_array($r);
-        },$args);
-
-        if(array_product($array))
-        {
-            foreach($args as $item)
-            {
-                list($key,$con,$value) = [$item[0],$item[1],$item[2]];
-                $this->conditions['and'][$key] = [$con,$value];
-            }
-
-            return $this;
-        }
-
-        // on normal request
-        list($key,$con,$value) = $args;
-        $this->conditions['and'][$key] = [$con,$value];
-
-        return $this;
+        return $this->addCondition('and', ...$args);
     }
 
     /**
@@ -216,32 +300,7 @@ class Query
      */
     public function orWhere(...$args) : Query
     {
-        if(count($args) ==1 && is_array($args[0]))
-        {
-             foreach($args[0] as $item)
-             {
-                list($key,$con,$value)=[$item[0],$item[1],$item[2]];
-                $this->conditions['or'][]=[$key,$con,$value];
-             }
-             return $this;
-        }
-        // check for multi array input
-        $array=array_map(function($r){
-            return is_array($r);
-        },$args);
-        if(array_product($array))
-        {
-            foreach($args as $item)
-            {
-                list($key,$con,$value)=[$item[0],$item[1],$item[2]];
-                $this->conditions['or'][]=[$key,$con,$value];
-            }
-            return $this;
-        }
-        // on normal request
-        list($key,$con,$value)=$args;
-        $this->conditions['or'][]=[$key,$con,$value];
-        return $this;
+        return $this->addCondition('or', ...$args);
     }
 
     /**
@@ -276,41 +335,102 @@ class Query
      */
     public function filter() : Collection
     {
-        $items = $this->getAll();
-        foreach($this->conditions['and'] as $and_condition_key=>$and_condition)
+        $documents = $this->getAll();
+        $result = [];
+
+        foreach($this->conditions as $conditionKey => $conditions)
         {
-            $result = [];
-            foreach ($items as $key => $value) 
-            {
-                if(isset($value[$and_condition_key]))
-                {
-                    // run the AND clause
-                    if($this->match($value[$and_condition_key],$and_condition[0],$and_condition[1]))
-                    {
-                        $result[] = $value;
-                        continue;
-                    }
+            // $documents = array_values(array_filter($documents, function ($document) use ($field, $operator, $value) {
+            //     return $this->match($document, $field, $operator, $value);
+            // }));
 
-                    // just if record rejected with 'and' conditions we need to match record with 'or' conditions
-                    if(!isset($this->conditions['or'])) continue;
+            // foreach($documents as $document) 
+            // {
+            //     $data = $document->toArray();
 
-                    // run the OR clause
-                    foreach ($this->conditions['or'] as $or_condition) 
-                    {
-                        if($this->match($value[$or_condition[0]],$or_condition[1],$or_condition[2]))
-                        {
-                            $result[] = $value;
-                            continue;
-                        }
-                    }
-                }
+            //     foreach($conditions as $condition)
+            //     {
+            //         list($field, $operator, $value) = $condition;
 
-            }
+            //         if(isset($data[$field]) && $this->match($data[$field], $operator, $value))
+            //         {
+            //             $result[] = $document;
+            //             continue;
+            //         }
+            //     }                    
+            // }
 
-            $items = array_unique($result);
+            // if we have a group clauses
+            // if ($and_condition_key == 'group')
+            // {
+            //     foreach ($and_condition as $index => $clauses) 
+            //     {
+            //         foreach ($clauses as $andcondition_key=>$andcondition) 
+            //         {
+            //             foreach ($items as $key => $value) 
+            //             {
+            //                 if (isset($value[$andcondition_key])) 
+            //                 {
+            //                     // run the AND clause
+            //                     if ($this->match($value[$andcondition_key], $andcondition[0], $andcondition[1])) 
+            //                     {
+            //                         $result[] = $value;
+            //                         continue;
+            //                     }
+            //                 }
+
+            //                 // just if record rejected with 'and' conditions we need to match record with 'or' conditions
+            //                 if($index!='and') continue;
+        
+            //                 // run the OR clause
+            //                 foreach ($this->conditions['or'] as $or_condition) 
+            //                 {
+            //                     if($this->match($value[$or_condition[0]],$or_condition[1],$or_condition[2]))
+            //                     {
+            //                         $result[] = $value;
+            //                         continue;
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+   
+            // }
+            // else 
+            // {
+            //     foreach ($items as $key => $value) 
+            //     {
+            //         if(isset($value[$and_condition_key]))
+            //         {
+            //             // run the AND clause
+            //             if($this->match($value[$and_condition_key],$and_condition[0],$and_condition[1]))
+            //             {
+            //                 $result[] = $value;
+            //                 continue;
+            //             }
+    
+            //             // just if record rejected with 'and' conditions we need to match record with 'or' conditions
+            //             if(!isset($this->conditions['or'])) continue;
+    
+            //             // run the OR clause
+            //             foreach ($this->conditions['or'] as $or_condition) 
+            //             {
+            //                 if($this->match($value[$or_condition[0]],$or_condition[1],$or_condition[2]))
+            //                 {
+            //                     $result[] = $value;
+            //                     continue;
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }            
+
+            // // this doesnt seem useful? 
+            // $items = array_unique($result);
         } 
 
-        return new Collection(array_unique($result));
+
+        return new Collection($result);
     }
 
     /**
@@ -323,7 +443,8 @@ class Query
      */
     public function match($key, $operator, $value) : bool
     {
-        $operator=trim($operator);
+        $operator = trim($operator);
+
         switch (true)
         {
             case ($operator === '=' && $key == $value):

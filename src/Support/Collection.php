@@ -9,4 +9,9 @@ class Collection extends ArrayObject
     {
         return $this->getArrayCopy();
     }
+
+    public function count()
+    {
+        return count($this->getArrayCopy());
+    }
 }

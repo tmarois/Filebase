@@ -41,18 +41,33 @@ class TestCase extends base_case
           rmdir($dir); 
         } 
      } 
-     public function fakeRecordCreator($limit=5)
+
+    /**
+     * create fake items in table
+     */
+    public function fakeRecordCreator($limit=5)
     {
         $a=0;
         $tbl=$this->tmp_db->table('tbl_name');
         while($a < $limit)
         {
-            $a++;
+			$a++;
+			
+			$status = 'enabled';
+
+			if ($a > 5)
+			{
+				$status = 'disabled';
+			}
+
+        
             $tbl->query()->create([
                 'Foo'=>'bar'.$a,
                 'name'=>'name'.$a,
-                ]);
+                'status' => $status
+            ]);
         }
+
         return $tbl;
     }
     
