@@ -137,6 +137,7 @@ class Query
     public function getAll() : Collection
     {
         $files = $this->getTable()->fs()->files('.', $this->getConfig()->extension);
+
         $documents = [];
         foreach($files as $fileName)
         {
@@ -145,7 +146,7 @@ class Query
             ,true));
         }
 
-        return new Collection($documents);
+        return (new Collection($documents));
     }
 
     /**
@@ -335,15 +336,48 @@ class Query
      */
     public function filter() : Collection
     {
-        $documents = $this->getAll();
+        $allDocuments = $this->getAll();
         $result = [];
+
+        // print_r($documents->toArray());
 
         foreach($this->conditions as $conditionKey => $conditions)
         {
-            // $documents = array_values(array_filter($documents, function ($document) use ($field, $operator, $value) {
-            //     return $this->match($document, $field, $operator, $value);
-            // }));
+            if ($conditionKey == 'and') 
+            {
+                $documentsAnd = $allDocuments;
 
+                foreach ($conditions as $condition) 
+                {
+                    list($field, $operator, $value) = $condition;
+
+                    $documentsAnd = $documentsAnd->filter(function ($document) use ($field, $operator, $value) {
+                        return $this->match($document, $field, $operator, $value);
+                    });
+                }
+            }
+
+            $documents = $documentsAnd;
+
+            if ($conditionKey == 'or') 
+            {
+                $documentsOr = $allDocuments;
+                
+                foreach ($conditions as $condition) 
+                {
+                    list($field, $operator, $value) = $condition;
+
+                    $documentsOr = $documentsOr->filter(function ($document) use ($field, $operator, $value) {
+                        return $this->match($document, $field, $operator, $value);
+                    });
+                }
+
+                if ($documentsOr->count() > 0) {
+                    $documents = $documents->merge($documentsOr->toArray());
+                }
+            }
+            
+            
             // foreach($documents as $document) 
             // {
             //     $data = $document->toArray();
@@ -429,8 +463,8 @@ class Query
             // $items = array_unique($result);
         } 
 
-
-        return new Collection($result);
+        return $documents;
+        // return new Collection($documents);
     }
 
     /**
@@ -441,43 +475,43 @@ class Query
      * @param [type] $value
      * @return bool
      */
-    public function match($key, $operator, $value) : bool
+    public function match($document, $key, $operator, $value) : bool
     {
-        $operator = trim($operator);
+        $dvalue = $document->field($key);
 
         switch (true)
         {
-            case ($operator === '=' && $key == $value):
+            case ($operator === '=' && $dvalue == $value):
                 return true;
-            case ($operator === '==' && $key == $value):
+            case ($operator === '==' && $dvalue == $value):
                 return true;
-            case ($operator === '===' && $key === $value):
+            case ($operator === '===' && $dvalue === $value):
                 return true;
-            case ($operator === '!=' && $key != $value):
+            case ($operator === '!=' && $dvalue != $value):
                 return true;
-            case ($operator === '!==' && $key !== $value):
+            case ($operator === '!==' && $dvalue !== $value):
                 return true;
-            case (strtoupper($operator) === 'NOT' && $key != $value):
+            case (strtoupper($operator) === 'NOT' && $dvalue != $value):
                 return true;
-            case ($operator === '>'  && $key >  $value):
+            case ($operator === '>'  && $dvalue >  $value):
                 return true;
-            case ($operator === '>=' && $key >= $value):
+            case ($operator === '>=' && $dvalue >= $value):
                 return true;
-            case ($operator === '<'  && $key <  $value):
+            case ($operator === '<'  && $dvalue <  $value):
                 return true;
-            case ($operator === '<=' && $key <= $value):
+            case ($operator === '<=' && $dvalue <= $value):
                 return true;
             case ((strtoupper($operator) === 'LIKE' || strtoupper($operator) === 'CONTAIN') 
-                                                    && preg_match('/'.$value.'/is',$key)):
+                                                    && preg_match('/'.$value.'/is',$dvalue)):
                 return true;
             case ((strtoupper($operator) === 'NOT LIKE' || str_replace(' ','',strtoupper($operator)) === '!LIKE') 
-                                                    && !preg_match('/'.$value.'/is',$key)):
+                                                    && !preg_match('/'.$value.'/is',$dvalue)):
                 return true;
-            case (strtoupper($operator) === 'IN' && in_array($key, (array) $value)):
+            case (strtoupper($operator) === 'IN' && in_array($dvalue, (array) $value)):
                 return true;
-            case (strtoupper($operator) === 'IN' && in_array($value, (array) $key)):
+            case (strtoupper($operator) === 'IN' && in_array($value, (array) $dvalue)):
                 return true;
-            case (strtoupper($operator) === 'REGEX' && preg_match($value, $key)):
+            case (strtoupper($operator) === 'REGEX' && preg_match($value, $dvalue)):
                 return true;
             default:
                 return false;

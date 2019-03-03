@@ -171,9 +171,9 @@ class QueryTest extends TestCase
 
         // print_r($result->getConditions());
 
-        $result = $tbl->where(['Foo'=>'Bar1'])
-            ->where('status','==','enabled');
+        $result = $tbl->where('status','enabled')->orWhere('status','pending');
 
+        print_r($result->getConditions());
         print_r($result->get());
 
         // $result = $tbl->where(function($q){
@@ -193,7 +193,6 @@ class QueryTest extends TestCase
         // $result = $tbl->where(function($q){
         //     $q->where('status','enabled');
         //     $q->orWhere('status','pending');
-        //     $q->orWhere('status','deleted');
         // })->where('tag','php');
 
         // print_r($result->getConditions());
