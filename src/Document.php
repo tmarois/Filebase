@@ -129,15 +129,19 @@ class Document implements ArrayAccess,Countable
     /**
      * Write document data into file
      *
-     * @return array
+     * @return this
      */
     public function save()
     {
+        // need to figure out how to use the format class
         // $format = $this->db()->config()->format;
+        // $data = $format::encode($this->attr);
 
-        $data = $this->db()->config()->formater::encode($this->attr,true);
-        $this->table()->db()->fs()->put($this->table()->name().DIRECTORY_SEPARATOR.$this->name(), $data);
-        // $this=$this->table()->get ($this->name());
+        $data = json_encode($this->attr);
+        $this->table()->db()->fs()->put(
+            $this->table()->name().DIRECTORY_SEPARATOR.$this->name(), $data
+        );
+
         return $this; 
     }
 
@@ -154,24 +158,20 @@ class Document implements ArrayAccess,Countable
     }
 
     /**
-     * Bulk Update items in the data prop
+     * Bulk Update or Add items in the data prop
      *
      * @param array $args 
      * 
-     * @return void
+     * @return this
      */
     public function update(array $args)
     {
         foreach($args as $key=>$item)
         {
-            // must add a new config for accept new key or not
-            // if(isset($this->attr[$key]))
-            // {
-                $this->attr[$key]=$item;
-            // }
+            $this->attr[$key] = $item;
         }
 
-        $this->save();
+        return $this->save();
     }
 
     /**

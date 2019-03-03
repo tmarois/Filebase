@@ -62,22 +62,27 @@ class Config
     }
 
     /**
-    * get property (it's MAGIC!)
+    * get config property
     *
     * @param string $name
-    * @return mixed
     */
     public function __get($name)
     {
         if (isset($this->$name)) {
             return $this->$name;
         }
-
-        return null;
     }
-    public function __set($key,$value)
+
+   /**
+    * set config property
+    *
+    * @param string $name
+    * @param string $value 
+    */
+    public function __set($key, $value)
     {
-        if(isset($this->$key))
-        $this->$key=$value;
+        if(isset($this->$key)) {
+            $this->$key = $value;
+        }
     }
 }

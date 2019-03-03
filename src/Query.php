@@ -1,10 +1,8 @@
 <?php namespace Filebase;
 
-use Filebase\Table;
+use Filebase\{Table,Config,Document};
 use Filebase\Support\Filesystem;
 use Filebase\Support\Collection;
-use Filebase\Format\Json;
-
 
 class Query 
 {
@@ -27,6 +25,7 @@ class Query
         $this->formater = $this->getDb()->config()->formater;
         
     }
+
     /**
      * getTable function
      *
@@ -36,6 +35,7 @@ class Query
     {
         return $this->table;
     }
+
     /**
      * getDb function
      *
@@ -45,6 +45,7 @@ class Query
     {
         return $this->table->db();
     }
+
     /**
      * getConfig function
      *
@@ -54,6 +55,7 @@ class Query
     {
         return $this->getDb()->config(); 
     }
+
     /**
      * create function
      *
@@ -68,6 +70,7 @@ class Query
         $this->fs->write($this->getTable()->name().'/'.$name,$this->formater::encode($args,true));
         return $this->find($name);  
     }
+
     /**
      * findOrFail function
      *
@@ -81,6 +84,7 @@ class Query
         $result=$this->find($id);
         return count($result)==0  ? false : $result;
     } 
+
     /**
      * find function
      *
@@ -105,6 +109,7 @@ class Query
                 // empty Document on if item not exist 
                 (new Document($this->getTable(),$id.'.'.$ext));
     }
+
     /**
      * findMany function
      *
@@ -122,6 +127,7 @@ class Query
         }
         return new Collection($docs);
     }
+
     /**
     * Get a list of documents within our table
     * Returns an array of items
@@ -140,6 +146,7 @@ class Query
         }
         return new Collection($_items);
     }
+
     /**
      * where function
      *
@@ -148,35 +155,50 @@ class Query
      */
     public function where(...$args) : Query
     {
+        // check if we are passing anonymous function
+        // to create (A=X AND B=C) AND (C=X OR D=X)
+        if (is_callable($args[0]))
+        {
+            // TODO: need to make this functional 
+            // return $args[0]($this);
+        }
+
         if(count($args)==1 && is_array($args[0]))
         {
              foreach($args[0] as $item)
              {
-                list($key,$con,$value)=[$item[0],$item[1],$item[2]];
-                $this->conditions['and'][$key]=[$con,$value];
+                list($key,$con,$value) = [$item[0],$item[1],$item[2]];
+                $this->conditions['and'][$key] = [$con,$value];
              }
+
              return $this;
         }
+
         // check for multi array input
-        $array=array_map(function($r){
+        $array = array_map(function($r){
             return is_array($r);
         },$args);
+
         if(array_product($array))
         {
             foreach($args as $item)
             {
-                list($key,$con,$value)=[$item[0],$item[1],$item[2]];
-                $this->conditions['and'][$key]=[$con,$value];
+                list($key,$con,$value) = [$item[0],$item[1],$item[2]];
+                $this->conditions['and'][$key] = [$con,$value];
             }
+
             return $this;
         }
+
         // on normal request
-        list($key,$con,$value)=$args;
-        $this->conditions['and'][$key]=[$con,$value];
+        list($key,$con,$value) = $args;
+        $this->conditions['and'][$key] = [$con,$value];
+
         return $this;
     }
+
     /**
-     * andWhere function
+     * This is an alias for where
      *
      * @param [type] ...$args
      * @return Query
@@ -185,6 +207,7 @@ class Query
     {
         return $this->where(...$args);
     }
+
     /**
      * orWhere function
      *
@@ -220,6 +243,7 @@ class Query
         $this->conditions['or'][]=[$key,$con,$value];
         return $this;
     }
+
     /**
      * getConditions function
      *
@@ -229,6 +253,7 @@ class Query
     {
         return $this->conditions;
     }
+
     /**
      * get function
      *
@@ -240,8 +265,10 @@ class Query
         {
             return $this->filter();
         }
+
         return $this->getAll();
     }
+
     /**
      * filter function
      *
@@ -249,34 +276,43 @@ class Query
      */
     public function filter() : Collection
     {
-        $items=$this->getAll();
+        $items = $this->getAll();
         foreach($this->conditions['and'] as $and_condition_key=>$and_condition)
         {
-            $result=[];
-            foreach ($items as $key => $value) {
+            $result = [];
+            foreach ($items as $key => $value) 
+            {
                 if(isset($value[$and_condition_key]))
                 {
+                    // run the AND clause
                     if($this->match($value[$and_condition_key],$and_condition[0],$and_condition[1]))
                     {
-                        $result[]=$value;
+                        $result[] = $value;
                         continue;
                     }
+
                     // just if record rejected with 'and' conditions we need to match record with 'or' conditions
                     if(!isset($this->conditions['or'])) continue;
-                    foreach ($this->conditions['or'] as $or_condition) {
+
+                    // run the OR clause
+                    foreach ($this->conditions['or'] as $or_condition) 
+                    {
                         if($this->match($value[$or_condition[0]],$or_condition[1],$or_condition[2]))
                         {
-                            $result[]=$value;
+                            $result[] = $value;
                             continue;
                         }
                     }
                 }
 
             }
-            $items=array_unique($result);
+
+            $items = array_unique($result);
         } 
+
         return new Collection(array_unique($result));
     }
+
     /**
      * match function
      *
