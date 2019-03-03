@@ -1,12 +1,28 @@
 <?php namespace Filebase\Support;
 
 use ArrayObject;
-
+use FileBase\Document;
 class Collection extends ArrayObject
 {
 
-    public function toArray()
+    /**
+     * toArray Method
+     *
+     * @return array
+     */
+    public function toArray() : array
     {
-        return $this->getArrayCopy();
+        $array=[];
+        foreach($this->getArrayCopy() as $document)
+        {
+            if(is_object($document) && $document instanceof Document)
+            {
+                $array[]=$document->attr();
+                continue;
+            }
+            $array[]=$document;
+            
+        }
+        return $array;
     }
 }
