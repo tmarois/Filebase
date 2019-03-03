@@ -158,24 +158,20 @@ class Document implements ArrayAccess,Countable
     }
 
     /**
-     * Bulk Update items in the data prop
+     * Bulk Update or Add items in the data prop
      *
      * @param array $args 
      * 
-     * @return void
+     * @return this
      */
     public function update(array $args)
     {
         foreach($args as $key=>$item)
         {
-            // must add a new config for accept new key or not
-            // if(isset($this->attr[$key]))
-            // {
-                $this->attr[$key]=$item;
-            // }
+            $this->attr[$key] = $item;
         }
 
-        $this->save();
+        return $this->save();
     }
 
     /**
