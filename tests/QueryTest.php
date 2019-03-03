@@ -362,18 +362,12 @@ class QueryTest extends TestCase
         
         $this->assertCount(3,$result);
     }
-    // TODO:testMustRemoveEmptyDocumentsOnFindMany
     /** @test */
-    // public function testMustRemoveEmptyDocumentsOnFindMany()
-    // {
-    //     $tbl=$this->fakeRecordCreator(5);
-    //     $result=$tbl->query()->find(1,2,12);
+    public function testMustRemoveEmptyDocumentsOnFindMany()
+    {
+        $tbl=$this->fakeRecordCreator(5);
+        $result=$tbl->query()->find(1,2,12,3);
         
-    //     $this->assertCount(2,$result);
-    // }
-    
-    
-    
-    
-     
+        $this->assertCount(3,$result);
+    }
 }

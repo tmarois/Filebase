@@ -75,7 +75,8 @@ class Query
         $docs=[];
         foreach($ids as $id)
         {
-            $docs[]=$this->find($id);
+            // if doc is true will store
+            if($doc=$this->findOrFail($id)) $docs[]=$doc;
         }
         return new Collection($docs);
     }
