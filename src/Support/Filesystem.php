@@ -29,15 +29,15 @@ class Filesystem
      */
     public function __construct($adapter)
     {
-        if(is_callable($adapter) )
+        if(is_callable($adapter))
         {
             if(($adapter=$adapter()) instanceof AdapterInterface)
             {
-                $this->filesystem = $adapter;
+                $this->filesystem = new FS($adapter);
             } 
         }else{
             // by defult will set local path
-            $this->filesystem = new FS((new Local($adapter)));
+            $this->filesystem = new FS(new Local($adapter));
         }
 
     }
