@@ -60,12 +60,13 @@ class Query
         if(count($id) > 1 ) return $this->findMany(...$id);
 
         // return single document on find(1)
-        $id=$id[0];
         $ext=$this->config()->extension;
-        $id=strpos($id,'.'.$ext)!==false ? str_replace('.'.$ext,'',$id) : $id;
+        $id=strpos($id[0],'.'.$ext)!==false ? str_replace('.'.$ext,'',$id[0]) : $id[0];
 
         return $this->fs->has($id.'.'.$ext) ?
-            (new Document($this->table(),$id.'.'.$ext,(array)json_decode($this->fs->read($id.'.'.$ext),true))):
+            (new Document($this->table(),
+                                $id.'.'.$ext,
+                                    $this->formater::decode($this->fs->read($id.'.'.$ext),true))):
                 // empty Document on if item not exist 
                 (new Document($this->table(),$id.'.'.$ext));
     }
