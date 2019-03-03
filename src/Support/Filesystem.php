@@ -63,16 +63,41 @@ class Filesystem
     }
 
     /**
-     * Write to a specific file and
-     * create one if non-exists
+     * Create a file if one doesnt
+     * exists
      * 
      * @param string $path
      * @param string $data
+     * 
+     * @return string
      */
     public function write($path, $data = '')
     {
         return $this->filesystem->write($path, $data);
     }
+
+    /**
+     * Update an existing a file
+     * 
+     * @param string $path
+     * @param string $data
+     * 
+     * @return string
+     */
+    public function update($path, $data = '')
+    {
+        return $this->filesystem->update($path, $data);
+    }
+
+    /**
+     * Write to a file or create
+     * one if it doesnt exist
+     * 
+     * @param string $path
+     * @param string $data
+     * 
+     * @return string
+     */
     public function put($path, $data = '')
     {
         return $this->filesystem->put($path, $data);
