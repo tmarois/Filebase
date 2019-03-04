@@ -330,6 +330,43 @@ class Query
     }
 
     /**
+     * filter condition
+     *
+     */
+    private function filterCondition($documents, $conditions)
+    {
+        if (isset($conditions['and'])) {
+            $documents = $this->filterCondition($documents, $conditions['and']);
+        }
+
+        if (isset($conditions['or'])) {
+            $documentsOr = $this->filterCondition($documents, $conditions['or']);
+
+            if ($documentsOr->count() > 0) {
+                $documents = $documents->merge($documentsOr->toArray());
+            }
+        }
+
+        if (!isset($conditions['and'],$conditions['or'])) 
+        {
+            foreach ($conditions as $key => $matchStatement) 
+            {
+                if (isset($matchStatement['and']) || isset($matchStatement['or'])) {
+                    return $this->filterCondition($documents, $matchStatement);
+                }
+                
+                list($field, $operator, $value) = $matchStatement;
+
+                $documents = $documents->filter(function ($document) use ($field, $operator, $value) {
+                    return $this->match($document, $field, $operator, $value);
+                });
+            }
+        }
+
+        return $documents;
+    }
+
+    /**
      * filter function
      *
      * @return Collection
@@ -339,43 +376,70 @@ class Query
         $allDocuments = $this->getAll();
         $result = [];
 
-        // print_r($documents->toArray());
+        //$documents = $this->filterCondition($allDocuments, $this->conditions);
 
-        foreach($this->conditions as $conditionKey => $conditions)
+        if (isset($this->conditions['and']))
         {
-            if ($conditionKey == 'and') 
-            {
-                $documentsAnd = $allDocuments;
+            $documents = $this->filterCondition($allDocuments, $this->conditions['and']);
+        }
 
-                foreach ($conditions as $condition) 
-                {
-                    list($field, $operator, $value) = $condition;
+        if (isset($this->conditions['or']))
+        {
+            $documentsOr = $this->filterCondition($allDocuments, $this->conditions['or']);
 
-                    $documentsAnd = $documentsAnd->filter(function ($document) use ($field, $operator, $value) {
-                        return $this->match($document, $field, $operator, $value);
-                    });
-                }
+            if ($documentsOr->count() > 0) {
+                $documents = $documents->merge($documentsOr->toArray());
             }
+        }
 
-            $documents = $documentsAnd;
+        // foreach($this->conditions as $conditionKey => $conditions)
+        // {
+            //$documents = $this->filterCondition($allDocuments, $conditions);
 
-            if ($conditionKey == 'or') 
-            {
-                $documentsOr = $allDocuments;
+            // filter through AND statements
+            // if ($conditionKey == 'and') 
+            // {
+            //     $documentsAnd = $allDocuments;
+
+            //     foreach ($conditions as $ckey => $condition) 
+            //     {
+            //         if ($ckey == 'and')
+            //         {
+            //             // run through again 
+            //             // $this->filterDocs($condition)
+            //         }
+            //         else
+            //         {
+            //             list($field, $operator, $value) = $condition;
+
+            //             $documentsAnd = $documentsAnd->filter(function ($document) use ($field, $operator, $value) {
+            //                 return $this->match($document, $field, $operator, $value);
+            //             });
+            //         }
+            //     }
+            // }
+
+            // assign our documents from the ANDs
+            // $documents = $documentsAnd;
+
+            // // filter through OR statements
+            // if ($conditionKey == 'or') 
+            // {
+            //     $documentsOr = $allDocuments;
                 
-                foreach ($conditions as $condition) 
-                {
-                    list($field, $operator, $value) = $condition;
+            //     foreach ($conditions as $condition) 
+            //     {
+            //         list($field, $operator, $value) = $condition;
 
-                    $documentsOr = $documentsOr->filter(function ($document) use ($field, $operator, $value) {
-                        return $this->match($document, $field, $operator, $value);
-                    });
-                }
+            //         $documentsOr = $documentsOr->filter(function ($document) use ($field, $operator, $value) {
+            //             return $this->match($document, $field, $operator, $value);
+            //         });
+            //     }
 
-                if ($documentsOr->count() > 0) {
-                    $documents = $documents->merge($documentsOr->toArray());
-                }
-            }
+            //     if ($documentsOr->count() > 0) {
+            //         $documents = $documents->merge($documentsOr->toArray());
+            //     }
+            // }
             
             
             // foreach($documents as $document) 
@@ -461,7 +525,7 @@ class Query
 
             // // this doesnt seem useful? 
             // $items = array_unique($result);
-        } 
+        //} 
 
         return $documents;
         // return new Collection($documents);

@@ -146,7 +146,7 @@ class QueryTest extends TestCase
     /** @test */
     public function testMustFilterItemsWithQuickWhere()
     {
-        $tbl = $this->fakeRecordCreator(10);
+        $tbl = $this->fakeRecordCreator(9);
 
         // $result = $tbl->where('Foo','bar2');
         // print_r($result->getConditions());
@@ -171,10 +171,27 @@ class QueryTest extends TestCase
 
         // print_r($result->getConditions());
 
-        $result = $tbl->where('status','enabled')->orWhere('status','pending');
+        // $result = $tbl->where('status','enabled');
+        // $result = $tbl->where('status','enabled')->where('Foo','bar1');
+        // $result = $tbl->where('status','enabled')->orWhere('Foo','bar1');
 
-        print_r($result->getConditions());
-        print_r($result->get());
+        $result = $tbl->where(function($query){
+            // count=6
+            // $query->where('status','enabled');
+            // $query->orWhere('Foo','bar1');
+
+            // count=2
+            $query->where('Foo','bar1');
+            $query->orWhere('status','enabled');
+
+            // something isnt right here...
+        }); 
+
+        //print_r($result->getConditions());
+
+        //$result->get();
+
+        print_r('count='.$result->get()->count());
 
         // $result = $tbl->where(function($q){
         //     $q->where('status','enabled');
