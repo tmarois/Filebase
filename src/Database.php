@@ -114,8 +114,12 @@ class Database
     *
     * @return $document \Filebase\Document object
     */
-    public function get($id)
+    public function get($id = null)
     {
+        if(is_null($id))
+        {
+          $id = $this->getAutoId();
+        }
         $content = $this->read($id);
 
         $document = new Document($this);
@@ -130,6 +134,50 @@ class Database
         }
 
         return $document;
+    }
+
+    /**
+    * getAutoId
+    *
+    * Generates a unique id
+    *
+    * @return mixed $id
+    */
+    public function getAutoId()
+    {
+        $mode = $this->config->auto_id_mode;
+
+        if($mode == 'hash')
+        {
+          do{
+            // Build random id with 8 characters
+            $id = substr(md5(rand(0,1000000000)), 0, 8);
+
+            // If id is unique break out of the loop
+            if(!$this->has($id)) break;
+          } while(0);
+
+          // Return the found id
+          return $id;
+        }elseif($mode == 'autoincrement'){
+          $files =  Filesystem::getAllFiles( $this->config->dir, $this->config->format::getFileExtension());
+          $id = 1;
+
+          // Run through all available files and find max id
+          foreach($files as $file){
+            // If filename contains letters or starts with zero ignore it
+            if (!preg_match('/^[1-9][0-9]*$/', $file))
+            {
+              continue;
+            }
+            // If filename is bigger than current id then increase id
+            if(intval($file) >= $id) $id = intval($file) +1;
+          }
+          // Return the found id
+          return $id;
+        }else{
+          throw new \Exception('Filebase Error: Unknown Autoid Mode.');
+        }
     }
 
     /**
