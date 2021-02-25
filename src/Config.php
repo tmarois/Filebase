@@ -77,6 +77,16 @@ class Config
     public $validate = [];
 
     /**
+    * $auto_id_mode
+    *
+    * how new ids are generated when no id is given
+    * Possible values: autoincrement/hash
+    *
+    * default autoincrement
+    */
+    public $auto_id_mode = 'autoincrement';
+
+    /**
     * __construct
     *
     * This sets all the config variables (replacing its defaults)
