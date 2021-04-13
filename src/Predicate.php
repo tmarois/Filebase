@@ -23,7 +23,8 @@ class Predicate
         'NOT',
         'LIKE',
         'NOT LIKE',
-        'REGEX'
+        'REGEX',
+        'CONTAINS'
     ];
 
 

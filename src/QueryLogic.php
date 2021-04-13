@@ -234,6 +234,8 @@ class QueryLogic
                 return true;
             case (strtoupper($operator) === 'REGEX' && preg_match($value, $d_value)):
                 return true;
+            case (strtoupper($operator) === 'CONTAINS' && strpos(strtoupper($d_value), strtoupper($value)) !== false)
+                return true;
             default:
                 return false;
         }
