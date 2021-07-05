@@ -338,4 +338,25 @@ class DatabaseTest extends \PHPUnit\Framework\TestCase
         $this->assertInternalType('string', $result_from_cache[0]['email']);
         $db->flush(true);
     }
+    public function test_must_return_name_of_culomns()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/saved',
+            'cache' => true
+        ]);
+
+        $db->flush(true);
+
+        for ($x = 1; $x <= 10; $x++)
+    	{
+    		$user = $db->get(uniqid());
+    		$user->name  = 'John';
+            $user->email = 'john@example.com';
+    		$user->save();
+    	}
+
+        $r=$db->first();
+        $names=array_keys($r);
+        $this->assertEquals($names, $db->getColumns());
+    }
 }

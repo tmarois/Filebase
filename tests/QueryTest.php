@@ -1261,4 +1261,84 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
         $db->flush(true);
     }
+    public function test_must_detect_and_return_culomn_with_regex()
+    {
+        $query=new Query(new Database);
+        $result=$query->sanatizeWhere('whereName');
+        $this->assertEquals('name',$result);
+
+        $result=$query->sanatizeWhere('whereUser');
+        $this->assertEquals('user',$result);
+
+    }
+    public function test_must_call_method_on_regex_matched_culumn()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $user1 = $db->get('obj1')->save(['name' => 'Bob','user_profile_is_some_query'=>'data','email'=>'email@addres.com']);
+        $user2 = $db->get('obj2')->save(['name' => 'Jenny','user_profile_is_some_query'=>'data','email'=>'email@addres.com']);
+        $user3 = $db->get('obj3')->save(['name' => 'Cyrus','user_profile_is_some_query'=>'data','email'=>'email@addres.com']);
+
+        // check with one input
+        $test1 = $db->query()->whereName('Bob')->first();
+        $expected = ['name' => 'Bob','user_profile_is_some_query'=>'data','email'=>'email@addres.com'];
+        $this->assertEquals($expected, $test1);
+
+        // check with two input 
+        $test1 = $db->query()->whereEmail('==','email@addres.com')->first();
+        $expected = ['name' => 'Bob','user_profile_is_some_query'=>'data','email'=>'email@addres.com'];
+        $this->assertEquals($expected, $test1);
+
+        // check with two input withour query()
+        $test1 = $db->whereEmail('==','email@addres.com')->first();
+        $expected = ['name' => 'Bob','user_profile_is_some_query'=>'data','email'=>'email@addres.com'];
+        $this->assertEquals($expected, $test1);
+
+         
+        $db->flush(true);
+    }
+    public function test_must_return_exception_on_none_exist_method()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $user1 = $db->get('obj1')->save(['name' => 'Bob','email'=>'email@addres.com']);
+        $this->expectException(\BadMethodCallException::class);
+        $db->query()->wherenone('name')->first();
+    }
+    public function test_must_return_exception_on_empty_whereName_call_method()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $user1 = $db->get('obj1')->save(['name' => 'Bob','email'=>'email@addres.com']);
+        $this->expectException(\InvalidArgumentException::class);
+        $db->query()->whereName()->first();
+    }
+    public function test_must_return_exception_on_where_contain_underscore()
+    {
+        $db = new \Filebase\Database([
+            'dir' => __DIR__.'/databases/users_1',
+            'cache' => false
+        ]);
+
+        $db->flush(true);
+
+        $user1 = $db->get('obj1')->save(['name' => 'Bob','email'=>'email@addres.com']);
+        $this->expectException(\BadMethodCallException::class);
+        $db->query()->where_Name('Bob')->first();
+    }
 }

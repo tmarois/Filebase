@@ -49,7 +49,10 @@ class QueryLogic
     private function loadDocuments()
     {
         $predicates = $this->predicate->get();
-
+        if (empty($predicates))
+        {
+            $predicates = 'findAll';
+        }
         if ($this->cache===false)
         {
             $this->documents = $this->database->findAll(true,false);
@@ -86,7 +89,7 @@ class QueryLogic
         }
 
         $this->loadDocuments();
-
+        
         if ($predicates !== 'findAll')
         {
             $this->documents = $this->filter($this->documents, $predicates);

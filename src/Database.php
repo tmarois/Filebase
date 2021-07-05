@@ -422,11 +422,23 @@ class Database
             return $this->$method(...$args);
         }
 
-        if(method_exists(Query::class,$method)) {
-            return (new Query($this))->$method(...$args);
+        if(is_callable([$obj=(new Query($this)),$method])) {
+            return $obj->$method(...$args);
         }
 
         throw new \BadMethodCallException("method {$method} not found on 'Database::class' and 'Query::class'");
+    }
+    /**
+     * getColumns
+     */
+    public function getColumns()
+    {
+        $items=[];
+        foreach(array_keys($this->first()) as $item)
+        {
+            $items[]=strtolower($item);
+        }
+        return $items;
     }
 
 }
