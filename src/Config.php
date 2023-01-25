@@ -77,6 +77,13 @@ class Config
     public $validate = [];
 
     /**
+    * $encryption
+    *
+    * Contains all encryption options
+    */
+    public $encryption;
+
+    /**
     * __construct
     *
     * This sets all the config variables (replacing its defaults)

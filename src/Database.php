@@ -24,7 +24,6 @@ class Database
     * \Filebase\Config
     */
     protected $config;
-
     /**
      * Database constructor.
      *
@@ -144,7 +143,7 @@ class Database
     public function has($id)
     {
         $format = $this->config->format;
-        $record = Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($id, $this->config->safe_filename).'.'.$format::getFileExtension() );
+        $record = Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($id, $this->config->safe_filename).'.'.$format::getFileExtension(), $this->config->encryption);
 
         return $record ? true : false;
     }
@@ -226,7 +225,7 @@ class Database
             $document->setCreatedAt($created);
         }
 
-        if (!Filesystem::read($file_location) || $created==false)
+        if (!Filesystem::read($file_location, $this->config->encryption) || $created==false)
         {
             $document->setCreatedAt(time());
         }
@@ -240,7 +239,7 @@ class Database
             throw new SavingException("Can not encode document.", 0, $e);
         }
 
-        if (Filesystem::write($file_location, $data))
+        if (Filesystem::write($file_location, $data, $this->config->encryption))
         {
             $this->flushCache();
 
@@ -276,7 +275,8 @@ class Database
         $file = Filesystem::read(
             $this->config->dir . '/'
             . Filesystem::validateName($name, $this->config->safe_filename)
-            . '.' . $format::getFileExtension()
+            . '.' . $format::getFileExtension(),
+            $this->config->encryption
         );
 
         if ($file !== false) {
