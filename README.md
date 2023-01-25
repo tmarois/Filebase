@@ -508,7 +508,7 @@ $database->backup()->rollback();
 
 All notable changes to this project will be documented here.
 
-## [2.0.0] - 2023-01-25
+## [2.0.0] - 2023-01-25 - @mitmelon
 
 ## (11) Encryption Added
 
