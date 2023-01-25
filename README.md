@@ -4,7 +4,7 @@
 
 [Join Discord](https://discord.gg/kywDsDnJ6C) – For support, updates and collaboration.
 
-A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](README.md#2-formatting) the way you like).
+A Simple but Powerful Flat File Database Storage with document encryption. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](README.md#2-formatting) the way you like).
 
 You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in **version control** and pass them to your team without having out-of-sync SQL databases.
 
@@ -503,6 +503,42 @@ $database->backup()->rollback();
 
 ```
 
+# Changelog
+
+All notable changes to this project will be documented here.
+
+## [2.0.0] - 2023-01-25
+
+### New features
+
+  - 🌟 Added Encryption mechanism to the document. You can now encrypt and decrypt all your documents by passing an encryption array to the config settings as shown below;
+
+```php
+require_once __DIR__."/vendor/autoload.php";
+
+/**
+ * @settings array $encryption
+ * @param key_storage_path - The path to where your encryption keys are stored
+ * @key_name - The name of your key which points to the name of the key file (Store this name in your database)
+ */
+
+$db = new \Filebase\Database([
+    'dir' => __DIR__.'/databases',
+    'encryption' => array('key_storage_path' => __DIR__.'/encrypter',  'key_name' => 'test')
+]);
+
+$db->flush(true);
+$user = $db->get(uniqid());
+$user->name  = 'John';
+$user->email = 'john@example.com';
+$user->save();
+$db->where('name','=','John')->andWhere('email','==','john@example.com')->select('email')->results();
+$result_from_cache = $db->where('name','=','John')->andWhere('email','==','john@example.com')->select('email')->results();
+print_r($result_from_cache);
+
+```
+
+The above will encrypt your document when creating and decrypt it when fetching or quering. Please note that its required that you have the extension Sodium installed to use the encryption mechanism.
 
 ## Why Filebase?
 
