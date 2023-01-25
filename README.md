@@ -28,6 +28,7 @@ Filebase is simple by design, but has enough features for the more advanced.
 * CRUD (method APIs)
 * File locking (on save)
 * Intuitive Method Naming
+* [Encryption](README.md#11-Encryption-Added)
 
 ## Installation
 
@@ -509,7 +510,7 @@ All notable changes to this project will be documented here.
 
 ## [2.0.0] - 2023-01-25
 
-### New features
+## (11) Encryption Added
 
   - 🌟 Added Encryption mechanism to the document. You can now encrypt and decrypt all your documents by passing an encryption array to the config settings as shown below;
 
