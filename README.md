@@ -25,10 +25,10 @@ Filebase is simple by design, but has enough features for the more advanced.
 * [Database Backups](README.md#10-database-backups)
 * [Formatting](README.md#2-formatting) (encode/decode)
 * [Validation](README.md#6-validation-optional) (on save)
+* [Encryption](README.md#11-Encryption-Added)
 * CRUD (method APIs)
 * File locking (on save)
 * Intuitive Method Naming
-* [Encryption](README.md#11-Encryption-Added)
 
 ## Installation
 
