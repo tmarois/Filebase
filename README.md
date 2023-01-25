@@ -508,7 +508,7 @@ $database->backup()->rollback();
 
 All notable changes to this project will be documented here.
 
-## [2.0.0] - 2023-01-25 - @mitmelon
+## [2.0.0] - 2023-01-25
 
 ## (11) Encryption Added
 
@@ -577,6 +577,15 @@ Filebase will work-hard to be **backwards-compatible** when possible.
 ## Contributions
 
 Anyone can contribute to Filebase. Please do so by posting issues when you've found something that is unexpected or sending a pull request for improvements.
+
+## All Contributors
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://github.com/mitmelon"><img src="https://user-images.githubusercontent.com/55149512/214651199-91fcbd60-100e-4425-a351-fb2a0e2f998b.png" width="100px;" alt="Adeyeye George"/><br /><sub><b>Adeyeye George</b></sub></a></td>
+  </tbody>
+</table>
 
 
 ## License
