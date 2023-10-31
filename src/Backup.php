@@ -31,8 +31,9 @@ class Backup
     * __construct
     *
     */
-    public function __construct($backupLocation = '', Database $database)
+    public function __construct($backupLocation, Database $database)
     {
+        
         $this->backupLocation = $backupLocation;
         $this->config = $database->getConfig();
         $this->database = $database;
