@@ -1,7 +1,7 @@
 <?php  namespace Filebase;
 
 
-class DocumentTest extends \PHPUnit\Framework\TestCase
+class DocumentYamlTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
@@ -17,7 +17,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     {
         $db = new \Filebase\Database([
             'dir'   => __DIR__.'/databases',
-            'cache' => false
+            'cache' => false,
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -31,7 +32,7 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         // should equal...
         $this->assertEquals('value', $val->key);
 
-        $db->flush(true);
+        #$db->flush(true);
     }
 
 
@@ -53,7 +54,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         {
             $db = new \Filebase\Database([
                 'dir'   => __DIR__.'/databases',
-                'cache' => false
+                'cache' => false,
+                'format' => \Filebase\Format\Yaml::class
             ]);
 
             $db->flush(true);
@@ -85,7 +87,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     {
         $db = new \Filebase\Database([
             'dir'   => __DIR__.'/databases/data_rename',
-            'cache' => false
+            'cache' => false,
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         // save data
@@ -118,7 +121,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases',
-            'cache' => false
+            'cache' => false,
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -161,7 +165,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     {
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases',
-            'cache' => false
+            'cache' => false,
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -186,7 +191,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testArraySetValueSave()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -204,7 +210,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testPropertySetValueSave()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -224,7 +231,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testToArray()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -242,7 +250,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testDelete()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -260,7 +269,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testGetId()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -278,7 +288,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testSetId()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -300,7 +311,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testDates()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -320,7 +332,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testFormatDates()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -340,7 +353,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testNoFormatDates()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -360,7 +374,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testMissingUpdatedDate()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -383,7 +398,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testCustomFilter()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -415,7 +431,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testCustomFilterParam()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -448,7 +465,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testCustomFilterParamIndex()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -483,7 +501,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testCustomFilterEmpty()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -504,7 +523,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
     public function testFieldMethod()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -518,36 +538,12 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
         $db->flush(true);
     }
 
-    public function testFieldId()
-    {
-        $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
-        ]);
-
-        $db->flush(true);
-
-        $db->get('vegetables')->set(['broccoli'=>'27'])->save();
-
-        $expected = time();
-        $actual = $db->get('vegetables')->field('__created_at');
-        $this->assertEquals($expected, $actual);
-
-        $actual = $db->get('vegetables')->field('__updated_at');
-        $this->assertEquals($expected, $actual);
-
-        $db->get('weather')->set(['cityname'=>'condition1'])->save();
-
-        $actual = $db->get('weather')->field('__id');
-        $this->assertEquals('weather', $actual);
-
-        $db->flush(true);
-    }
-
 
     public function testNestedFieldMethod()
     {
         $db = new \Filebase\Database([
-            'dir' => __DIR__.'/databases'
+            'dir' => __DIR__.'/databases',
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);
@@ -572,7 +568,8 @@ class DocumentTest extends \PHPUnit\Framework\TestCase
 
         $db = new \Filebase\Database([
             'dir' => __DIR__.'/databases',
-            'safe_filename' => false
+            'safe_filename' => false,
+            'format' => \Filebase\Format\Yaml::class
         ]);
 
         $db->flush(true);

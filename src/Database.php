@@ -1,11 +1,10 @@
 <?php  namespace Filebase;
 
 use Exception;
-use Filebase\Config;
-use Filebase\Cache;
-use Filebase\Filesystem;
-use Filebase\Document;
-use Filebase\Backup;
+use Filebase\Format\EncodingException;
+use Filebase\Filesystem\SavingException;
+use Filebase\Filesystem\ReadingException;
+use Filebase\Filesystem\FilesystemException;
 
 class Database
 {
@@ -16,10 +15,7 @@ class Database
     * Stores the version of Filebase
     * use $db->getVersion()
     */
-    const VERSION = '1.0.20';
-
-
-    //--------------------------------------------------------------------
+    const VERSION = '1.0.24';
 
     /**
     * $config
@@ -28,12 +24,13 @@ class Database
     * \Filebase\Config
     */
     protected $config;
-
-
     /**
-    * __construct
-    *
-    */
+     * Database constructor.
+     *
+     * @param array $config
+     *
+     * @throws FilesystemException
+     */
     public function __construct(array $config = [])
     {
         $this->config = new Config($config);
@@ -46,18 +43,14 @@ class Database
         {
             if (!@mkdir($this->config->dir, 0777, true))
             {
-                throw new Exception(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->dir));
+                throw new FilesystemException(sprintf('`%s` doesn\'t exist and can\'t be created.', $this->config->dir));
             }
         }
         else if (!is_writable($this->config->dir))
         {
-            throw new Exception(sprintf('`%s` is not writable.', $this->config->dir));
+            throw new FilesystemException(sprintf('`%s` is not writable.', $this->config->dir));
         }
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * version
@@ -70,10 +63,6 @@ class Database
     {
         return self::VERSION;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * findAll()
@@ -94,31 +83,26 @@ class Database
         $file_location  = $this->config->dir.'/';
 
         $all_items = Filesystem::getAllFiles($file_location, $file_extension);
-        if ($include_documents==true)
+        if (!$include_documents)
         {
-            $items = [];
+            return $all_items;
+        }
+        $items = [];
 
-            foreach($all_items as $a)
-        	{
-                if ($data_only === true)
-                {
-                    $items[] = $this->get($a)->getData();
-                }
-                else
-                {
-                    $items[] = $this->get($a);
-                }
-        	}
-
-            return $items;
+        foreach($all_items as $a)
+        {
+            if ($data_only === true)
+            {
+                $items[] = $this->get($a)->getData();
+            }
+            else
+            {
+                $items[] = $this->get($a);
+            }
         }
 
-        return $all_items;
+        return $items;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * get
@@ -147,10 +131,6 @@ class Database
         return $document;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * has
     *
@@ -163,14 +143,10 @@ class Database
     public function has($id)
     {
         $format = $this->config->format;
-        $record = Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($id, $this->config->safe_filename).'.'.$format::getFileExtension() );
+        $record = Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($id, $this->config->safe_filename).'.'.$format::getFileExtension(), $this->config->encryption);
 
         return $record ? true : false;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * backup
@@ -188,10 +164,6 @@ class Database
 
         return new Backup($this->config->backupLocation, $this);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * set
@@ -215,10 +187,6 @@ class Database
         return $document;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * count
     *
@@ -230,23 +198,17 @@ class Database
         return count($this->findAll(false));
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
-    * save
-    *
-    * @param $document \Filebase\Document object
-    * @param mixed $data should be an array, new data to replace all existing data within
-    *
-    * @return (bool) true or false if file was saved
-    */
+     * @param Document $document
+     * @param string $wdata
+     * @return bool|Document
+     * @throws SavingException
+     */
     public function save(Document $document, $wdata = '')
     {
         if ($this->config->read_only === true)
         {
-            throw new Exception("This database is set to be read-only. No modifications can be made.");
+            throw new SavingException("This database is set to be read-only. No modifications can be made.");
         }
 
         $format         = $this->config->format;
@@ -263,30 +225,29 @@ class Database
             $document->setCreatedAt($created);
         }
 
-        if (!Filesystem::read($file_location) || $created==false)
+        if (!Filesystem::read($file_location, $this->config->encryption) || $created==false)
         {
             $document->setCreatedAt(time());
         }
 
         $document->setUpdatedAt(time());
 
-        $data = $format::encode( $document->saveAs(), $this->config->pretty );
+        try {
+            $data = $format::encode( $document->saveAs(), $this->config->pretty );
+        } catch (EncodingException $e) {
+            // TODO: add logging
+            throw new SavingException("Can not encode document.", 0, $e);
+        }
 
-        if (Filesystem::write($file_location, $data))
+        if (Filesystem::write($file_location, $data, $this->config->encryption))
         {
             $this->flushCache();
 
             return $document;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * query
@@ -298,26 +259,32 @@ class Database
         return new Query($this);
     }
 
-
-    //--------------------------------------------------------------------
-
-
-
     /**
-    * read
-    *
-    * @param string $name
-    * @return decoded file data
-    */
+     * Read and return Document from filesystem by name.
+     * If doesn't exists return new empty Document.
+     *
+     * @param $name
+     *
+     * @throws Exception|ReadingException
+     * @return array|null
+     */
     protected function read($name)
     {
         $format = $this->config->format;
-        return $format::decode( Filesystem::read( $this->config->dir.'/'.Filesystem::validateName($name, $this->config->safe_filename).'.'.$format::getFileExtension() ) );
+
+        $file = Filesystem::read(
+            $this->config->dir . '/'
+            . Filesystem::validateName($name, $this->config->safe_filename)
+            . '.' . $format::getFileExtension(),
+            $this->config->encryption
+        );
+
+        if ($file !== false) {
+            return $format::decode($file);
+        }
+
+        return null;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * delete
@@ -341,9 +308,6 @@ class Database
         return $d;
     }
 
-
-    //--------------------------------------------------------------------
-
     /**
     * truncate
     *
@@ -355,10 +319,6 @@ class Database
     {
         return $this->flush(true);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * flush
@@ -375,33 +335,25 @@ class Database
             throw new Exception("This database is set to be read-only. No modifications can be made.");
         }
 
-        if ($confirm===true)
-        {
-            $format = $this->config->format;
-            $documents = $this->findAll(false);
-            foreach($documents as $document)
-            {
-                Filesystem::delete($this->config->dir.'/'.$document.'.'.$format::getFileExtension());
-            }
-
-            if ($this->count() === 0)
-            {
-                return true;
-            }
-            else
-            {
-                throw new Exception("Could not delete all database files in ".$this->config->dir);
-            }
-        }
-        else
+        if ($confirm!==true)
         {
             throw new Exception("Database Flush failed. You must send in TRUE to confirm action.");
         }
+
+        $format = $this->config->format;
+        $documents = $this->findAll(false);
+        foreach($documents as $document)
+        {
+            Filesystem::delete($this->config->dir.'/'.$document.'.'.$format::getFileExtension());
+        }
+
+        if ($this->count() === 0)
+        {
+            return true;
+        }
+
+        throw new Exception("Could not delete all database files in ".$this->config->dir);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * flushCache
@@ -417,10 +369,6 @@ class Database
         }
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * toArray
     *
@@ -431,10 +379,6 @@ class Database
     {
         return $this->objectToArray( $document->getData() );
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * objectToArray
@@ -456,10 +400,6 @@ class Database
         return $arr;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * getConfig
     *
@@ -468,6 +408,25 @@ class Database
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+    * __call
+    *
+    * Magic method to give us access to query methods on db class
+    *
+    */
+    public function __call($method,$args)
+    {
+        if(method_exists($this,$method)) {
+            return $this->$method(...$args);
+        }
+
+        if(method_exists(Query::class,$method)) {
+            return (new Query($this))->$method(...$args);
+        }
+
+        throw new \BadMethodCallException("method {$method} not found on 'Database::class' and 'Query::class'");
     }
 
 }

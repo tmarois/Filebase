@@ -25,10 +25,6 @@ class Document
         $this->__database = $database;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * saveAs
     *
@@ -47,10 +43,6 @@ class Document
         return $data;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * save()
     *
@@ -66,10 +58,6 @@ class Document
         return $this->__database->save($this, $data);
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * delete
     *
@@ -82,10 +70,6 @@ class Document
         return $this->__database->delete($this);
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * set
     *
@@ -94,10 +78,6 @@ class Document
     {
         return $this->__database->set($this, $data);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * toArray
@@ -108,10 +88,6 @@ class Document
         return $this->__database->toArray($this);
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * __set
     *
@@ -120,10 +96,6 @@ class Document
     {
         $this->data[$name] = $value;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * __get
@@ -139,10 +111,6 @@ class Document
         return $this->data[$name];
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * __isset
     *
@@ -151,10 +119,6 @@ class Document
     {
         return isset($this->data[$name]);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * __unset
@@ -180,10 +144,6 @@ class Document
     {
         return $this->customFilter($field, $paramOne, $paramTwo);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * customFilter
@@ -235,10 +195,6 @@ class Document
 
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * getDatabase
     *
@@ -248,10 +204,6 @@ class Document
     {
         return $this->__database;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * getId
@@ -263,10 +215,6 @@ class Document
         return $this->__id;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * getData
     *
@@ -276,10 +224,6 @@ class Document
     {
         return $this->data;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * setId
@@ -293,10 +237,6 @@ class Document
         return $this;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * setCache
     *
@@ -309,10 +249,6 @@ class Document
         return $this;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * isCache
     *
@@ -321,11 +257,6 @@ class Document
     {
         return $this->__cache;
     }
-
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * createdAt
@@ -350,10 +281,6 @@ class Document
         return $this->__created_at;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * updatedAt
     *
@@ -377,10 +304,6 @@ class Document
         return $this->__updated_at;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * setCreatedAt
     *
@@ -393,10 +316,6 @@ class Document
         return $this;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * setuUpdatedAt
     *
@@ -408,10 +327,6 @@ class Document
 
         return $this;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * field
@@ -429,9 +344,20 @@ class Document
         $parts   = explode('.', $field);
         $context = $this->data;
 
-        if ($field=='data')
-        {
+        if ($field=='data') {
             return $context;
+        }
+
+        if ($field == '__created_at') {
+            return $this->__created_at;
+        }
+
+        if ($field == '__updated_at') {
+            return $this->__updated_at;
+        }
+
+        if ($field == '__id') {
+            return $this->__id;
         }
 
         foreach($parts as $part)

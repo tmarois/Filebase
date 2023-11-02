@@ -1,8 +1,10 @@
 # Filebase
 
-[![Build Status](https://travis-ci.org/filebase/Filebase.svg?branch=1.0)](https://travis-ci.org/filebase/Filebase) [![Coverage Status](https://coveralls.io/repos/github/filebase/Filebase/badge.svg?branch=1.0)](https://coveralls.io/github/filebase/Filebase?branch=1.0)
+[![Build Status](https://travis-ci.org/tmarois/Filebase.svg?branch=1.0)](https://travis-ci.org/tmarois/Filebase) [![Coverage Status](https://coveralls.io/repos/github/tmarois/Filebase/badge.svg?branch=1.0)](https://coveralls.io/github/tmarois/Filebase?branch=1.0)
 
-A Simple but Powerful Flat File Database Storage. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](https://github.com/filebase/Filebase#2-formatting) the way you like).
+[Join Discord](https://discord.gg/kywDsDnJ6C) – For support, updates and collaboration.
+
+A Simple but Powerful Flat File Database Storage with document encryption. No need for MySQL or an expensive SQL server, in fact, you just need your current site or application setup. All database entries are stored in files ([formatted](README.md#2-formatting) the way you like).
 
 You can even modify the raw data within the files themselves without ever needing to use the API. And even better you can put all your files in **version control** and pass them to your team without having out-of-sync SQL databases.
 
@@ -10,29 +12,29 @@ Doesn't that sound awesome?
 
 With Filebase, you are in complete control. Design your data structure the way you want. Use arrays and objects like you know how in PHP. Update and share your data with others and teams using version control. Just remember, upgrading your web/apache server is a lot less than your database server.
 
-Works with **PHP 5.6** and **PHP 7+**
+Works with **PHP 5.6** and **PHP 8+**
 
 ### Features
 
 Filebase is simple by design, but has enough features for the more advanced.
 
 * Key/Value and Array-based Data Storing
-* [Querying data](https://github.com/filebase/Filebase#8-queries)
-* [Custom filters](https://github.com/filebase/Filebase#7-custom-filters)
-* [Caching](https://github.com/filebase/Filebase#9-caching) (queries)
-* [Database Backups](https://github.com/filebase/Filebase#10-database-backups)
-* [Formatting](https://github.com/filebase/Filebase#2-formatting) (encode/decode)
-* [Validation](https://github.com/filebase/Filebase#6-validation-optional) (on save)
+* [Querying data](README.md#8-queries)
+* [Custom filters](README.md#7-custom-filters)
+* [Caching](README.md#9-caching) (queries)
+* [Database Backups](README.md#10-database-backups)
+* [Formatting](README.md#2-formatting) (encode/decode)
+* [Validation](README.md#6-validation-optional) (on save)
+* [Encryption](README.md#11-Encryption-Added)
 * CRUD (method APIs)
 * File locking (on save)
 * Intuitive Method Naming
-
 
 ## Installation
 
 Use [Composer](http://getcomposer.org/) to install package.
 
-Use `composer require filebase/filebase`
+Run `composer require tmarois/filebase:^1.0`
 
 If you do not want to use composer, download the files, and include it within your application, it does not have any dependencies, you will just need to keep it updated with any future releases.
 
@@ -45,7 +47,8 @@ $database = new \Filebase\Database([
 ]);
 
 // in this example, you would search an exact user name
-// It would technically be stored as user_name.json in the directories
+// it would technically be stored as user_name.json in the directories
+// if user_name.json doesn't exists get will return new empty Document
 $item = $database->get('kingslayer');
 
 // display property values
@@ -67,12 +70,11 @@ if ($database->has('kingslayer'))
     // do some action
 }
 
-
 // Need to find all the users that have a tag for "php" ?
-$users = $db->query()->where('tags','IN','php')->results();
+$users = $db->where('tags','IN','php')->results();
 
 // Need to search for all the users who use @yahoo.com email addresses?
-$users = $db->query()->where('email','LIKE','@yahoo.com')->results();
+$users = $db->where('email','LIKE','@yahoo.com')->results();
 
 ```
 
@@ -107,8 +109,8 @@ $db = new \Filebase\Database([
 |`dir`				|string		|current directory          |The directory where the database files are stored. 	    |
 |`backupLocation`   |string		|current directory (`/backups`)         |The directory where the backup zip files will be stored. 	    |
 |`format`			|object		|`\Filebase\Format\Json`   |The format class used to encode/decode data				|
-|`validate`			|array		|   |Check [Validation Rules](https://github.com/filebase/Filebase#6-validation-optional) for more details |
-|`cache`			|bool		|true   |Stores [query](https://github.com/filebase/Filebase#8-queries) results into cache for faster loading.				|
+|`validate`			|array		|   |Check [Validation Rules](README.md#6-validation-optional) for more details |
+|`cache`			|bool		|true   |Stores [query](README.md#8-queries) results into cache for faster loading.				|
 |`cache_expire`		|int		|1800   |How long caching will last (in seconds)	|
 |`pretty`	    	|bool		|true   |Store the data for human readability? Pretty Print	|
 |`safe_filename`	|bool		|true   |Automatically converts the file name to a valid name (added: 1.0.13)   |
@@ -126,10 +128,16 @@ The Default Format Class: `JSON`
 \Filebase\Format\Json::class
 ```
 
+Additional Format Classes: `Yaml`
+```php
+\Filebase\Format\Yaml::class
+```
 
 ## (3) GET (and methods)
 
 After you've loaded up your database config, then you can use the `get()` method to retrieve a single document of data.
+
+If document does not exist, it will create a empty object for you to store data into. You can then call the `save()` method and it will create the document (or update an existing one).
 
 ```php
 // my user id
@@ -152,7 +160,7 @@ $item = $db->get($userId);
 |`updatedAt()`                    | Document was updated (default Y-m-d H:i:s) |
 |`field()`                        | You can also use `.` dot delimiter to find values from nested arrays |
 |`isCache()`                      | (true/false) if the current document is loaded from cache |
-|`filter()`                       | Refer to the [Custom Filters](https://github.com/filebase/Filebase#7-custom-filters) |
+|`filter()`                       | Refer to the [Custom Filters](README.md#7-custom-filters) |
 
 Example:
 
@@ -214,15 +222,15 @@ Here is a list of methods you can use on the database class.
 |Method|Details|
 |---|---|
 |`version()`                      | Current version of your Filebase library |
-|`get($id)`                       | Refer to [get()](https://github.com/filebase/Filebase#3-get-and-methods) |
+|`get($id)`                       | Refer to [get()](README.md#3-get-and-methods) |
 |`has($id)`                       | Check if a record exist returning true/false |
 |`findAll()`                      | Returns all documents in database |
 |`count()`                        | Number of documents in database |
 |`flush(true)`                    | Deletes all documents. |
 |`flushCache()`                   | Clears all the cache |
 |`truncate()`                     | Deletes all documents. Alias of `flush(true)` |
-|`query()`                        | Refer to the [Queries](https://github.com/filebase/Filebase#8-queries) |
-|`backup()`                       | Refer to the [Backups](https://github.com/filebase/Filebase#10-database-backups) |
+|`query()`                        | Refer to the [Queries](README.md#8-queries) |
+|`backup()`                       | Refer to the [Backups](README.md#10-database-backups) |
 
 Examples
 
@@ -327,58 +335,85 @@ Queries allow you to search **multiple documents** and return only the ones that
 
 If caching is enabled, queries will use `findAll()` and then cache results for the next run.
 
+> Note: You no longer need to call `query()`, you can now call query methods directly on the database class.
+
 ```php
 // Simple (equal to) Query
 // return all the users that are blocked.
-$users = $db->query()->where(['status' => 'blocked'])->results();
+$users = $db->where(['status' => 'blocked'])->results();
 
 // Stackable WHERE clauses
 // return all the users who are blocked,
 // AND have "php" within the tag array
-$users = $db->query()
-    ->where('status','=','blocked')
-    ->andWhere('tag','IN','php')
-    ->results();
+$users = $db->where('status','=','blocked')
+            ->andWhere('tag','IN','php')
+            ->results();
 
 // You can also use `.` dot delimiter to use on nested keys
-$users = $db->query()->where('status.language.english','=','blocked')->results();
+$users = $db->where('status.language.english','=','blocked')->results();
 
 // Limit Example: Same query as above, except we only want to limit the results to 10
-$users = $db->query()->where('status.language.english','=','blocked')->limit(10)->results();
+$users = $db->where('status.language.english','=','blocked')->limit(10)->results();
 
 
 
 // Query LIKE Example: how about find all users that have a gmail account?
-$usersWithGmail = $db->query()->where('email','LIKE','@gmail.com')->results();
+$usersWithGmail = $db->where('email','LIKE','@gmail.com')->results();
 
 // OrderBy Example: From the above query, what if you want to order the results by nested array
-$usersWithGmail = $db->query()
-                    ->where('email','LIKE','@gmail.com')
-                    ->orderBy('profile.name', 'ASC')
-                    ->results();
+$usersWithGmail = $db->where('email','LIKE','@gmail.com')
+                     ->orderBy('profile.name', 'ASC')
+                     ->results();
 
 // or just order the results by email address
+$usersWithGmail = $db->where('email','LIKE','@gmail.com')
+                     ->orderBy('email', 'ASC')
+                     ->results();
+
+// OrderBy can be applied multiple times to perform a multi-sort
 $usersWithGmail = $db->query()
                     ->where('email','LIKE','@gmail.com')
+                    ->orderBy('last_name', 'ASC')
                     ->orderBy('email', 'ASC')
                     ->results();
 
-
 // this will return the first user in the list based on ascending order of user name.
-$user = $db->query()->orderBy('name', 'ASC')->first();
+$user = $db->orderBy('name','ASC')->first();
 // print out the user name
 echo $user['name'];
 
-// What about regex search? Finds emails within a field
-$users = $db->query()->where('email','REGEX','/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i')->results();
+// You can also order multiple columns as such (stacking)
+$orderMultiples = $db->orderBy('field1','ASC')
+                     ->orderBy('field2','DESC')
+                     ->results();
 
+// What about regex search? Finds emails within a field
+$users = $db->where('email','REGEX','/[a-z\d._%+-]+@[a-z\d.-]+\.[a-z]{2,4}\b/i')->results();
 
 // Find all users that have gmail addresses and only returning their name and age fields (excluding the rest)
-$users = $db->query()->select('name,age')->where('email','LIKE','@gmail.com')->results();
+$users = $db->select('name,age')->where('email','LIKE','@gmail.com')->results();
 
 // Instead of returning users, how about just count how many users are found.
-$totalUsers = $db->query()->where('email','LIKE','@gmail.com')->count();
+$totalUsers = $db->where('email','LIKE','@gmail.com')->count();
 
+
+// You can delete all documents that match the query (BULK DELETE)
+$db->where('name','LIKE','john')->delete();
+
+// Delete all items that match query and match custom filter
+$db->where('name','LIKE','john')->delete(function($item){
+    return ($item->name == 'John' && $item->email == 'some@mail.com');
+});
+
+
+// GLOBAL VARIABLES
+
+// ability to sort the results by created at or updated at times
+$documents = $db->orderBy('__created_at', 'DESC')->results();
+$documents = $db->orderBy('__updated_at', 'DESC')->results();
+
+// search for items that match the (internal) id
+$documents = $db->where('__id', 'IN', ['id1', 'id2'])->results();
 
 ```
 
@@ -396,6 +431,7 @@ To run the query use `results()` or if you only want to return the first item us
 |`orWhere()`            | `mixed`                               | see `where()`, this uses the logical `OR` |
 |`limit()`              | `int` limit, `int` offset             | How many documents to return, and offset |
 |`orderBy()`            | `field` , `sort order`                | Order documents by a specific field and order by `ASC` or `DESC` |
+|`delete()`             | `Closure`                             | Ability to Bulk-delete all items that match |
 
 
 The below **methods execute the query** and return results *(do not try to use them together)*
@@ -468,9 +504,46 @@ $database->backup()->rollback();
 
 ```
 
+# Changelog
+
+All notable changes to this project will be documented here.
+
+## [2.0.0] - 2023-01-25
+
+## (11) Encryption Added
+
+  - 🌟 Added Encryption mechanism to the document. You can now encrypt and decrypt all your documents by passing an encryption array to the config settings as shown below;
+
+```php
+require_once __DIR__."/vendor/autoload.php";
+
+/**
+ * @settings array $encryption
+ * @param key_storage_path - The path to where your encryption keys are stored
+ * @key_name - The name of your key which points to the name of the key file (Store this name in your database)
+ */
+
+$db = new \Filebase\Database([
+    'dir' => __DIR__.'/databases',
+    'encryption' => array('key_storage_path' => __DIR__.'/encrypter',  'key_name' => 'test')
+]);
+
+$db->flush(true);
+$user = $db->get(uniqid());
+$user->name  = 'John';
+$user->email = 'john@example.com';
+$user->save();
+$db->where('name','=','John')->andWhere('email','==','john@example.com')->select('email')->results();
+$result_from_cache = $db->where('name','=','John')->andWhere('email','==','john@example.com')->select('email')->results();
+print_r($result_from_cache);
+
+```
+
+The above will encrypt your document when creating and decrypt it when fetching or quering. Please note that its required that you have the extension Sodium installed to use the encryption mechanism.
+
 ## Why Filebase?
 
-I originally built Filebase because I needed more flexibility, control over the database files, how they are stored, query filtration and a design with very intuitive API methods.
+Filebase was built for the flexibility to help manage simple data storage without the hassle of a heavy database engine. The concept of Filebase is to provide very intuitive API methods, and make it easy for the developer to maintain and manage (even on a large scale).
 
 Inspired by [Flywheel](https://github.com/jamesmoss/flywheel) and [Flinetone](https://github.com/fire015/flintstone).
 
@@ -482,6 +555,8 @@ Versions are as follows: Major.Minor.Patch
 * Major: Rewrites with completely new code-base.
 * Minor: New Features/Changes that breaks compatibility.
 * Patch: New Features/Fixes that does not break compatibility.
+
+Filebase will work-hard to be **backwards-compatible** when possible.
 
 
 ## Sites and Users of Filebase
@@ -496,9 +571,23 @@ Versions are as follows: Major.Minor.Patch
 * [Discount Savings](https://discount-savings.com)
 * [Vivint - Smart Homes](http://smarthomesecurityplans.com/)
 
-*If you are using Filebase on your website, send in a pull request and we will put your site up here.*
+*If you are using Filebase – send in a pull request and we will add your project here.*
 
 
 ## Contributions
 
-Accepting contributions and feedback. Send in any issues and pull requests.
+Anyone can contribute to Filebase. Please do so by posting issues when you've found something that is unexpected or sending a pull request for improvements.
+
+## All Contributors
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><a href="https://github.com/mitmelon"><img src="https://user-images.githubusercontent.com/55149512/214651199-91fcbd60-100e-4425-a351-fb2a0e2f998b.png" width="100px;" alt="Adeyeye George"/><br /><sub><b>Adeyeye George</b></sub></a></td>
+  </tbody>
+</table>
+
+
+## License
+
+Filebase is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

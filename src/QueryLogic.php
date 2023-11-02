@@ -1,5 +1,6 @@
 <?php  namespace Filebase;
 
+use Filebase\SortLogic;
 
 class QueryLogic
 {
@@ -10,7 +11,6 @@ class QueryLogic
     * \Filebase\Database
     */
     protected $database;
-
 
     /**
     * $predicate
@@ -27,10 +27,6 @@ class QueryLogic
     */
     protected $cache = false;
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * __construct
     *
@@ -46,9 +42,33 @@ class QueryLogic
         }
     }
 
+    /**
+    * loadDocuments
+    *
+    */
+    private function loadDocuments()
+    {
+        $predicates = $this->predicate->get();
 
-    //--------------------------------------------------------------------
+        if ($this->cache===false)
+        {
+            $this->documents = $this->database->findAll(true,false);
+            return $this;
+        }
 
+        $this->cache->setKey(json_encode($predicates));
+
+        if ($cached_documents = $this->cache->get())
+        {
+            $this->documents = $cached_documents;
+
+            $this->sort();
+            $this->offsetLimit();
+            return $this;
+        }
+        $this->documents = $this->database->findAll(true,false);
+        return $this;
+    }
 
     /**
     * run
@@ -65,22 +85,7 @@ class QueryLogic
             $predicates = 'findAll';
         }
 
-        if ($this->cache !== false)
-        {
-            $this->cache->setKey(json_encode($predicates));
-
-            if ($cached_documents = $this->cache->get())
-            {
-                $this->documents = $cached_documents;
-
-                $this->sort();
-                $this->offsetLimit();
-
-                return $this;
-            }
-        }
-
-        $this->documents = $this->database->findAll(true,false);
+        $this->loadDocuments();
 
         if ($predicates !== 'findAll')
         {
@@ -120,10 +125,6 @@ class QueryLogic
 
         return $this;
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * filter
@@ -166,10 +167,6 @@ class QueryLogic
         return $results;
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * offsetLimit
     *
@@ -182,50 +179,20 @@ class QueryLogic
         }
     }
 
-
-    //--------------------------------------------------------------------
-
-
     /**
     * sort
     *
     */
     protected function sort()
     {
-        $orderBy = $this->orderBy;
-        $sortBy  = $this->sortBy;
-
-        if ($orderBy=='')
+        if ($this->orderBy[0] == '')
         {
             return false;
         }
 
-        usort($this->documents, function($a, $b) use ($orderBy, $sortBy) {
-
-            $propA = $a->field($orderBy);
-            $propB = $b->field($orderBy);
-
-
-            if (strnatcasecmp($propB, $propA) == strnatcasecmp($propA, $propB)) {
-                return 0;
-            }
-
-            if ($sortBy == 'DESC')
-            {
-                return (strnatcasecmp($propB, $propA) < strnatcasecmp($propA, $propB)) ? -1 : 1;
-            }
-            else
-            {
-                return (strnatcasecmp($propA, $propB) < strnatcasecmp($propB, $propA)) ? -1 : 1;
-            }
-
-        });
-
+        $sortlogic = new SortLogic($this->orderBy, $this->sortBy, 0);
+        usort($this->documents, [$sortlogic, 'sort']);
     }
-
-
-    //--------------------------------------------------------------------
-
 
     /**
     * match
@@ -272,9 +239,5 @@ class QueryLogic
         }
 
     }
-
-
-    //--------------------------------------------------------------------
-
 
 }

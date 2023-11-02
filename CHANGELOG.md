@@ -1,6 +1,22 @@
 Change Log
 ==========
 
+### 02/24/2019 - 1.0.24
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/50) Fixed [bug](https://github.com/filebase/Filebase/issues/41) returning unexpected results.
+
+### 02/24/2019 - 1.0.23
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/49) Added support for order by multiple columns
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/46) Added ability to query document ids (internal id)
+* Added ability to use query `delete()` on all items that match the query (making the custom filter optional)
+
+### 02/23/2019 - 1.0.22
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/47) for deleting items with a custom filter. (this adds the `delete()` method on queries.)
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/48) for calling to the Query methods directly on the database class.
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/45) for sorting by update/created at times (ability to fetch `__created_at` and `__updated_at`)
+
+### 12/26/2018 - 1.0.21
+* Merged [Pull Request](https://github.com/filebase/Filebase/pull/30) for YAML format.
+
 ### 08/16/2018 - 1.0.20
 * Fixed #23 – Caching is cleared when deleting/saving documents to prevent cache from being out of sync with document data.
 
